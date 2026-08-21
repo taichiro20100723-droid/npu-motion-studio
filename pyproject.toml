@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "npu-motion-studio"
-version = "0.4.0"
+version = "0.4.1"
 description = "A local Windows app that uses NPU keyframes and Arc GPU interpolation for dynamic video."
 readme = "README.md"
 license = { file = "LICENSE" }

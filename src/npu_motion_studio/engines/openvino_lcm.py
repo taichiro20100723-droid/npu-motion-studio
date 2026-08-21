@@ -158,11 +158,35 @@ def _transition_prompt(
     count: int,
 ) -> str:
     phase = index / max(1, count - 1)
-    timed_action = compact_prompt(frame_prompt(base_prompt, action, index, count), max_words=48)
+    if action == ActionKind.TRANSFORM:
+        timed_action = compact_prompt(base_prompt, max_words=58)
+    else:
+        timed_action = compact_prompt(frame_prompt(base_prompt, action, index, count), max_words=52)
+    if phase <= 0.18:
+        form_cue = "starting form dominant, earliest destination traits visibly emerging"
+    elif phase <= 0.42:
+        form_cue = "origin visibly morphing into destination, both forms readable in one body"
+    elif phase <= 0.64:
+        form_cue = "coherent halfway hybrid, origin and destination features equally visible"
+    elif phase <= 0.86:
+        form_cue = "destination form dominant, only a few origin traits remain"
+    else:
+        form_cue = "destination form nearly complete, final origin traces disappearing"
     return (
         f"{timed_action}, transition progress {round(phase * 100)} percent, "
+        f"{form_cue}, continuous physical metamorphosis, "
         "one coherent subject, single scene, no split screen, no collage, no watermark"
     )
+
+
+def _transition_strength(mode: str, phase: float) -> float:
+    """Denoise strongly in the middle while protecting recognisable A/B forms near edges."""
+    peak = {"fast": 0.62, "fun": 0.72, "wow": 0.78}[mode]
+    edge = {"fast": 0.26, "fun": 0.28, "wow": 0.30}[mode]
+    # A steep bell curve gives the NPU freedom to invent a coherent hybrid at
+    # the centre, then rapidly hands control back to the real endpoint images.
+    middle_weight = max(0.0, 4.0 * phase * (1.0 - phase)) ** 4
+    return edge + (peak - edge) * middle_weight
 
 
 class OpenVINOLCMEngine(MotionEngine):
@@ -311,9 +335,6 @@ class OpenVINOLCMEngine(MotionEngine):
             if prepared is None or request.target_image_data_url is None:
                 raise ValueError("AとBの画像を2枚とも選んでください")
             target = _prepare_transition_target(request.target_image_data_url, prepared)
-            transition_strength = {"fast": 0.52, "fun": 0.68, "wow": 0.78}[
-                request.mode
-            ]
             for index in range(1, desired - 1):
                 estimated_finish = max(8.0, request.duration_seconds * 1.6)
                 if not scheduler.can_start(4.0 + estimated_finish):
@@ -323,6 +344,7 @@ class OpenVINOLCMEngine(MotionEngine):
                 eased = phase * phase * (3.0 - 2.0 * phase)
                 condition = Image.blend(base, target, eased)
                 condition = warp_condition(condition, ActionKind.TRANSFORM, index, desired)
+                anchor_strength = _transition_strength(request.mode, phase)
                 progress(
                     "image",
                     12 + round(56 * index / max(1, desired - 1)),
@@ -334,7 +356,7 @@ class OpenVINOLCMEngine(MotionEngine):
                     width=512,
                     height=512,
                     num_inference_steps=inference_steps,
-                    strength=transition_strength,
+                    strength=anchor_strength,
                     guidance_scale=1.0,
                     rng_seed=seed,
                 )

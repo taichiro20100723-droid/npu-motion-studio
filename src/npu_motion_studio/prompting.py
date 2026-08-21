@@ -95,6 +95,8 @@ def contains_japanese(text: str) -> bool:
 
 def classify_action(text: str) -> ActionKind:
     normalized = text.casefold()
+    if any(term.casefold() in normalized for term in _ACTION_TERMS[ActionKind.TRANSFORM]):
+        return ActionKind.TRANSFORM
     vehicle_terms = ("車", "自動車", "バイク", "電車", "列車", "car", "vehicle", "train")
     vehicle_motion = ("走", "運転", "ドリフト", "drive", "driving", "race", "drift")
     if any(term in normalized for term in vehicle_terms) and any(
