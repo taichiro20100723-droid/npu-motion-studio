@@ -19,6 +19,7 @@ def test_detects_japanese_and_actions() -> None:
     assert classify_action("ビルが基礎から建っていく") == ActionKind.BUILD
     assert classify_action("赤い車が高速で走る") == ActionKind.DRIVE
     assert classify_action("ロボットが全速力で走り、脚を大きく動かす") == ActionKind.RUN
+    assert classify_action("robot transforms into a dog while running") == ActionKind.TRANSFORM
 
 
 def test_fallback_translation_preserves_subject_and_action() -> None:

@@ -62,8 +62,8 @@ def frame_prompt(base_prompt: str, action: ActionKind, index: int, count: int) -
         )
     elif action == ActionKind.TRANSFORM:
         motion = (
-            f"the same subject at transformation progress {round(phase * 100)} percent, "
-            "silhouette visibly evolving while identity remains recognizable"
+            f"the subject at transformation progress {round(phase * 100)} percent, "
+            "origin anatomy and materials visibly becoming the requested destination form"
         )
     elif action == ActionKind.FLOW:
         motion = (
