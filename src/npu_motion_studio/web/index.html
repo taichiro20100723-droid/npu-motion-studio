@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="Create local A-to-B AI motion with Intel NPU and Arc GPU.">
+  <title>NPU Motion Studio</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">N</span>
+        <div><p class="eyebrow">LOCAL AI MOTION</p><h1>NPU Motion Studio</h1></div>
+      </div>
+      <div class="top-actions">
+        <div class="language-switch" role="group" aria-label="Language">
+          <button id="langJa" class="active" type="button" aria-pressed="true">日本語</button>
+          <button id="langEn" type="button" aria-pressed="false">EN</button>
+        </div>
+        <span class="runtime-badge" aria-live="polite">
+          <span id="systemDot" class="dot"></span><span id="systemLabel">準備を確認中</span>
+        </span>
+      </div>
+    </header>
+
+    <section class="intro" aria-labelledby="pageTitle">
+      <p class="intro-kicker" data-i18n="introKicker">NPUで描き、Arc GPUでつなぐ。</p>
+      <h2 id="pageTitle"><span data-i18n="heroLead">AからBへの変化を</span><br><em data-i18n="heroAccent">ローカルAI動画</em><span data-i18n="heroTail">に。</span></h2>
+      <p data-i18n="introBody">最初と最後の画像を選ぶだけ。AIが途中の変形や動きを描きます。1枚を動かすモードも選べます。</p>
+    </section>
+
+    <section class="workspace">
+      <form id="creationForm" class="composer" novalidate>
+        <fieldset class="creation-mode-fieldset">
+          <legend class="sr-only" data-i18n="creationLegend">動画の基本モード</legend>
+          <div class="creation-modes">
+            <label class="creation-mode selected">
+              <input type="radio" name="creationMode" value="transition" checked>
+              <span class="creation-mode-icon" aria-hidden="true">A→B</span>
+              <span><strong data-i18n="transitionTitle">AからBへ変化</strong><small data-i18n="transitionSub">2枚の間をAIが描く・おすすめ</small></span>
+              <span class="check" aria-hidden="true">✓</span>
+            </label>
+            <label class="creation-mode">
+              <input type="radio" name="creationMode" value="animate">
+              <span class="creation-mode-icon" aria-hidden="true">A↻</span>
+              <span><strong data-i18n="animateTitle">1枚を動かす</strong><small data-i18n="animateSub">Aを残して大きく動かす</small></span>
+              <span class="check" aria-hidden="true">✓</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <div class="section-heading">
+          <span class="step-number">1</span>
+          <div><h3 id="sceneTitle">AとBを選んで、変化を書いてください</h3><p id="sceneHelp">Aの形と画面比率を保ち、Bまでの途中をAIが描きます。</p></div>
+        </div>
+
+        <label id="promptLabel" class="sr-only" for="prompt">変化や動きの説明</label>
+        <textarea id="prompt" maxlength="500" rows="4" aria-describedby="promptHint" placeholder="例：ロボットが部品を展開しながら、赤いスポーツカーへ変形する。"></textarea>
+        <div id="promptHint" class="input-hint"><span data-i18n="shortPrompt">短い文章でもOK</span><span><kbd>Ctrl</kbd> + <kbd>Enter</kbd> <span data-i18n="shortcutTail">で作成</span></span></div>
+
+        <div class="or-divider"><span id="orLabel">AからBへの動きを文章で指定</span></div>
+
+        <div id="imagePair" class="image-pair transition-active">
+          <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Aの画像を選ぶ" aria-describedby="dropHelp">
+            <input id="imageInput" type="file" accept="image/png,image/jpeg,image/webp" hidden>
+            <div id="dropPrompt" class="drop-prompt">
+              <span class="drop-icon" aria-hidden="true">A</span>
+              <span><strong id="firstImageLabel">A・最初の画像</strong><small id="dropHelp">クリックまたはここへドロップ</small></span>
+            </div>
+            <img id="imagePreview" alt="A image preview" hidden>
+            <div id="imageShade" class="image-shade" hidden></div>
+            <button id="removeImage" class="remove-image" type="button" hidden>画像を外す</button>
+          </div>
+
+          <div id="transitionTargetGroup" class="transition-target">
+            <span class="transition-arrow" aria-hidden="true">→</span>
+            <div id="targetDropzone" class="dropzone" tabindex="0" role="button" aria-label="Bの画像を選ぶ" aria-describedby="targetDropHelp">
+              <input id="targetImageInput" type="file" accept="image/png,image/jpeg,image/webp" hidden>
+              <div id="targetDropPrompt" class="drop-prompt">
+                <span class="drop-icon" aria-hidden="true">B</span>
+                <span><strong id="targetImageLabel">B・最後の画像</strong><small id="targetDropHelp">クリックまたはここへドロップ</small></span>
+              </div>
+              <img id="targetImagePreview" alt="B image preview" hidden>
+              <div id="targetImageShade" class="image-shade" hidden></div>
+              <button id="removeTargetImage" class="remove-image" type="button" hidden>画像を外す</button>
+            </div>
+          </div>
+        </div>
+
+        <fieldset class="style-fieldset">
+          <legend><span class="step-number">2</span><span><strong data-i18n="qualityTitle">品質を選ぶ</strong><small data-i18n="qualityHelp">迷ったら「ダイナミック」がおすすめです。</small></span></legend>
+          <div class="modes">
+            <label class="mode">
+              <input type="radio" name="mode" value="fast">
+              <span class="mode-visual mode-soft" aria-hidden="true"><i></i></span>
+              <span><strong data-i18n="fastTitle">すばやく</strong><small data-i18n="fastSub">NPU画像4枚・短め</small></span><span class="check" aria-hidden="true">✓</span>
+            </label>
+            <label class="mode selected">
+              <input type="radio" name="mode" value="fun" checked>
+              <span class="mode-visual mode-play" aria-hidden="true"><i></i></span>
+              <span><strong data-i18n="funTitle">ダイナミック</strong><small data-i18n="funSub">NPU画像8枚・おすすめ</small></span><span class="check" aria-hidden="true">✓</span>
+            </label>
+            <label class="mode">
+              <input type="radio" name="mode" value="wow">
+              <span class="mode-visual mode-cinema" aria-hidden="true"><i></i></span>
+              <span><strong data-i18n="wowTitle">高品質</strong><small data-i18n="wowSub">NPU画像12枚・じっくり</small></span><span class="check" aria-hidden="true">✓</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <details id="advancedSettings" class="advanced">
+          <summary data-i18n="advanced">詳細設定</summary>
+          <div class="advanced-body">
+            <div class="duration-row">
+              <label for="duration"><span data-i18n="duration">作品の長さ</span> <output id="durationOutput">4秒</output></label>
+              <input id="duration" type="range" min="2" max="10" step="1" value="4">
+              <div class="scale"><span id="scaleMin">2秒</span><span id="scaleMax">10秒</span></div>
+            </div>
+            <label id="loopOption" class="loop-option" for="seamlessLoop" hidden>
+              <input id="seamlessLoop" type="checkbox">
+              <span><strong data-i18n="loopTitle">最後から最初へ自然につなぐ</strong><small data-i18n="loopSub">繰り返し再生しても切れ目を目立たせません</small></span>
+            </label>
+            <div id="systemPanel" class="system-panel" aria-live="polite">機器を確認しています…</div>
+          </div>
+        </details>
+
+        <button id="generate" class="generate" type="submit" disabled>
+          <span class="generate-icon" aria-hidden="true">✦</span>
+          <span><strong id="generateLabel">AIを準備しています</strong><small id="generateHelp">起動時だけ少しお待ちください</small></span>
+          <span class="generate-arrow" aria-hidden="true">→</span>
+        </button>
+        <div id="formError" class="error" role="alert" tabindex="-1" hidden></div>
+      </form>
+
+      <section class="stage" aria-label="Preview" aria-live="polite">
+        <div id="emptyState" class="empty-state">
+          <div class="orb" aria-hidden="true"><span></span><i></i></div>
+          <h3 data-i18n="emptyTitle">AからBへの変化がここに現れます</h3>
+          <p data-i18n="emptyBody">2枚の画像と動きを指定して、下の大きなボタンを押してください。</p>
+          <ul class="promise-list" aria-label="Features">
+            <li><span>✓</span><span data-i18n="promise1">AとBを正確に固定</span></li>
+            <li><span>✓</span><span data-i18n="promise2">NPUで途中を描く</span></li>
+            <li><span>✓</span><span data-i18n="promise3">Arc GPUで滑らかに</span></li>
+          </ul>
+        </div>
+
+        <div id="workingState" class="working-state" hidden>
+          <div class="timer-ring" aria-label="Elapsed time"><strong id="countdown">0.0</strong><small data-i18n="seconds">秒</small></div>
+          <p class="working-kicker" data-i18n="workingKicker">ただいま制作中</p>
+          <h3 id="progressMessage">準備しています</h3>
+          <div class="progress-track" role="progressbar" aria-label="Progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="progressBar"></span></div>
+          <ol class="pipeline">
+            <li id="step-analysis"><span>1</span><b data-i18n="step1">文章を理解</b></li>
+            <li id="step-image"><span>2</span><b data-i18n="step2">NPUで描く</b></li>
+            <li id="step-motion"><span>3</span><b data-i18n="step3">GPUでつなぐ</b></li>
+            <li id="step-encode"><span>4</span><b data-i18n="step4">仕上げる</b></li>
+          </ol>
+          <p class="working-note" data-i18n="workingNote">品質を優先します。高品質は少し長くかかります。</p>
+        </div>
+
+        <div id="resultState" class="result-state" hidden tabindex="-1">
+          <div class="media-frame">
+            <video id="resultVideo" autoplay muted loop controls playsinline hidden></video>
+            <img id="resultImage" alt="Generated motion preview" hidden>
+          </div>
+          <div class="result-meta">
+            <div class="result-status"><span class="success-mark">✓</span><span><strong id="resultTime">できました</strong><small id="resultNote">このPCに保存しました</small></span></div>
+            <a id="download" class="download" download data-i18n="save">保存する</a>
+          </div>
+          <button id="remix" class="remix" type="button" data-i18n="remix">同じAとBで、別の動きを作る</button>
+        </div>
+      </section>
+    </section>
+
+    <footer><span>NPU Motion Studio — Local AI</span><span data-i18n="privacy">入力は外部へ送信しません</span></footer>
+  </main>
+  <script src="/app.js" defer></script>
+</body>
+</html>

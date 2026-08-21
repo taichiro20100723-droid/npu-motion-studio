@@ -1,0 +1,10 @@
+{
+  "app_name": "NPU Motion Studio",
+  "host": "127.0.0.1",
+  "port": 7862,
+  "engine": "mock",
+  "deadline_seconds": 180.0,
+  "output_directory": ".runtime/outputs",
+  "max_jobs": 30,
+  "open_browser": true
+}
