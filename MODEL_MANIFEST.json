@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "application": "npu-motion-studio",
+  "policy": {
+    "automatic_downloads": false,
+    "bundle_without_sha256": false,
+    "notes": "FlowCache CPU core requires no AI model. All entries below are optional integration targets."
+  },
+  "components": [
+    {
+      "id": "helsinki-opus-mt-ja-en",
+      "role": "offline Japanese-to-English prompt translation",
+      "status": "implemented-downloaded-by-setup-not-bundled",
+      "runtime": "Transformers-PyTorch",
+      "device": "CPU",
+      "interface": "LocalPromptTranslator",
+      "source": "https://huggingface.co/Helsinki-NLP/opus-mt-ja-en",
+      "license": "Apache-2.0 according to the upstream model card",
+      "bundled": false,
+      "sha256": null
+    },
+    {
+      "id": "flowcache-cpu-v1",
+      "role": "motion-routing-warp-cycle-disocclusion-noise-planning",
+      "status": "implemented-no-model-required",
+      "runtime": "numpy-pillow",
+      "device": "CPU",
+      "interface": "internal",
+      "license": "MIT",
+      "bundled": true,
+      "sha256": null
+    },
+    {
+      "id": "openvino-lcm-dreamshaper-v7-int8",
+      "role": "text-to-image anchors and low-strength image-to-image redraw",
+      "status": "implemented-downloaded-by-setup-not-bundled",
+      "runtime": "OpenVINO",
+      "device": "CPU text encoder / NPU UNet / GPU VAE",
+      "interface": "AnchorImageBackend",
+      "source": "https://huggingface.co/OpenVINO/LCM_Dreamshaper_v7-int8-ov",
+      "license": "MIT according to the upstream model card; verify again before redistribution",
+      "bundled": false,
+      "sha256": null
+    },
+    {
+      "id": "depth-anything-v2-small",
+      "role": "optional-depth-for-parallax",
+      "status": "planned-not-bundled",
+      "runtime": "OpenVINO",
+      "device": "NPU-or-GPU",
+      "interface": "future-depth-backend",
+      "source": "https://github.com/DepthAnything/Depth-Anything-V2",
+      "license": "Apache-2.0-for-Small-check-model-card-before-distribution",
+      "bundled": false,
+      "sha256": null
+    },
+    {
+      "id": "openvino-inpaint-compatible-model",
+      "role": "disocclusion-repair",
+      "status": "adapter-defined-not-selected",
+      "runtime": "OpenVINO",
+      "device": "NPU-or-GPU",
+      "interface": "InpaintRepairBackend",
+      "source": null,
+      "license": "unresolved",
+      "bundled": false,
+      "sha256": null
+    },
+    {
+      "id": "rife-ncnn-vulkan-20221029-v4.6",
+      "role": "dynamic frame interpolation and seamless loop closure",
+      "status": "implemented-downloaded-by-setup-not-bundled",
+      "runtime": "ncnn-Vulkan",
+      "device": "Intel Arc GPU",
+      "interface": "RifeVulkanInterpolator",
+      "source": "https://github.com/nihui/rife-ncnn-vulkan",
+      "license": "MIT according to the upstream repository; verify model weights before redistribution",
+      "bundled": false,
+      "sha256": null
+    }
+  ]
+}
