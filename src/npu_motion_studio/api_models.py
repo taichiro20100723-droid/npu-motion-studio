@@ -13,7 +13,9 @@ class GenerateRequest(BaseModel):
     seamless_loop: bool = True
     input_image_data_url: str | None = Field(default=None, max_length=7_000_000)
     target_image_data_url: str | None = Field(default=None, max_length=7_000_000)
-    preview_first: bool = True
+    # Direct generation is the normal path.  The preview flag remains available
+    # for API compatibility with older clients.
+    preview_first: bool = False
     upgrade_anchor_count: int = Field(default=12, ge=8, le=24)
     motion_mask_data_url: str | None = Field(default=None, max_length=7_000_000)
     lock_mask_data_url: str | None = Field(default=None, max_length=7_000_000)

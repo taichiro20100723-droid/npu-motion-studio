@@ -37,13 +37,13 @@ memes, and weird visual experiments. The included robot→dog clip is a real out
 - **Bilingual, beginner-friendly UI** — switch between English and Japanese with one click.
 - **No hard 10-second limit** — quality modes can spend more time drawing better transitions.
 - **Made for rapid experiments** — two images, one sentence, one Create button; the technical pipeline stays hidden.
-- **Preview before spending time** — draw four NPU anchors first, approve the take, then upgrade it to 8–24 anchors.
+- **Choose quality up front** — Small (8), Medium (12), or Large (20) NPU anchors are generated in one pass.
 - **Motion Brush** — paint moving areas red, locked areas blue, and drag an arrow to direct the subject.
 - **Overlapped hardware pipeline** — completed NPU intervals enter Arc RIFE while the NPU draws the next anchor,
   then Quick Sync finishes the MP4.
 
 [Watch a real Motion Brush robot→dog run](examples/motion-brush/robot-to-dog-motion-brush.mp4) — the robot was
-painted red and directed to the right; the same brush data was carried from preview into the 12-anchor upgrade.
+painted red and directed to the right; the same brush data was used for the 12-anchor render.
 
 ## Two creation modes
 
@@ -56,7 +56,7 @@ painted red and directed to the right; the same brush data was carried from prev
 </p>
 
 The default experience. Pick two images and describe the process—not just the destination. The engine first
-creates a four-anchor preview, then upgrades an approved take to 8–24 anchor moments. A/B stay locked at the ends.
+creates the selected Small, Medium, or Large anchor timeline in one pass. A/B stay locked at the ends.
 
 Example prompt:
 
@@ -98,9 +98,8 @@ Requirements: Windows 11, Python 3.12, an Intel Core Ultra NPU, an Intel Arc GPU
 2. Double-click **`setup_windows.bat`** once. It downloads the optional AI runtime, image model, translator, and
    RIFE binary. Models are not stored in Git.
 3. Double-click **`run_windows.bat`** whenever you want to create.
-4. Choose A and B, optionally paint a Motion Brush, and press **Preview with 4 NPU frames**.
-5. If the motion looks right, press **Looks good · upgrade**. The default is 12 NPU frames; Advanced settings
-   lets you choose 8, 12, 16, 20, or 24.
+4. Choose A and B, optionally paint a Motion Brush, choose **Small**, **Medium**, or **Large**, and press **Create**.
+   Medium (12 NPU frames) is the recommended starting point.
 
 Everything listens on `127.0.0.1` only. Generated videos are stored under `.runtime/outputs/`.
 
@@ -113,7 +112,7 @@ Japanese / English prompt
 CPU: local translation + action timeline
           │
           ▼
-NPU: four-frame preview → approved 8–24 prompt-aware anchor images
+NPU: selected 8 / 12 / 20 prompt-aware anchor images
           │
           ▼
 Arc GPU: VAE decode + queued RIFE Vulkan intervals (overlapped with NPU)
@@ -127,14 +126,13 @@ midpoint, then increasingly protects the real B image near the end. Each anchor 
 an action-specific motion warp; independent AI images are never simply cross-faded. After RIFE, the first and
 last decoded frames are replaced with A and B again before encoding.
 
-## Preview and quality controls
+## Quality controls
 
 | UI | NPU anchors | Intended use |
 |---|---:|---|
-| Preview | 4 | Check the idea quickly; stop here if it is wrong |
-| Recommended | 12 | Default balance after approval |
-| Maximum preset | 20 | Finer transformation timeline |
-| Advanced | 8 / 12 / 16 / 20 / 24 | Direct control over NPU generation time and detail |
+| Small | 8 | Fastest generation |
+| Medium | 12 | Recommended balance |
+| Large | 20 | Finer, higher-quality transformation timeline |
 
 Video length is 2–10 seconds. The 180-second scheduler is a safety ceiling, not a target.
 

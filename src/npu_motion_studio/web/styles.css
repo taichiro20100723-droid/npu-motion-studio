@@ -112,7 +112,7 @@ kbd { border: 1px solid var(--line-strong); border-bottom-width: 2px; border-rad
 
 .style-fieldset { border: 0; padding: 0; margin: 21px 0 15px; }
 .style-fieldset legend { margin-bottom: 12px; }
-.modes { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.modes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 .mode { position: relative; display: grid; justify-items: center; border: 1px solid var(--line); border-radius: 14px; padding: 10px 6px 11px; text-align: center; cursor: pointer; transition: transform .18s, border-color .18s, background .18s; }
 .mode:hover { transform: translateY(-2px); border-color: var(--line-strong); }
 .mode input { position: absolute; opacity: 0; pointer-events: none; }
@@ -216,11 +216,6 @@ input[type="range"] { width: 100%; accent-color: var(--cyan); }
 .download { flex: 0 0 auto; text-decoration: none; color: #071016; background: var(--text); padding: 10px 15px; border-radius: 11px; font-size: .75rem; font-weight: 850; }
 .remix { width: 100%; margin-top: 12px; border: 1px solid var(--line); border-radius: 11px; padding: 11px; background: rgba(255,255,255,.035); cursor: pointer; color: #dfe4ee; font-size: .76rem; }
 .remix:hover { border-color: var(--line-strong); background: rgba(255,255,255,.06); }
-.upgrade-panel { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 14px; padding: 13px; border: 1px solid rgba(76,227,217,.35); border-radius: 13px; background: rgba(76,227,217,.065); }
-.upgrade-panel strong, .upgrade-panel small { display: block; }
-.upgrade-panel small { margin-top: 3px; color: var(--muted); font-size: .65rem; }
-.upgrade-panel button { flex: 0 0 auto; border: 0; border-radius: 11px; padding: 10px 13px; color: #071112; background: linear-gradient(103deg, var(--cyan), var(--violet)); cursor: pointer; font-weight: 900; }
-.upgrade-panel button small { color: rgba(7,17,18,.7); }
 
 footer { display: flex; justify-content: space-between; color: #596477; font-size: .65rem; padding: 17px 5px; }
 
@@ -247,7 +242,6 @@ footer { display: flex; justify-content: space-between; color: #596477; font-siz
   .input-hint span:last-child { display: none; }
   .modes { grid-template-columns: 1fr; }
   .brush-tools { grid-template-columns: 1fr 1fr; }
-  .upgrade-panel { align-items: stretch; flex-direction: column; }
   .mode { min-height: 66px; grid-template-columns: 54px 1fr; align-items: center; justify-items: start; text-align: left; padding: 7px 36px 7px 8px; }
   .mode strong { margin-top: 0; font-size: .84rem; }
   .mode small { font-size: .64rem; }

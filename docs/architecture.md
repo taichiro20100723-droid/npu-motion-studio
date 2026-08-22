@@ -2,7 +2,7 @@
 
 ## 目的
 
-NPU Motion Studioは、ユーザーが技術用語を知らなくても「AとBを選ぶ → 4枚で確認 → 気に入ったら高品質化」できる体験を提供します。v0.5はA→Bを既定にし、Motion Brush、8〜24枚のNPU画像調整、NPU/GPU並列処理を追加しました。180秒は通常目標ではなく異常時の安全上限です。
+NPU Motion Studioは、ユーザーが技術用語を知らなくても「AとBを選ぶ → 小・中・大を選ぶ → 作成」できる体験を提供します。A→Bを既定にし、Motion Brush、品質別のNPU画像数、NPU/GPU並列処理を備えています。180秒は通常目標ではなく異常時の安全上限です。
 
 ## 構成
 
@@ -27,7 +27,7 @@ EngineRegistry ── MockMotionEngine
                       ├── Action timeline / condition warp
                       ├── A/B endpoint lock / intermediate NPU redraw
                       ├── Motion Brush move / lock / direction masks
-                      ├── Fast four-anchor preview
+                      ├── Small / Medium / Large anchor presets
                       ├── NPU generation ↔ Arc GPU RIFE overlap queue
                       └── Endpoint lock / seamless loop / Quick Sync MP4
 ```
@@ -40,15 +40,15 @@ HTML/CSS/JavaScriptだけで構成し、ビルドツールを不要にしてい�
 
 HTTP処理から重い生成処理を切り離し、ジョブIDを即時に返します。現在はメモリ内キューとワーカースレッド1本です。共有メモリを使うNPU/GPUで複数生成を同時実行すると遅くなるため、初期値は直列です。
 
-4枚プレビュージョブは元入力とMotion Brushをメモリ内に保持します。`POST /api/jobs/{id}/upgrade` は
-同じ入力を8〜24枚へ引き継ぐため、画像選択やブラシをやり直す必要がありません。
+通常のUIは選んだ品質（8・12・20枚）を一度に生成します。旧クライアント向けに
+`preview_first=true` と `POST /api/jobs/{id}/upgrade` のAPI互換は残しています。
 
 ### v0.5並列パイプライン
 
-高品質化では、NPUアンカーが1枚完成するたびに直前区間を1本のArc RIFEキューへ渡します。
+中・大品質では、NPUアンカーが1枚完成するたびに直前区間を1本のArc RIFEキューへ渡します。
 NPUが次の画像を描いている間にGPUが前区間を補間するため、12枚の実測ではGPU仕事8.23秒のうち
 NPU終了後に残った待ちは1.57秒でした。区間を順番に結合した後、Quick Syncへ一括投入します。
-4枚プレビューだけはRIFE起動時間の方が大きいため、軽量補間とQuick Syncで2〜3秒台を狙います。
+小品質ではRIFE起動時間の方が大きいため、軽量補間とQuick Syncで短時間化します。
 
 ### MotionEngine
 
@@ -56,7 +56,7 @@ UIとAIランタイムの境界です。エンジンは `probe()` で利用可�
 
 ### SafetyScheduler
 
-上限は「画像」「解析」「動き」「書き出し」「配信」の予算に分けます。通常は4枚プレビューから始め、承認後はユーザーが選んだ8〜24枚を生成します。180秒へ近づいた異常時だけ要点を減らし、画面には残り時間ではなく経過時間を表示します。
+上限は「画像」「解析」「動き」「書き出し」「配信」の予算に分けます。通常はユーザーが選んだ小・中・大の枚数を生成します。180秒へ近づいた異常時だけ要点を減らし、画面には残り時間ではなく経過時間を表示します。
 
 ### 2つの作成方式
 
@@ -130,8 +130,7 @@ img2img/inpaintやRIFEを追加しても既存HTTP APIとUIは変わりません
 3. 外部inpaint（fun/wow）
 4. 外部interpolation（wow）
 
-このplannerはV1互換とCPU fallbackの試験用に残しています。本番エンジンはプレビュー4枚、
-高品質化8〜24枚を使い、安全上限へ近づいた異常時だけ枚数を減らします。
+このplannerはV1互換とCPU fallbackの試験用に残しています。本番エンジンは小8枚・中12枚・大20枚を使い、安全上限へ近づいた異常時だけ枚数を減らします。
 
 ## V2の実機時間
 
