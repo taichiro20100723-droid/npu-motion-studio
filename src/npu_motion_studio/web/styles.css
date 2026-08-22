@@ -92,6 +92,7 @@ textarea { resize: vertical; width: 100%; min-height: 118px; margin-top: 15px; b
 textarea::placeholder { color: #697486; }
 textarea:focus { border-color: rgba(76,227,217,.65); box-shadow: 0 0 0 4px rgba(76,227,217,.07); }
 .input-hint, .scale { display: flex; justify-content: space-between; color: #707b8f; font-size: .64rem; margin-top: 7px; }
+.safety-note { margin: 8px 0 0; color: #7e8b9e; font-size: .63rem; }
 kbd { border: 1px solid var(--line-strong); border-bottom-width: 2px; border-radius: 4px; padding: 1px 4px; font-family: inherit; font-size: .6rem; }
 .or-divider { display: flex; align-items: center; gap: 8px; color: #687286; font-size: .65rem; margin: 10px 0; }
 .or-divider::before, .or-divider::after { content: ""; height: 1px; flex: 1; background: var(--line); }
