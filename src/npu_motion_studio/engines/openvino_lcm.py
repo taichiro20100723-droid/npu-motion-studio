@@ -43,6 +43,9 @@ SAFE_NEGATIVE_PROMPT = (
     "nudity, nude, topless, bare chest, bare breasts, exposed breasts, nipples, cleavage, "
     "lingerie, transparent clothing, erotic, pornographic, sexualized pose"
 )
+# OpenVINO ignores a negative prompt when guidance is <= 1.0 and raises a
+# runtime error. Keep this just above the threshold so the safety filter works.
+SAFE_GUIDANCE_SCALE = 1.2
 REQUIRED_MODEL_FILES = (
     "model_index.json",
     "text_encoder/openvino_model.xml",
@@ -339,7 +342,7 @@ class OpenVINOLCMEngine(MotionEngine):
                 width=512,
                 height=512,
                 num_inference_steps=inference_steps,
-                guidance_scale=1.0,
+                guidance_scale=SAFE_GUIDANCE_SCALE,
                 negative_prompt=SAFE_NEGATIVE_PROMPT,
                 rng_seed=seed,
             )
@@ -443,7 +446,7 @@ class OpenVINOLCMEngine(MotionEngine):
                     height=512,
                     num_inference_steps=inference_steps,
                     strength=anchor_strength,
-                    guidance_scale=1.0,
+                    guidance_scale=SAFE_GUIDANCE_SCALE,
                     negative_prompt=SAFE_NEGATIVE_PROMPT,
                     rng_seed=seed,
                 )
@@ -482,7 +485,7 @@ class OpenVINOLCMEngine(MotionEngine):
                     height=512,
                     num_inference_steps=inference_steps,
                     strength=strength,
-                    guidance_scale=1.0,
+                    guidance_scale=SAFE_GUIDANCE_SCALE,
                     negative_prompt=SAFE_NEGATIVE_PROMPT,
                     rng_seed=seed,
                 )
