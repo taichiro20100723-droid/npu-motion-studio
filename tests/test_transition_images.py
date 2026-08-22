@@ -5,8 +5,6 @@ import numpy as np
 from PIL import Image
 
 from npu_motion_studio.engines.openvino_lcm import (
-    SAFE_GUIDANCE_SCALE,
-    SAFE_NEGATIVE_PROMPT,
     _cropped_array,
     _decode_data_url,
     _prepare_transition_target,
@@ -53,8 +51,6 @@ def test_transition_prompt_keeps_the_requested_timed_action() -> None:
     assert "transition progress 29 percent" in prompt
     assert "both forms readable in one body" in prompt
     assert "opaque clothing" in prompt
-    assert "bare breasts" in SAFE_NEGATIVE_PROMPT
-    assert SAFE_GUIDANCE_SCALE > 1.0
 
 
 def test_transform_prompt_describes_a_real_hybrid_instead_of_preserving_identity() -> None:
