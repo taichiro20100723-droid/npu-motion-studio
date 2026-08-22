@@ -29,6 +29,14 @@ _BUILD_PHASES = (
     "fully completed building in a dramatic hero view",
 )
 
+# Keep human subjects covered even when a transformation prompt is vague.  This
+# is used as positive guidance; the diffusion negative prompt in the OpenVINO
+# engine provides the stronger exclusion for explicit anatomy.
+SAFE_CLOTHING_GUIDANCE = (
+    "when a human is visible, fully clothed in opaque clothing covering the chest and torso, "
+    "non-sexual framing"
+)
+
 
 def frame_prompt(base_prompt: str, action: ActionKind, index: int, count: int) -> str:
     phase = 0.0 if count <= 1 else index / (count - 1)
@@ -77,7 +85,7 @@ def frame_prompt(base_prompt: str, action: ActionKind, index: int, count: int) -
         )
     return (
         f"{subject}, {motion}, coherent anatomy, consistent face, consistent colors, "
-        "sharp cinematic frame, no text, no watermark"
+        f"sharp cinematic frame, {SAFE_CLOTHING_GUIDANCE}, no text, no watermark"
     )
 
 

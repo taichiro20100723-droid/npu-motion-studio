@@ -37,6 +37,12 @@ from npu_motion_studio.scheduler import DeadlineScheduler
 MODEL_ID = "OpenVINO/LCM_Dreamshaper_v7-int8-ov"
 MODEL_FOLDER_NAME = "LCM_Dreamshaper_v7-int8-ov"
 TRANSLATION_MODEL_FOLDER = "opus-mt-ja-en"
+# Explicit negative conditioning keeps the NPU from inventing exposed anatomy
+# during image-to-image transitions and one-image motion generation.
+SAFE_NEGATIVE_PROMPT = (
+    "nudity, nude, topless, bare chest, bare breasts, exposed breasts, nipples, cleavage, "
+    "lingerie, transparent clothing, erotic, pornographic, sexualized pose"
+)
 REQUIRED_MODEL_FILES = (
     "model_index.json",
     "text_encoder/openvino_model.xml",
@@ -181,7 +187,9 @@ def _transition_prompt(
     return (
         f"{timed_action}, transition progress {round(phase * 100)} percent, "
         f"{form_cue}, continuous physical metamorphosis, "
-        "one coherent subject, single scene, no split screen, no collage, no watermark"
+        "one coherent subject, single scene, when a human is visible use opaque clothing "
+        "covering the chest and torso, non-sexual framing, no split screen, no collage, "
+        "no watermark"
     )
 
 
@@ -332,6 +340,7 @@ class OpenVINOLCMEngine(MotionEngine):
                 height=512,
                 num_inference_steps=inference_steps,
                 guidance_scale=1.0,
+                negative_prompt=SAFE_NEGATIVE_PROMPT,
                 rng_seed=seed,
             )
             base = Image.fromarray(tensor.data[0])
@@ -435,6 +444,7 @@ class OpenVINOLCMEngine(MotionEngine):
                     num_inference_steps=inference_steps,
                     strength=anchor_strength,
                     guidance_scale=1.0,
+                    negative_prompt=SAFE_NEGATIVE_PROMPT,
                     rng_seed=seed,
                 )
                 generated = enforce_lock(Image.fromarray(tensor.data[0]), base, lock_mask)
@@ -473,6 +483,7 @@ class OpenVINOLCMEngine(MotionEngine):
                     num_inference_steps=inference_steps,
                     strength=strength,
                     guidance_scale=1.0,
+                    negative_prompt=SAFE_NEGATIVE_PROMPT,
                     rng_seed=seed,
                 )
                 generated = enforce_lock(Image.fromarray(tensor.data[0]), base, lock_mask)
