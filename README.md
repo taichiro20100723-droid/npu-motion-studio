@@ -37,6 +37,13 @@ memes, and weird visual experiments. The included robot→dog clip is a real out
 - **Bilingual, beginner-friendly UI** — switch between English and Japanese with one click.
 - **No hard 10-second limit** — quality modes can spend more time drawing better transitions.
 - **Made for rapid experiments** — two images, one sentence, one Create button; the technical pipeline stays hidden.
+- **Preview before spending time** — draw four NPU anchors first, approve the take, then upgrade it to 8–24 anchors.
+- **Motion Brush** — paint moving areas red, locked areas blue, and drag an arrow to direct the subject.
+- **Overlapped hardware pipeline** — completed NPU intervals enter Arc RIFE while the NPU draws the next anchor,
+  then Quick Sync finishes the MP4.
+
+[Watch a real Motion Brush robot→dog run](examples/motion-brush/robot-to-dog-motion-brush.mp4) — the robot was
+painted red and directed to the right; the same brush data was carried from preview into the 12-anchor upgrade.
 
 ## Two creation modes
 
@@ -48,8 +55,8 @@ memes, and weird visual experiments. The included robot→dog clip is a real out
   <img src="examples/robot-to-dog/B-dog.png" width="42%" alt="B: real Shiba Inu">
 </p>
 
-The default experience. Pick two images and describe the process—not just the destination. The engine creates
-4, 8, or 12 anchor moments, locks A/B at the ends, and interpolates the final sequence on the Arc GPU.
+The default experience. Pick two images and describe the process—not just the destination. The engine first
+creates a four-anchor preview, then upgrades an approved take to 8–24 anchor moments. A/B stay locked at the ends.
 
 Example prompt:
 
@@ -77,6 +84,8 @@ Windows 11 · Intel AI Boost NPU · Intel Arc 140V · OpenVINO 2025.4.1.
 | Robot→dog High quality, 12 anchors, 5 sec / 120 frames | 15.25 sec | 3.99 sec RIFE | **20.69 sec** |
 | One image Fast, 4 anchors, 3 sec / 47 frames | 3.13 sec | 1.27 sec RIFE | **5.80 sec** |
 | High quality build sequence, 12 anchors, 5 sec | 11.11 sec | 2.42 sec RIFE | **15.39 sec** |
+| v0.5 four-anchor robot→dog preview, 4 sec | 2.36 sec | 0.02 sec fast preview blend | **2.83 sec** |
+| v0.5 approved robot→dog upgrade, 12 anchors, 4 sec | 15.46 sec | 8.23 sec RIFE, mostly overlapped | **18.05 sec** |
 
 These are warm-run measurements from one laptop, not universal guarantees. The first NPU compilation can take
 minutes; cached launches took roughly 6–7 seconds on the test machine.
@@ -89,7 +98,9 @@ Requirements: Windows 11, Python 3.12, an Intel Core Ultra NPU, an Intel Arc GPU
 2. Double-click **`setup_windows.bat`** once. It downloads the optional AI runtime, image model, translator, and
    RIFE binary. Models are not stored in Git.
 3. Double-click **`run_windows.bat`** whenever you want to create.
-4. Choose A and B, write the motion prompt, and press **Create the A-to-B video**.
+4. Choose A and B, optionally paint a Motion Brush, and press **Preview with 4 NPU frames**.
+5. If the motion looks right, press **Looks good · upgrade**. The default is 12 NPU frames; Advanced settings
+   lets you choose 8, 12, 16, 20, or 24.
 
 Everything listens on `127.0.0.1` only. Generated videos are stored under `.runtime/outputs/`.
 
@@ -102,10 +113,10 @@ Japanese / English prompt
 CPU: local translation + action timeline
           │
           ▼
-NPU: 4 / 8 / 12 prompt-aware anchor images
+NPU: four-frame preview → approved 8–24 prompt-aware anchor images
           │
           ▼
-Arc GPU: VAE decode + RIFE Vulkan interpolation
+Arc GPU: VAE decode + queued RIFE Vulkan intervals (overlapped with NPU)
           │
           ▼
 Intel Quick Sync: H.264 MP4
@@ -116,13 +127,14 @@ midpoint, then increasingly protects the real B image near the end. Each anchor 
 an action-specific motion warp; independent AI images are never simply cross-faded. After RIFE, the first and
 last decoded frames are replaced with A and B again before encoding.
 
-## Quality modes
+## Preview and quality controls
 
-| UI | Anchors | Intended use |
+| UI | NPU anchors | Intended use |
 |---|---:|---|
-| Fast | 4 | Quick experiments |
-| Dynamic | 8 | Default; the best motion/time balance |
-| High quality | 12 | More intermediate changes and higher prompt fidelity |
+| Preview | 4 | Check the idea quickly; stop here if it is wrong |
+| Recommended | 12 | Default balance after approval |
+| Maximum preset | 20 | Finer transformation timeline |
+| Advanced | 8 / 12 / 16 / 20 / 24 | Direct control over NPU generation time and detail |
 
 Video length is 2–10 seconds. The 180-second scheduler is a safety ceiling, not a target.
 

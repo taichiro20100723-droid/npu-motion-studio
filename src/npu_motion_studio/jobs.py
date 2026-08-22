@@ -25,10 +25,25 @@ class Job:
     degraded: bool = False
     notes: tuple[str, ...] = ()
     error: str | None = None
+    kind: str = "final"
+    upgrade_available: bool = False
+    upgrade_anchor_count: int | None = None
+    source_job_id: str | None = None
 
     @classmethod
-    def create(cls) -> Job:
-        return cls(id=uuid.uuid4().hex)
+    def create(
+        cls,
+        *,
+        kind: str = "final",
+        upgrade_anchor_count: int | None = None,
+        source_job_id: str | None = None,
+    ) -> Job:
+        return cls(
+            id=uuid.uuid4().hex,
+            kind=kind,
+            upgrade_anchor_count=upgrade_anchor_count,
+            source_job_id=source_job_id,
+        )
 
     def public_dict(self) -> dict[str, object]:
         data = asdict(self)

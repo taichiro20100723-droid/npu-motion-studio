@@ -2,7 +2,7 @@
 
 ## 目的
 
-NPU Motion Studioは、ユーザーが技術用語を知らなくても「AとBを選ぶ → 文章を書く → 動画を見る」体験を提供します。V4はA→Bを既定にし、日英UI、NPUの複数キーフレーム、Arc GPU補間で動きと完成度を優先します。180秒は通常目標ではなく異常時の安全上限です。
+NPU Motion Studioは、ユーザーが技術用語を知らなくても「AとBを選ぶ → 4枚で確認 → 気に入ったら高品質化」できる体験を提供します。v0.5はA→Bを既定にし、Motion Brush、8〜24枚のNPU画像調整、NPU/GPU並列処理を追加しました。180秒は通常目標ではなく異常時の安全上限です。
 
 ## 構成
 
@@ -26,8 +26,10 @@ EngineRegistry ── MockMotionEngine
                       ├── CPU Japanese-to-English translator
                       ├── Action timeline / condition warp
                       ├── A/B endpoint lock / intermediate NPU redraw
-                      ├── Arc GPU RIFE v4.6 interpolation
-                      └── Endpoint lock / seamless loop / MP4
+                      ├── Motion Brush move / lock / direction masks
+                      ├── Fast four-anchor preview
+                      ├── NPU generation ↔ Arc GPU RIFE overlap queue
+                      └── Endpoint lock / seamless loop / Quick Sync MP4
 ```
 
 ### UI
@@ -38,15 +40,25 @@ HTML/CSS/JavaScriptだけで構成し、ビルドツールを不要にしてい�
 
 HTTP処理から重い生成処理を切り離し、ジョブIDを即時に返します。現在はメモリ内キューとワーカースレッド1本です。共有メモリを使うNPU/GPUで複数生成を同時実行すると遅くなるため、初期値は直列です。
 
+4枚プレビュージョブは元入力とMotion Brushをメモリ内に保持します。`POST /api/jobs/{id}/upgrade` は
+同じ入力を8〜24枚へ引き継ぐため、画像選択やブラシをやり直す必要がありません。
+
+### v0.5並列パイプライン
+
+高品質化では、NPUアンカーが1枚完成するたびに直前区間を1本のArc RIFEキューへ渡します。
+NPUが次の画像を描いている間にGPUが前区間を補間するため、12枚の実測ではGPU仕事8.23秒のうち
+NPU終了後に残った待ちは1.57秒でした。区間を順番に結合した後、Quick Syncへ一括投入します。
+4枚プレビューだけはRIFE起動時間の方が大きいため、軽量補間とQuick Syncで2〜3秒台を狙います。
+
 ### MotionEngine
 
 UIとAIランタイムの境界です。エンジンは `probe()` で利用可能性を返し、`generate()` で成果物を生成します。本物のOpenVINO実装、DirectML実装、クラウド実装をUI変更なしで追加できます。
 
 ### SafetyScheduler
 
-上限は「画像」「解析」「動き」「書き出し」「配信」の予算に分けます。通常はfast=4枚、fun=8枚、wow=12枚を生成し、180秒へ近づいた異常時だけ要点を減らします。画面には残り時間ではなく経過時間を表示します。
+上限は「画像」「解析」「動き」「書き出し」「配信」の予算に分けます。通常は4枚プレビューから始め、承認後はユーザーが選んだ8〜24枚を生成します。180秒へ近づいた異常時だけ要点を減らし、画面には残り時間ではなく経過時間を表示します。
 
-### V4の2方式
+### 2つの作成方式
 
 1枚方式はAを最初のアンカーに固定し、文章から判定した動作ごとの時系列promptでNPU再描画します。
 ループ時はAを補間列の最後へ再投入し、書き出し直前の最終フレームもAに固定します。
@@ -118,8 +130,8 @@ img2img/inpaintやRIFEを追加しても既存HTTP APIとUIは変わりません
 3. 外部inpaint（fun/wow）
 4. 外部interpolation（wow）
 
-このplannerはV1互換とCPU fallbackの試験用に残しています。V2本番エンジンは通常4・8・12枚を
-固定し、安全上限へ近づいた異常時だけ枚数を減らします。
+このplannerはV1互換とCPU fallbackの試験用に残しています。本番エンジンはプレビュー4枚、
+高品質化8〜24枚を使い、安全上限へ近づいた異常時だけ枚数を減らします。
 
 ## V2の実機時間
 
