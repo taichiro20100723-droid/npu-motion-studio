@@ -41,8 +41,8 @@ memes, and weird visual experiments. The included robot→dog clip is a real out
 - **Motion Brush** — paint moving areas red, locked areas blue, and drag an arrow to direct the subject.
 - **Overlapped hardware pipeline** — completed NPU intervals enter Arc RIFE while the NPU draws the next anchor,
   then Quick Sync finishes the MP4.
-- **Clothed-generation safety filter** — generated human frames use opaque, non-sexual clothing guidance; exact
-  A/B source images are preserved unchanged.
+- **Clothed-generation safety filter** — source images are checked before generation; suspicious exposed-torso
+  inputs are stopped, and text-only human scenes start with opaque clothing guidance.
 
 [Watch a real Motion Brush robot→dog run](examples/motion-brush/robot-to-dog-motion-brush.mp4) — the robot was
 painted red and directed to the right; the same brush data was used for the 12-anchor render.
