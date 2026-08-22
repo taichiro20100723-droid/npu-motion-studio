@@ -9,7 +9,7 @@
 [![OpenVINO](https://img.shields.io/badge/OpenVINO-2025.4-5C2D91)](https://github.com/openvinotoolkit/openvino)
 [![License](https://img.shields.io/badge/code-MIT-4ce3d9)](LICENSE)
 
-[日本語](README.ja.md) · [Architecture](docs/architecture.md) · [Benchmarks](docs/benchmarks.md)
+[日本語](README.ja.md) · [Architecture](docs/architecture.md) · [Benchmarks](docs/benchmarks.md) · [Intel Innovator submission pack](docs/intel-innovator-application.md)
 
 </div>
 
@@ -102,6 +102,11 @@ Requirements: Windows 11, Python 3.12, an Intel Core Ultra NPU, an Intel Arc GPU
    Medium (12 NPU frames) is the recommended starting point.
 
 Everything listens on `127.0.0.1` only. Generated videos are stored under `.runtime/outputs/`.
+
+## OpenVINO project submission
+
+This repository is prepared for the [Intel Software Innovator Program for OpenVINO](https://www.intel.com/content/www/us/en/developer/community/edge-innovator-program.html).
+The [submission pack](docs/intel-innovator-application.md) contains the project summary, device mapping, measured evidence, demo storyboard, and copy-ready application answers.
 
 ## How the pipeline works
 

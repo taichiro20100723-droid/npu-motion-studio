@@ -2,7 +2,7 @@
 
 **2枚の画像の「ありえない途中」を作る。ロボット→犬、廃墟→都市、ラフ→完成品。すべてPC内で。**
 
-[English](README.md) · [設計](docs/architecture.md) · [実測](docs/benchmarks.md)
+[English](README.md) · [設計](docs/architecture.md) · [実測](docs/benchmarks.md) · [Intel応募資料](docs/intel-innovator-application.md)
 
 ![巨大ロボットが本物の柴犬へ変身する実動画](examples/robot-to-dog/robot-to-dog.gif)
 
@@ -48,6 +48,11 @@ MVの場面転換、ショート動画、作品のビフォーアフター、製
 6. 「動画を作る」を押します。選んだ品質で最初から最後まで生成します。
 
 画像AIや補間ツールは初回セットアップ時に取得され、GitHubにはモデル本体を含めません。
+
+## Intel向け応募資料
+
+このリポジトリは、[Intel Software Innovator Program for OpenVINO](https://www.intel.com/content/www/us/en/developer/community/edge-innovator-program.html)へ紹介できる形に整理しています。
+[応募資料](docs/intel-innovator-application.md)に、プロジェクト概要、Intelデバイスの役割、実測値、デモ台本、申請フォームへ貼り付ける英文回答をまとめています。
 
 ## 実測
 
