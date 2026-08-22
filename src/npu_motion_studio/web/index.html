@@ -90,23 +90,35 @@
           </div>
         </div>
 
+        <details id="motionBrush" class="motion-brush" hidden>
+          <summary><span data-i18n="brushTitle">動かす場所を指定（Motion Brush）</span><small data-i18n="brushSummary">赤で動かす・青で固定・矢印で方向</small></summary>
+          <div class="brush-body">
+            <div class="brush-canvas-wrap" id="brushCanvasWrap">
+              <img id="brushImage" alt="Motion brush source">
+              <canvas id="brushCanvas" aria-label="Motion Brush canvas"></canvas>
+            </div>
+            <div class="brush-tools" role="toolbar" aria-label="Motion Brush tools">
+              <button type="button" class="brush-tool active" data-tool="move"><span class="red-dot"></span><b data-i18n="brushMove">激しく動かす</b></button>
+              <button type="button" class="brush-tool" data-tool="lock"><span class="blue-dot"></span><b data-i18n="brushLock">固定する</b></button>
+              <button type="button" class="brush-tool" data-tool="arrow"><span class="arrow-icon">→</span><b data-i18n="brushArrow">方向を引く</b></button>
+              <button id="clearBrush" type="button" class="brush-clear" data-i18n="brushClear">全部消す</button>
+            </div>
+            <p class="brush-tip" data-i18n="brushTip">例：車を赤く塗り、背景を青く塗って、右向きの矢印を引きます。</p>
+          </div>
+        </details>
+
         <fieldset class="style-fieldset">
-          <legend><span class="step-number">2</span><span><strong data-i18n="qualityTitle">品質を選ぶ</strong><small data-i18n="qualityHelp">迷ったら「ダイナミック」がおすすめです。</small></span></legend>
+          <legend><span class="step-number">2</span><span><strong data-i18n="qualityTitle">OK後の完成品質</strong><small data-i18n="qualityHelp">まず4枚で確認するので、失敗を早く止められます。</small></span></legend>
           <div class="modes">
-            <label class="mode">
-              <input type="radio" name="mode" value="fast">
-              <span class="mode-visual mode-soft" aria-hidden="true"><i></i></span>
-              <span><strong data-i18n="fastTitle">すばやく</strong><small data-i18n="fastSub">NPU画像4枚・短め</small></span><span class="check" aria-hidden="true">✓</span>
-            </label>
             <label class="mode selected">
               <input type="radio" name="mode" value="fun" checked>
               <span class="mode-visual mode-play" aria-hidden="true"><i></i></span>
-              <span><strong data-i18n="funTitle">ダイナミック</strong><small data-i18n="funSub">NPU画像8枚・おすすめ</small></span><span class="check" aria-hidden="true">✓</span>
+              <span><strong data-i18n="funTitle">高品質</strong><small data-i18n="funSub">NPU画像12枚・おすすめ</small></span><span class="check" aria-hidden="true">✓</span>
             </label>
             <label class="mode">
               <input type="radio" name="mode" value="wow">
               <span class="mode-visual mode-cinema" aria-hidden="true"><i></i></span>
-              <span><strong data-i18n="wowTitle">高品質</strong><small data-i18n="wowSub">NPU画像12枚・じっくり</small></span><span class="check" aria-hidden="true">✓</span>
+              <span><strong data-i18n="wowTitle">最高品質</strong><small data-i18n="wowSub">NPU画像20枚・じっくり</small></span><span class="check" aria-hidden="true">✓</span>
             </label>
           </div>
         </fieldset>
@@ -114,6 +126,12 @@
         <details id="advancedSettings" class="advanced">
           <summary data-i18n="advanced">詳細設定</summary>
           <div class="advanced-body">
+            <div class="duration-row anchor-count-row">
+              <label for="anchorCount"><span data-i18n="anchorCount">NPUが描く変化の枚数</span> <output id="anchorCountOutput">12枚・おすすめ</output></label>
+              <input id="anchorCount" type="range" min="8" max="24" step="4" value="12">
+              <div class="scale"><span data-i18n="anchorFast">8枚・速い</span><span data-i18n="anchorMax">24枚・最も細かい</span></div>
+              <p class="range-help" data-i18n="anchorHelp">枚数を増やすほど変形が細かくなりますが、生成時間も長くなります。</p>
+            </div>
             <div class="duration-row">
               <label for="duration"><span data-i18n="duration">作品の長さ</span> <output id="durationOutput">4秒</output></label>
               <input id="duration" type="range" min="2" max="10" step="1" value="4">
@@ -129,7 +147,7 @@
 
         <button id="generate" class="generate" type="submit" disabled>
           <span class="generate-icon" aria-hidden="true">✦</span>
-          <span><strong id="generateLabel">AIを準備しています</strong><small id="generateHelp">起動時だけ少しお待ちください</small></span>
+          <span><strong id="generateLabel">AIを準備しています</strong><small id="generateHelp">まず4枚だけ高速生成します</small></span>
           <span class="generate-arrow" aria-hidden="true">→</span>
         </button>
         <div id="formError" class="error" role="alert" tabindex="-1" hidden></div>
@@ -169,6 +187,10 @@
           <div class="result-meta">
             <div class="result-status"><span class="success-mark">✓</span><span><strong id="resultTime">できました</strong><small id="resultNote">このPCに保存しました</small></span></div>
             <a id="download" class="download" download data-i18n="save">保存する</a>
+          </div>
+          <div id="upgradePanel" class="upgrade-panel" hidden>
+            <div><strong data-i18n="previewReady">4枚プレビューができました</strong><small data-i18n="previewQuestion">この動きでよければ、高品質版へ進めます。</small></div>
+            <button id="upgrade" type="button"><span data-i18n="upgradeAction">これでOK・高品質化</span><small id="upgradeCount">12 NPU frames</small></button>
           </div>
           <button id="remix" class="remix" type="button" data-i18n="remix">同じAとBで、別の動きを作る</button>
         </div>

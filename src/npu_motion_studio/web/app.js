@@ -8,10 +8,10 @@ const copy = {
     creationLegend: "動画の基本モード", transitionTitle: "AからBへ変化",
     transitionSub: "2枚の間をAIが描く・おすすめ", animateTitle: "1枚を動かす",
     animateSub: "Aを残して大きく動かす", shortPrompt: "短い文章でもOK",
-    shortcutTail: "で作成", qualityTitle: "品質を選ぶ",
-    qualityHelp: "迷ったら「ダイナミック」がおすすめです。", fastTitle: "すばやく",
-    fastSub: "NPU画像4枚・短め", funTitle: "ダイナミック",
-    funSub: "NPU画像8枚・おすすめ", wowTitle: "高品質", wowSub: "NPU画像12枚・じっくり",
+    shortcutTail: "で作成", qualityTitle: "OK後の完成品質",
+    qualityHelp: "まず4枚で確認するので、失敗を早く止められます。", fastTitle: "プレビュー",
+    fastSub: "NPU画像4枚", funTitle: "高品質",
+    funSub: "NPU画像12枚・おすすめ", wowTitle: "最高品質", wowSub: "NPU画像20枚・じっくり",
     advanced: "詳細設定", duration: "作品の長さ", loopTitle: "最後から最初へ自然につなぐ",
     loopSub: "繰り返し再生しても切れ目を目立たせません",
     emptyTitle: "AからBへの変化がここに現れます",
@@ -30,9 +30,9 @@ const copy = {
     firstTransition: "A・最初の画像", firstAnimate: "画像を1枚選ぶ", targetLabel: "B・最後の画像",
     clickDrop: "クリックまたはここへドロップ", removeImage: "画像を外す",
     chooseA: "Aの画像を選ぶ", chooseImage: "画像を選ぶ", chooseB: "Bの画像を選ぶ",
-    preparing: "AIを準備しています", generateTransition: "AからBの動画を作る",
-    generateAnimate: "NPUとGPUで動画を作る", creating: "作品を作っています",
-    waitBusy: "続けて押さず、そのままお待ちください", qualityFirst: "速さより、動きと完成度を優先します",
+    preparing: "AIを準備しています", generateTransition: "まず4枚で動きを確認",
+    generateAnimate: "まず4枚で動きを確認", creating: "作品を作っています",
+    waitBusy: "続けて押さず、そのままお待ちください", qualityFirst: "まず4枚で高速確認 → OKなら高品質化",
     startupWait: "起動時だけ少しお待ちください", genericError: "うまく処理できませんでした。もう一度お試しください。",
     invalidImage: "PNG、JPEG、WebPの画像を選んでください。", imageTooLarge: "画像は5MB以下にしてください。",
     readImageError: "画像を読み込めませんでした。別の画像をお試しください。",
@@ -45,6 +45,13 @@ const copy = {
     notInstalled: "未導入（デモは動きます）", noInfo: "情報なし", notDetected: "未検出",
     systemError: "機器情報を取得できませんでした。デモはそのまま試せます。",
     selectedImage: "{name}を選択中。別の画像を選ぶ",
+    brushTitle: "動かす場所を指定（Motion Brush）", brushSummary: "赤で動かす・青で固定・矢印で方向",
+    brushMove: "激しく動かす", brushLock: "固定する", brushArrow: "方向を引く", brushClear: "全部消す",
+    brushTip: "例：車を赤く塗り、背景を青く塗って、右向きの矢印を引きます。",
+    previewReady: "4枚プレビューができました", previewQuestion: "この動きでよければ、高品質版へ進めます。",
+    upgradeAction: "これでOK・高品質化", upgrading: "高品質版を制作中",
+    anchorCount: "NPUが描く変化の枚数", anchorFast: "8枚・速い", anchorMax: "24枚・最も細かい",
+    anchorHelp: "枚数を増やすほど変形が細かくなりますが、生成時間も長くなります。", recommended: "おすすめ",
   },
   en: {
     introKicker: "Draw on the NPU. Connect on the Arc GPU.",
@@ -53,10 +60,10 @@ const copy = {
     creationLegend: "Creation mode", transitionTitle: "Transform A to B",
     transitionSub: "AI draws between two images · Recommended", animateTitle: "Animate one image",
     animateSub: "Move boldly, then return to A", shortPrompt: "A short prompt works",
-    shortcutTail: "to create", qualityTitle: "Choose quality",
-    qualityHelp: "Dynamic is the best place to start.", fastTitle: "Fast", fastSub: "4 NPU frames · quicker",
-    funTitle: "Dynamic", funSub: "8 NPU frames · recommended", wowTitle: "High quality",
-    wowSub: "12 NPU frames · take your time", advanced: "Advanced settings", duration: "Video length",
+    shortcutTail: "to create", qualityTitle: "Final quality after approval",
+    qualityHelp: "Check four frames first, then spend time only on a good take.", fastTitle: "Preview", fastSub: "4 NPU frames",
+    funTitle: "High quality", funSub: "12 NPU frames · recommended", wowTitle: "Maximum quality",
+    wowSub: "20 NPU frames · take your time", advanced: "Advanced settings", duration: "Video length",
     loopTitle: "Seamlessly return to the first frame", loopSub: "Hide the cut during repeated playback",
     emptyTitle: "Your A-to-B transformation appears here",
     emptyBody: "Choose two images, describe the motion, and press the big button.",
@@ -74,9 +81,9 @@ const copy = {
     firstTransition: "A · First image", firstAnimate: "Choose one image", targetLabel: "B · Last image",
     clickDrop: "Click or drop an image here", removeImage: "Remove image",
     chooseA: "Choose image A", chooseImage: "Choose an image", chooseB: "Choose image B",
-    preparing: "Preparing local AI", generateTransition: "Create the A-to-B video",
-    generateAnimate: "Create with NPU + GPU", creating: "Creating your video",
-    waitBusy: "Keep this window open while it works", qualityFirst: "Built for motion quality, not a hard 10-second limit",
+    preparing: "Preparing local AI", generateTransition: "Preview with 4 NPU frames",
+    generateAnimate: "Preview with 4 NPU frames", creating: "Creating your video",
+    waitBusy: "Keep this window open while it works", qualityFirst: "Fast 4-frame check → upgrade only when you approve",
     startupWait: "The first launch needs a moment", genericError: "Something went wrong. Please try again.",
     invalidImage: "Choose a PNG, JPEG, or WebP image.", imageTooLarge: "Choose an image under 5 MB.",
     readImageError: "That image could not be read. Try another file.",
@@ -89,6 +96,13 @@ const copy = {
     notInstalled: "Not installed (demo still works)", noInfo: "No information", notDetected: "Not detected",
     systemError: "Hardware details are unavailable. Demo mode still works.",
     selectedImage: "{name} selected. Choose another image",
+    brushTitle: "Choose what moves (Motion Brush)", brushSummary: "Red moves · blue locks · arrow directs",
+    brushMove: "Move strongly", brushLock: "Keep fixed", brushArrow: "Draw direction", brushClear: "Clear all",
+    brushTip: "Example: paint the car red, the background blue, then draw an arrow to the right.",
+    previewReady: "Your 4-frame preview is ready", previewQuestion: "If the motion looks right, upgrade this take.",
+    upgradeAction: "Looks good · upgrade", upgrading: "Creating the quality version",
+    anchorCount: "NPU transformation frames", anchorFast: "8 · faster", anchorMax: "24 · most detailed",
+    anchorHelp: "More NPU frames make the transformation more detailed, but take longer to generate.", recommended: "recommended",
   },
 };
 
@@ -104,6 +118,7 @@ const elements = {
   sceneTitle: $("#sceneTitle"), sceneHelp: $("#sceneHelp"), orLabel: $("#orLabel"),
   dropHelp: $("#dropHelp"), targetDropHelp: $("#targetDropHelp"), loopOption: $("#loopOption"),
   duration: $("#duration"), seamlessLoop: $("#seamlessLoop"), durationOutput: $("#durationOutput"),
+  anchorCount: $("#anchorCount"), anchorCountOutput: $("#anchorCountOutput"),
   scaleMin: $("#scaleMin"), scaleMax: $("#scaleMax"), generate: $("#generate"),
   generateLabel: $("#generateLabel"), generateHelp: $("#generateHelp"), error: $("#formError"),
   progressMessage: $("#progressMessage"), progressBar: $("#progressBar"),
@@ -111,6 +126,9 @@ const elements = {
   resultImage: $("#resultImage"), resultTime: $("#resultTime"), resultNote: $("#resultNote"),
   download: $("#download"), systemLabel: $("#systemLabel"), systemDot: $("#systemDot"),
   systemPanel: $("#systemPanel"), langJa: $("#langJa"), langEn: $("#langEn"),
+  motionBrush: $("#motionBrush"), brushImage: $("#brushImage"),
+  brushCanvas: $("#brushCanvas"), clearBrush: $("#clearBrush"),
+  upgradePanel: $("#upgradePanel"), upgrade: $("#upgrade"), upgradeCount: $("#upgradeCount"),
 };
 
 const state = {
@@ -118,7 +136,10 @@ const state = {
   busy: false, activeJobId: null, engineReady: false, readinessTimer: null,
   pollTimer: null, countdownTimer: null, countdownStartedAt: null,
   currentStage: "analysis", currentJobMessage: "", system: null,
-  resultElapsed: null, resultUnderstood: "",
+  resultElapsed: null, resultUnderstood: "", resultJob: null,
+  brushTool: "move", moveMaskCanvas: document.createElement("canvas"),
+  lockMaskCanvas: document.createElement("canvas"), brushDrawing: false,
+  arrowStart: null, motionVector: {x: 0, y: 0},
 };
 
 const t = (key) => copy[state.language][key] || key;
@@ -159,6 +180,15 @@ function selectMode(value) {
   document.querySelectorAll(".mode").forEach((label) => {
     label.classList.toggle("selected", label.querySelector("input").value === value);
   });
+  elements.anchorCount.value = value === "wow" ? "20" : "12";
+  renderAnchorCount();
+}
+
+function renderAnchorCount() {
+  const count = Number(elements.anchorCount.value);
+  elements.anchorCountOutput.value = state.language === "en"
+    ? `${count} frames${count === 12 ? ` · ${t("recommended")}` : ""}`
+    : `${count}枚${count === 12 ? `・${t("recommended")}` : ""}`;
 }
 
 function selectCreationMode(value) {
@@ -211,6 +241,7 @@ function applyLanguage(language) {
   elements.removeImage.textContent = t("removeImage"); elements.removeTargetImage.textContent = t("removeImage");
   elements.targetDropzone.setAttribute("aria-label", t("chooseB"));
   elements.durationOutput.value = durationText(elements.duration.value);
+  renderAnchorCount();
   elements.scaleMin.textContent = durationText(2); elements.scaleMax.textContent = durationText(10);
   selectCreationMode(state.creationMode); renderSystem(); clearError();
   if (state.busy) {
@@ -230,6 +261,16 @@ elements.langJa.addEventListener("click", () => applyLanguage("ja"));
 elements.langEn.addEventListener("click", () => applyLanguage("en"));
 elements.duration.addEventListener("input", () => {
   elements.durationOutput.value = durationText(elements.duration.value);
+});
+elements.anchorCount.addEventListener("input", () => {
+  renderAnchorCount();
+  const count = Number(elements.anchorCount.value);
+  const preset = count === 12 ? "fun" : count === 20 ? "wow" : null;
+  document.querySelectorAll(".mode").forEach((label) => {
+    const selected = preset && label.querySelector("input").value === preset;
+    label.classList.toggle("selected", Boolean(selected));
+    label.querySelector("input").checked = Boolean(selected);
+  });
 });
 
 const imageSlots = {
@@ -259,6 +300,7 @@ function acceptImage(file, slotName) {
     slot.preview.hidden = false; slot.shade.hidden = false; slot.remove.hidden = false;
     slot.prompt.hidden = true;
     slot.dropzone.setAttribute("aria-label", format(t("selectedImage"), {name: file.name}));
+    if (slotName === "start") setupBrush(state[slot.stateKey]);
   });
   reader.addEventListener("error", () => showError(t("readImageError")));
   reader.readAsDataURL(file);
@@ -269,6 +311,7 @@ function clearImage(slotName) {
   slot.preview.removeAttribute("src"); slot.preview.hidden = true; slot.shade.hidden = true;
   slot.remove.hidden = true; slot.prompt.hidden = false;
   slot.dropzone.setAttribute("aria-label", emptyAria(slotName));
+  if (slotName === "start") resetBrush(true);
 }
 
 function bindImageSlot(slotName) {
@@ -298,6 +341,105 @@ function bindImageSlot(slotName) {
   slot.remove.addEventListener("click", (event) => { event.stopPropagation(); clearImage(slotName); });
 }
 bindImageSlot("start"); bindImageSlot("target");
+
+function brushContexts() {
+  return {
+    visible: elements.brushCanvas.getContext("2d"),
+    move: state.moveMaskCanvas.getContext("2d"),
+    lock: state.lockMaskCanvas.getContext("2d"),
+  };
+}
+
+function resetBrush(hide = false) {
+  for (const canvas of [elements.brushCanvas, state.moveMaskCanvas, state.lockMaskCanvas]) {
+    canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+  }
+  state.motionVector = {x: 0, y: 0}; state.arrowStart = null;
+  if (hide) elements.motionBrush.hidden = true;
+}
+
+function setupBrush(source) {
+  const image = new Image();
+  image.addEventListener("load", () => {
+    const scale = Math.min(1, 900 / Math.max(image.naturalWidth, image.naturalHeight));
+    const width = Math.max(2, Math.round(image.naturalWidth * scale));
+    const height = Math.max(2, Math.round(image.naturalHeight * scale));
+    for (const canvas of [elements.brushCanvas, state.moveMaskCanvas, state.lockMaskCanvas]) {
+      canvas.width = width; canvas.height = height;
+    }
+    elements.brushImage.src = source; elements.motionBrush.hidden = false; resetBrush(false);
+  });
+  image.src = source;
+}
+
+function brushPoint(event) {
+  const rect = elements.brushCanvas.getBoundingClientRect();
+  return {
+    x: (event.clientX - rect.left) * elements.brushCanvas.width / rect.width,
+    y: (event.clientY - rect.top) * elements.brushCanvas.height / rect.height,
+  };
+}
+
+function paintBrush(from, to) {
+  const contexts = brushContexts();
+  const target = state.brushTool === "lock" ? contexts.lock : contexts.move;
+  const color = state.brushTool === "lock" ? "white" : "white";
+  const overlay = state.brushTool === "lock" ? "rgba(52,140,255,.58)" : "rgba(255,56,92,.58)";
+  const width = Math.max(18, elements.brushCanvas.width * 0.065);
+  for (const [context, stroke] of [[target, color], [contexts.visible, overlay]]) {
+    context.strokeStyle = stroke; context.lineWidth = width; context.lineCap = "round";
+    context.lineJoin = "round"; context.beginPath(); context.moveTo(from.x, from.y);
+    context.lineTo(to.x, to.y); context.stroke();
+  }
+}
+
+function drawArrow(from, to) {
+  const context = brushContexts().visible; const angle = Math.atan2(to.y - from.y, to.x - from.x);
+  context.strokeStyle = "rgba(255,212,91,.96)"; context.fillStyle = "rgba(255,212,91,.96)";
+  context.lineWidth = Math.max(4, elements.brushCanvas.width * .012); context.lineCap = "round";
+  context.beginPath(); context.moveTo(from.x, from.y); context.lineTo(to.x, to.y); context.stroke();
+  const size = Math.max(14, elements.brushCanvas.width * .045);
+  context.beginPath(); context.moveTo(to.x, to.y);
+  context.lineTo(to.x - size * Math.cos(angle - Math.PI / 6), to.y - size * Math.sin(angle - Math.PI / 6));
+  context.lineTo(to.x - size * Math.cos(angle + Math.PI / 6), to.y - size * Math.sin(angle + Math.PI / 6));
+  context.closePath(); context.fill();
+  const dx = to.x - from.x; const dy = to.y - from.y; const length = Math.hypot(dx, dy) || 1;
+  state.motionVector = {x: dx / length, y: dy / length};
+}
+
+document.querySelectorAll(".brush-tool").forEach((button) => button.addEventListener("click", () => {
+  state.brushTool = button.dataset.tool;
+  document.querySelectorAll(".brush-tool").forEach((item) => item.classList.toggle("active", item === button));
+}));
+elements.clearBrush.addEventListener("click", () => resetBrush(false));
+elements.brushCanvas.addEventListener("pointerdown", (event) => {
+  if (state.busy) return; elements.brushCanvas.setPointerCapture(event.pointerId);
+  state.brushDrawing = true; state.arrowStart = brushPoint(event); state.lastBrushPoint = state.arrowStart;
+});
+elements.brushCanvas.addEventListener("pointermove", (event) => {
+  if (!state.brushDrawing || state.brushTool === "arrow") return;
+  const point = brushPoint(event); paintBrush(state.lastBrushPoint, point); state.lastBrushPoint = point;
+});
+elements.brushCanvas.addEventListener("pointerup", (event) => {
+  if (!state.brushDrawing) return; const point = brushPoint(event);
+  if (state.brushTool === "arrow") drawArrow(state.arrowStart, point);
+  else paintBrush(state.lastBrushPoint, point);
+  state.brushDrawing = false;
+});
+
+function canvasHasPaint(canvas) {
+  const pixels = canvas.getContext("2d").getImageData(0, 0, canvas.width, canvas.height).data;
+  for (let index = 3; index < pixels.length; index += 4) if (pixels[index]) return true;
+  return false;
+}
+
+function brushPayload() {
+  return {
+    motion_mask_data_url: canvasHasPaint(state.moveMaskCanvas) ? state.moveMaskCanvas.toDataURL("image/png") : null,
+    lock_mask_data_url: canvasHasPaint(state.lockMaskCanvas) ? state.lockMaskCanvas.toDataURL("image/png") : null,
+    motion_vector_x: state.motionVector.x, motion_vector_y: state.motionVector.y,
+  };
+}
 
 function errorMessage(detail) {
   const raw = Array.isArray(detail)
@@ -350,6 +492,13 @@ function showArtifact(job) {
     elements.resultImage.src = source; elements.resultImage.hidden = false;
   }
   elements.download.href = job.artifact_url; elements.download.download = "";
+  state.resultJob = job;
+  const canUpgrade = job.kind === "preview" && job.upgrade_available;
+  elements.upgradePanel.hidden = !canUpgrade;
+  if (canUpgrade) {
+    const count = Number(job.upgrade_anchor_count) || 12;
+    elements.upgradeCount.textContent = `${count} NPU frames`;
+  }
 }
 function finishWithError(message) {
   stopTimers(); state.activeJobId = null; setBusy(false); show("emptyState"); showError(message);
@@ -420,15 +569,20 @@ async function submit() {
   await loadRuntimeSettings();
   if (!state.engineReady) { showError(t("stillPreparing")); return; }
   setBusy(true); show("workingState"); state.currentStage = "analysis";
+  elements.upgradePanel.hidden = true;
   state.currentJobMessage = t("gettingReady"); state.resultElapsed = null; state.resultUnderstood = "";
   updateProgress(4); updatePipeline("analysis"); elements.progressMessage.textContent = t("gettingReady");
   startCountdown();
   try {
+    const selectedQuality = $('input[name="mode"]:checked');
     const body = {
-      prompt: elements.prompt.value, mode: $('input[name="mode"]:checked').value,
+      prompt: elements.prompt.value, mode: selectedQuality?.value || "wow",
       creation_mode: state.creationMode, duration_seconds: Number(elements.duration.value),
       seamless_loop: state.creationMode === "animate" && elements.seamlessLoop.checked,
       input_image_data_url: state.imageDataUrl, target_image_data_url: state.targetImageDataUrl,
+      preview_first: true,
+      upgrade_anchor_count: Number(elements.anchorCount.value),
+      ...brushPayload(),
     };
     const job = await readJson(await fetch("/api/jobs", {
       method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body),
@@ -441,11 +595,20 @@ elements.form.addEventListener("submit", (event) => { event.preventDefault(); su
 elements.prompt.addEventListener("keydown", (event) => {
   if (event.key === "Enter" && (event.ctrlKey || event.metaKey)) { event.preventDefault(); submit(); }
 });
-$("#remix").addEventListener("click", () => {
-  if (state.busy) return; const modes = ["fast", "fun", "wow"];
-  const selected = $('input[name="mode"]:checked'); const next = modes[(modes.indexOf(selected.value) + 1) % modes.length];
-  document.querySelector(`input[name="mode"][value="${next}"]`).checked = true; selectMode(next); submit();
+elements.upgrade.addEventListener("click", async () => {
+  if (state.busy || !state.resultJob?.upgrade_available) return;
+  clearError(); setBusy(true); show("workingState"); elements.upgradePanel.hidden = true;
+  state.currentStage = "analysis"; state.currentJobMessage = t("upgrading");
+  updateProgress(4); updatePipeline("analysis"); elements.progressMessage.textContent = t("upgrading");
+  startCountdown();
+  try {
+    const job = await readJson(await fetch(`/api/jobs/${state.resultJob.id}/upgrade`, {
+      method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({}),
+    }));
+    state.activeJobId = job.id; pollJob(job.id);
+  } catch (error) { finishWithError(error.message); }
 });
+$("#remix").addEventListener("click", () => { if (!state.busy) submit(); });
 
 async function loadSystem() {
   try {

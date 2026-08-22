@@ -145,6 +145,37 @@ def interpolate_anchors(
     return frames, flow_seconds, time.perf_counter() - interpolation_started
 
 
+def interpolate_preview(
+    anchors: list[RgbFrame], *, duration_seconds: float, fps: int
+) -> tuple[list[RgbFrame], float]:
+    """Very cheap preview interpolation; final upgrades use Arc RIFE instead."""
+    import time
+
+    if not anchors:
+        raise ValueError("at least one anchor is required")
+    started = time.perf_counter()
+    total_frames = max(2, round(duration_seconds * fps))
+    if len(anchors) == 1:
+        return [anchors[0].copy() for _ in range(total_frames)], time.perf_counter() - started
+    cv2 = _require_cv2()
+    positions = np.linspace(0.0, len(anchors) - 1, total_frames, dtype=np.float32)
+    frames: list[RgbFrame] = []
+    for position in positions:
+        first_index = min(len(anchors) - 2, int(position))
+        amount = float(position - first_index)
+        blended = cv2.addWeighted(
+            anchors[first_index],
+            1.0 - amount,
+            anchors[first_index + 1],
+            amount,
+            0.0,
+        )
+        frames.append(np.ascontiguousarray(blended, dtype=np.uint8))
+    frames[0] = anchors[0].copy()
+    frames[-1] = anchors[-1].copy()
+    return frames, time.perf_counter() - started
+
+
 def encode_mp4(frames: list[RgbFrame], output: Path, *, fps: int) -> tuple[float, str]:
     import time
 

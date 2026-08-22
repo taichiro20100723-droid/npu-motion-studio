@@ -17,6 +17,13 @@ class MotionRequest:
     seamless_loop: bool = True
     input_image_data_url: str | None = None
     target_image_data_url: str | None = None
+    anchor_count: int | None = None
+    is_preview: bool = False
+    upgrade_anchor_count: int = 12
+    motion_mask_data_url: str | None = None
+    lock_mask_data_url: str | None = None
+    motion_vector_x: float = 0.0
+    motion_vector_y: float = 0.0
 
 
 @dataclass(frozen=True, slots=True)

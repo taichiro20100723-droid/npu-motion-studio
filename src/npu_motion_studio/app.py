@@ -8,7 +8,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
-from npu_motion_studio.api_models import GenerateRequest, JobResponse
+from npu_motion_studio.api_models import GenerateRequest, JobResponse, UpgradeRequest
 from npu_motion_studio.config import Settings
 from npu_motion_studio.domain import MotionRequest
 from npu_motion_studio.engines.registry import build_engine_registry
@@ -47,7 +47,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     app = FastAPI(
         title=resolved.app_name,
-        version="0.4.1",
+        version="0.5.0",
         docs_url="/api/docs",
         redoc_url=None,
         lifespan=lifespan,
@@ -90,17 +90,38 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                 raise HTTPException(status_code=422, detail="AとBの画像を2枚とも選んでください")
         elif not payload.prompt.strip() and not payload.input_image_data_url:
             raise HTTPException(status_code=422, detail="文章を書くか画像を1枚選んでください")
+        preview = payload.preview_first
+        requested_mode = "fast" if preview else payload.mode
+        requested_anchors = 4 if preview else None
         job = service.submit(
             MotionRequest(
                 prompt=payload.prompt.strip(),
                 creation_mode=payload.creation_mode,
-                mode=payload.mode,
+                mode=requested_mode,
                 duration_seconds=payload.duration_seconds,
                 seamless_loop=payload.seamless_loop,
                 input_image_data_url=payload.input_image_data_url,
                 target_image_data_url=payload.target_image_data_url,
-            )
+                anchor_count=requested_anchors,
+                is_preview=preview,
+                upgrade_anchor_count=payload.upgrade_anchor_count,
+                motion_mask_data_url=payload.motion_mask_data_url,
+                lock_mask_data_url=payload.lock_mask_data_url,
+                motion_vector_x=payload.motion_vector_x,
+                motion_vector_y=payload.motion_vector_y,
+            ),
+            kind="preview" if preview else "final",
         )
+        return job.public_dict()
+
+    @app.post("/api/jobs/{job_id}/upgrade", response_model=JobResponse, status_code=202)
+    def upgrade_job(job_id: str, payload: UpgradeRequest) -> dict[str, object]:
+        try:
+            job = service.upgrade(job_id, payload.anchor_count)
+        except KeyError as exc:
+            raise HTTPException(status_code=404, detail="プレビューが見つかりません") from exc
+        except ValueError as exc:
+            raise HTTPException(status_code=409, detail=str(exc)) from exc
         return job.public_dict()
 
     @app.get("/api/jobs/{job_id}", response_model=JobResponse)

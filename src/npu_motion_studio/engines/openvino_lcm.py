@@ -17,9 +17,15 @@ from PIL import Image, ImageFilter, ImageOps
 from npu_motion_studio.domain import MotionArtifact, MotionRequest
 from npu_motion_studio.dynamic_motion import frame_prompt, strength_for, warp_condition
 from npu_motion_studio.engines.base import EngineProbe, MotionEngine, ProgressCallback
+from npu_motion_studio.engines.overlap_pipeline import OverlappedRifePipeline
 from npu_motion_studio.engines.rife_vulkan import RifeVulkanInterpolator
-from npu_motion_studio.engines.video_pipeline import encode_mp4, interpolate_anchors
+from npu_motion_studio.engines.video_pipeline import (
+    encode_mp4,
+    interpolate_anchors,
+    interpolate_preview,
+)
 from npu_motion_studio.flowcache.motion import route_motion
+from npu_motion_studio.motion_brush import brush_warp, decode_brush_mask, enforce_lock
 from npu_motion_studio.prompting import (
     ActionKind,
     LocalPromptTranslator,
@@ -300,7 +306,7 @@ class OpenVINOLCMEngine(MotionEngine):
         if compile_seconds:
             notes.append(f"モデル準備 {compile_seconds:.2f}秒")
 
-        desired = {"fast": 4, "fun": 8, "wow": 12}[request.mode]
+        desired = request.anchor_count or {"fast": 4, "fun": 8, "wow": 12}[request.mode]
         fps = {"fast": 16, "fun": 24, "wow": 24}[request.mode]
         inference_steps = {"fast": 4, "fun": 6, "wow": 8}[request.mode]
         has_input = bool(request.input_image_data_url)
@@ -330,7 +336,70 @@ class OpenVINOLCMEngine(MotionEngine):
             )
             base = Image.fromarray(tensor.data[0])
 
+        move_mask = None
+        lock_mask = None
+        if prepared is not None:
+            move_mask = decode_brush_mask(
+                request.motion_mask_data_url,
+                crop_box=prepared.crop_box,
+                output_size=prepared.output_size,
+            )
+            lock_mask = decode_brush_mask(
+                request.lock_mask_data_url,
+                crop_box=prepared.crop_box,
+                output_size=prepared.output_size,
+            )
+        if move_mask is not None or lock_mask is not None:
+            notes.append(
+                "Motion Brush: 赤=強く動かす / 青=固定"
+                f" / 方向=({request.motion_vector_x:.2f}, {request.motion_vector_y:.2f})"
+            )
+
+        loop_enabled = request.seamless_loop and not is_transition
+        total_frames = max(2, round(request.duration_seconds * fps))
+        planned_pairs = desired if loop_enabled else desired - 1
+        overlap = (
+            OverlappedRifePipeline(
+                self.rife,
+                pair_count=planned_pairs,
+                total_frames=total_frames,
+                fps=fps,
+            )
+            if self.rife.available and desired >= 2 and not request.is_preview
+            else None
+        )
+        parallel_note = "（GPUも同時処理）" if overlap is not None else ""
+
+        def render_anchor(
+            anchor: Image.Image,
+            index: int,
+            *,
+            exact_endpoint: bool = False,
+        ) -> np.ndarray:
+            rendered = anchor
+            if not exact_endpoint:
+                rendered = warp_condition(rendered, action, index, desired)
+                rendered = brush_warp(
+                    rendered,
+                    move_mask,
+                    vector_x=request.motion_vector_x,
+                    vector_y=request.motion_vector_y,
+                    phase=index / max(1, desired - 1),
+                    loop=loop_enabled,
+                )
+                rendered = enforce_lock(rendered, base, lock_mask)
+            return _cropped_array(rendered, crop_box)
+
         anchors = [base]
+        arrays = [render_anchor(base, 0, exact_endpoint=True)]
+
+        def append_anchor(anchor: Image.Image, index: int, *, exact_endpoint: bool = False) -> None:
+            anchors.append(anchor)
+            rendered = render_anchor(anchor, index, exact_endpoint=exact_endpoint)
+            if overlap is not None:
+                overlap.submit(arrays[-1], rendered)
+            arrays.append(rendered)
+
         if is_transition:
             if prepared is None or request.target_image_data_url is None:
                 raise ValueError("AとBの画像を2枚とも選んでください")
@@ -344,11 +413,19 @@ class OpenVINOLCMEngine(MotionEngine):
                 eased = phase * phase * (3.0 - 2.0 * phase)
                 condition = Image.blend(base, target, eased)
                 condition = warp_condition(condition, ActionKind.TRANSFORM, index, desired)
+                condition = brush_warp(
+                    condition,
+                    move_mask,
+                    vector_x=request.motion_vector_x,
+                    vector_y=request.motion_vector_y,
+                    phase=phase,
+                    loop=False,
+                )
                 anchor_strength = _transition_strength(request.mode, phase)
                 progress(
                     "image",
                     12 + round(56 * index / max(1, desired - 1)),
-                    f"NPUでA→Bの途中 {index}/{desired - 2} を描いています",
+                    f"NPUでA→Bの途中 {index}/{desired - 2}{parallel_note}",
                 )
                 tensor = image_pipeline.generate(
                     _transition_prompt(translated_prompt, action, index, desired),
@@ -360,8 +437,9 @@ class OpenVINOLCMEngine(MotionEngine):
                     guidance_scale=1.0,
                     rng_seed=seed,
                 )
-                anchors.append(Image.fromarray(tensor.data[0]))
-            anchors.append(target)
+                generated = enforce_lock(Image.fromarray(tensor.data[0]), base, lock_mask)
+                append_anchor(generated, index)
+            append_anchor(target, desired - 1, exact_endpoint=True)
             notes.append("端点固定: 先頭=A / 最終=B")
         else:
             evolving_actions = {"build", "transform", "flow"}
@@ -374,10 +452,18 @@ class OpenVINOLCMEngine(MotionEngine):
                 progress(
                     "image",
                     12 + round(56 * index / max(1, desired - 1)),
-                    f"NPUで大きな動き {index + 1}/{desired} を描いています",
+                    f"NPUで大きな動き {index + 1}/{desired}{parallel_note}",
                 )
                 source = anchors[-1] if action.value in evolving_actions else base
                 condition = warp_condition(source, action, index, desired)
+                condition = brush_warp(
+                    condition,
+                    move_mask,
+                    vector_x=request.motion_vector_x,
+                    vector_y=request.motion_vector_y,
+                    phase=index / max(1, desired - 1),
+                    loop=loop_enabled,
+                )
                 prompt = frame_prompt(translated_prompt, action, index, desired)
                 tensor = image_pipeline.generate(
                     prompt,
@@ -389,45 +475,39 @@ class OpenVINOLCMEngine(MotionEngine):
                     guidance_scale=1.0,
                     rng_seed=seed,
                 )
-                anchors.append(Image.fromarray(tensor.data[0]))
+                generated = enforce_lock(Image.fromarray(tensor.data[0]), base, lock_mask)
+                append_anchor(generated, index)
         image_seconds = time.perf_counter() - image_started
 
-        if is_transition:
-            arrays = [
-                _cropped_array(
-                    (
-                        anchor
-                        if index in {0, len(anchors) - 1}
-                        else warp_condition(anchor, action, index, len(anchors))
-                    ),
-                    crop_box,
-                )
-                for index, anchor in enumerate(anchors)
-            ]
-        else:
-            arrays = [
-                _cropped_array(
-                    anchor if index == 0 else warp_condition(anchor, action, index, len(anchors)),
-                    crop_box,
-                )
-                for index, anchor in enumerate(anchors)
-            ]
         interpolation_anchors = arrays
-        loop_enabled = request.seamless_loop and not is_transition
         if loop_enabled and len(arrays) >= 2:
             interpolation_anchors = [*arrays, arrays[0]]
+            if overlap is not None:
+                overlap.submit(arrays[-1], arrays[0])
             notes.append("シームレスループ: 最後から最初へGPUで補間")
-        progress("motion", 72, "Arc GPUで中間の動きを作っています")
+        progress(
+            "motion",
+            72,
+            (
+                "NPUと同時に始めたGPU処理の残りを仕上げています"
+                if overlap is not None
+                else "高速プレビューをつないでいます"
+            ),
+        )
         interpolation_backend = "CPU bidirectional DIS"
         flow_seconds = 0.0
-        if self.rife.available and len(arrays) >= 2:
+        overlap_wait_seconds = 0.0
+        if request.is_preview:
+            frames, interpolation_seconds = interpolate_preview(
+                interpolation_anchors,
+                duration_seconds=request.duration_seconds,
+                fps=fps,
+            )
+            interpolation_backend = "Fast preview blend"
+        elif overlap is not None and len(arrays) == desired:
             try:
-                frames, interpolation_seconds = self.rife.interpolate(
-                    interpolation_anchors,
-                    duration_seconds=request.duration_seconds,
-                    fps=fps,
-                )
-                interpolation_backend = "Arc GPU RIFE Vulkan"
+                frames, interpolation_seconds, overlap_wait_seconds = overlap.finish()
+                interpolation_backend = "Arc GPU RIFE Vulkan (NPU overlap)"
             except (RuntimeError, OSError, subprocess.SubprocessError) as exc:
                 notes.append(f"GPU補間をCPUへ切替: {exc}")
                 frames, flow_seconds, interpolation_seconds = interpolate_anchors(
@@ -436,6 +516,8 @@ class OpenVINOLCMEngine(MotionEngine):
                     fps=fps,
                 )
         else:
+            if overlap is not None:
+                overlap.close()
             frames, flow_seconds, interpolation_seconds = interpolate_anchors(
                 interpolation_anchors,
                 duration_seconds=request.duration_seconds,
@@ -465,6 +547,15 @@ class OpenVINOLCMEngine(MotionEngine):
                 f"AI anchors={len(anchors)} / {fps}fps / {len(frames)} frames",
                 f"NPU画像 {image_seconds:.2f}秒",
                 f"{interpolation_backend} {flow_seconds + interpolation_seconds:.2f}秒",
+                (
+                    f"NPU終了後のGPU待ち {overlap_wait_seconds:.2f}秒"
+                    if interpolation_backend.endswith("(NPU overlap)")
+                    else (
+                        "4枚プレビューは軽量補間、完成版はArc GPU RIFE"
+                        if request.is_preview
+                        else "直列フォールバックで処理"
+                    )
+                ),
                 f"MP4 {encode_seconds:.2f}秒 ({codec})",
             )
         )
