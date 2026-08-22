@@ -32,7 +32,6 @@ from npu_motion_studio.prompting import (
     classify_action,
     compact_prompt,
 )
-from npu_motion_studio.safety_filter import has_exposed_torso
 from npu_motion_studio.scheduler import DeadlineScheduler
 
 MODEL_ID = "OpenVINO/LCM_Dreamshaper_v7-int8-ov"
@@ -182,9 +181,7 @@ def _transition_prompt(
     return (
         f"{timed_action}, transition progress {round(phase * 100)} percent, "
         f"{form_cue}, continuous physical metamorphosis, "
-        "one coherent subject, single scene, when a human is visible use opaque clothing "
-        "covering the chest and torso, non-sexual framing, no split screen, no collage, "
-        "no watermark"
+        "one coherent subject, single scene, no split screen, no collage, no watermark"
     )
 
 
@@ -319,10 +316,7 @@ class OpenVINOLCMEngine(MotionEngine):
         image_started = time.perf_counter()
         prepared: PreparedInput | None = None
         if request.input_image_data_url:
-            source_image = _load_data_url_image(request.input_image_data_url)
-            if has_exposed_torso(np.asarray(source_image)):
-                raise ValueError("安全のため、胸元が隠れた服装の入力画像を選んでください")
-            prepared = _prepare_input_image(source_image)
+            prepared = _decode_data_url(request.input_image_data_url)
             base = prepared.canvas
             crop_box = prepared.crop_box
             notes.append(
@@ -409,9 +403,6 @@ class OpenVINOLCMEngine(MotionEngine):
         if is_transition:
             if prepared is None or request.target_image_data_url is None:
                 raise ValueError("AとBの画像を2枚とも選んでください")
-            target_source = _load_data_url_image(request.target_image_data_url)
-            if has_exposed_torso(np.asarray(target_source)):
-                raise ValueError("安全のため、胸元が隠れたB画像を選んでください")
             target = _prepare_transition_target(request.target_image_data_url, prepared)
             for index in range(1, desired - 1):
                 estimated_finish = max(8.0, request.duration_seconds * 1.6)

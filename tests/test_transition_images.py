@@ -50,7 +50,6 @@ def test_transition_prompt_keeps_the_requested_timed_action() -> None:
     assert "full-body running" in prompt
     assert "transition progress 29 percent" in prompt
     assert "both forms readable in one body" in prompt
-    assert "opaque clothing" in prompt
 
 
 def test_transform_prompt_describes_a_real_hybrid_instead_of_preserving_identity() -> None:
