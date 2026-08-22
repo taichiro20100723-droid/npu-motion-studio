@@ -92,7 +92,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             raise HTTPException(status_code=422, detail="文章を書くか画像を1枚選んでください")
         preview = payload.preview_first
         requested_mode = "fast" if preview else payload.mode
-        requested_anchors = 4 if preview else None
+        requested_anchors = 4 if preview else payload.upgrade_anchor_count
         job = service.submit(
             MotionRequest(
                 prompt=payload.prompt.strip(),

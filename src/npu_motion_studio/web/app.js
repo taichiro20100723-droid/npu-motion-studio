@@ -8,10 +8,10 @@ const copy = {
     creationLegend: "動画の基本モード", transitionTitle: "AからBへ変化",
     transitionSub: "2枚の間をAIが描く・おすすめ", animateTitle: "1枚を動かす",
     animateSub: "Aを残して大きく動かす", shortPrompt: "短い文章でもOK",
-    shortcutTail: "で作成", qualityTitle: "OK後の完成品質",
-    qualityHelp: "まず4枚で確認するので、失敗を早く止められます。", fastTitle: "プレビュー",
-    fastSub: "NPU画像4枚", funTitle: "高品質",
-    funSub: "NPU画像12枚・おすすめ", wowTitle: "最高品質", wowSub: "NPU画像20枚・じっくり",
+    shortcutTail: "で作成", qualityTitle: "品質を選ぶ",
+    qualityHelp: "小・中・大から選べます。迷ったら中がおすすめです。", fastTitle: "小",
+    fastSub: "NPU画像8枚・速い", funTitle: "中",
+    funSub: "NPU画像12枚・おすすめ", wowTitle: "大", wowSub: "NPU画像20枚・高画質",
     advanced: "詳細設定", duration: "作品の長さ", loopTitle: "最後から最初へ自然につなぐ",
     loopSub: "繰り返し再生しても切れ目を目立たせません",
     emptyTitle: "AからBへの変化がここに現れます",
@@ -19,7 +19,7 @@ const copy = {
     promise1: "AとBを正確に固定", promise2: "NPUで途中を描く", promise3: "Arc GPUで滑らかに",
     seconds: "秒", workingKicker: "ただいま制作中", step1: "文章を理解", step2: "NPUで描く",
     step3: "GPUでつなぐ", step4: "仕上げる",
-    workingNote: "品質を優先します。高品質は少し長くかかります。",
+    workingNote: "小は速く、中はバランス、大は高画質です。",
     save: "保存する", remix: "同じAとBで、別の動きを作る", privacy: "入力は外部へ送信しません",
     sceneTransition: "AとBを選んで、変化を書いてください",
     sceneTransitionHelp: "Aの形と画面比率を保ち、Bまでの途中をAIが描きます。",
@@ -30,9 +30,9 @@ const copy = {
     firstTransition: "A・最初の画像", firstAnimate: "画像を1枚選ぶ", targetLabel: "B・最後の画像",
     clickDrop: "クリックまたはここへドロップ", removeImage: "画像を外す",
     chooseA: "Aの画像を選ぶ", chooseImage: "画像を選ぶ", chooseB: "Bの画像を選ぶ",
-    preparing: "AIを準備しています", generateTransition: "まず4枚で動きを確認",
-    generateAnimate: "まず4枚で動きを確認", creating: "作品を作っています",
-    waitBusy: "続けて押さず、そのままお待ちください", qualityFirst: "まず4枚で高速確認 → OKなら高品質化",
+    preparing: "AIを準備しています", generateTransition: "AからBの動画を作る",
+    generateAnimate: "動画を作る", creating: "作品を作っています",
+    waitBusy: "続けて押さず、そのままお待ちください", qualityFirst: "選んだ品質で最初から生成します",
     startupWait: "起動時だけ少しお待ちください", genericError: "うまく処理できませんでした。もう一度お試しください。",
     invalidImage: "PNG、JPEG、WebPの画像を選んでください。", imageTooLarge: "画像は5MB以下にしてください。",
     readImageError: "画像を読み込めませんでした。別の画像をお試しください。",
@@ -48,10 +48,7 @@ const copy = {
     brushTitle: "動かす場所を指定（Motion Brush）", brushSummary: "赤で動かす・青で固定・矢印で方向",
     brushMove: "激しく動かす", brushLock: "固定する", brushArrow: "方向を引く", brushClear: "全部消す",
     brushTip: "例：車を赤く塗り、背景を青く塗って、右向きの矢印を引きます。",
-    previewReady: "4枚プレビューができました", previewQuestion: "この動きでよければ、高品質版へ進めます。",
-    upgradeAction: "これでOK・高品質化", upgrading: "高品質版を制作中",
-    anchorCount: "NPUが描く変化の枚数", anchorFast: "8枚・速い", anchorMax: "24枚・最も細かい",
-    anchorHelp: "枚数を増やすほど変形が細かくなりますが、生成時間も長くなります。", recommended: "おすすめ",
+    recommended: "おすすめ",
   },
   en: {
     introKicker: "Draw on the NPU. Connect on the Arc GPU.",
@@ -60,17 +57,17 @@ const copy = {
     creationLegend: "Creation mode", transitionTitle: "Transform A to B",
     transitionSub: "AI draws between two images · Recommended", animateTitle: "Animate one image",
     animateSub: "Move boldly, then return to A", shortPrompt: "A short prompt works",
-    shortcutTail: "to create", qualityTitle: "Final quality after approval",
-    qualityHelp: "Check four frames first, then spend time only on a good take.", fastTitle: "Preview", fastSub: "4 NPU frames",
-    funTitle: "High quality", funSub: "12 NPU frames · recommended", wowTitle: "Maximum quality",
-    wowSub: "20 NPU frames · take your time", advanced: "Advanced settings", duration: "Video length",
+    shortcutTail: "to create", qualityTitle: "Choose quality",
+    qualityHelp: "Pick Small, Medium, or Large. Medium is recommended.", fastTitle: "Small", fastSub: "8 NPU frames · fast",
+    funTitle: "Medium", funSub: "12 NPU frames · recommended", wowTitle: "Large",
+    wowSub: "20 NPU frames · high quality", advanced: "Advanced settings", duration: "Video length",
     loopTitle: "Seamlessly return to the first frame", loopSub: "Hide the cut during repeated playback",
     emptyTitle: "Your A-to-B transformation appears here",
     emptyBody: "Choose two images, describe the motion, and press the big button.",
     promise1: "Exact A and B endpoints", promise2: "NPU-drawn in-betweens", promise3: "Smooth Arc GPU motion",
     seconds: "sec", workingKicker: "CREATING LOCALLY", step1: "Understand prompt", step2: "Draw on NPU",
     step3: "Connect on GPU", step4: "Finish MP4",
-    workingNote: "Quality comes first. High quality takes a little longer.",
+    workingNote: "Small is fast, Medium is balanced, and Large is high quality.",
     save: "Save video", remix: "Try another motion with the same A and B", privacy: "Your inputs never leave this PC",
     sceneTransition: "Choose A and B, then describe the transformation",
     sceneTransitionHelp: "A defines the aspect ratio. AI draws the path toward B.",
@@ -81,9 +78,9 @@ const copy = {
     firstTransition: "A · First image", firstAnimate: "Choose one image", targetLabel: "B · Last image",
     clickDrop: "Click or drop an image here", removeImage: "Remove image",
     chooseA: "Choose image A", chooseImage: "Choose an image", chooseB: "Choose image B",
-    preparing: "Preparing local AI", generateTransition: "Preview with 4 NPU frames",
-    generateAnimate: "Preview with 4 NPU frames", creating: "Creating your video",
-    waitBusy: "Keep this window open while it works", qualityFirst: "Fast 4-frame check → upgrade only when you approve",
+    preparing: "Preparing local AI", generateTransition: "Create A-to-B video",
+    generateAnimate: "Create video", creating: "Creating your video",
+    waitBusy: "Keep this window open while it works", qualityFirst: "Generates at the quality you selected",
     startupWait: "The first launch needs a moment", genericError: "Something went wrong. Please try again.",
     invalidImage: "Choose a PNG, JPEG, or WebP image.", imageTooLarge: "Choose an image under 5 MB.",
     readImageError: "That image could not be read. Try another file.",
@@ -99,10 +96,7 @@ const copy = {
     brushTitle: "Choose what moves (Motion Brush)", brushSummary: "Red moves · blue locks · arrow directs",
     brushMove: "Move strongly", brushLock: "Keep fixed", brushArrow: "Draw direction", brushClear: "Clear all",
     brushTip: "Example: paint the car red, the background blue, then draw an arrow to the right.",
-    previewReady: "Your 4-frame preview is ready", previewQuestion: "If the motion looks right, upgrade this take.",
-    upgradeAction: "Looks good · upgrade", upgrading: "Creating the quality version",
-    anchorCount: "NPU transformation frames", anchorFast: "8 · faster", anchorMax: "24 · most detailed",
-    anchorHelp: "More NPU frames make the transformation more detailed, but take longer to generate.", recommended: "recommended",
+    recommended: "recommended",
   },
 };
 
@@ -118,7 +112,6 @@ const elements = {
   sceneTitle: $("#sceneTitle"), sceneHelp: $("#sceneHelp"), orLabel: $("#orLabel"),
   dropHelp: $("#dropHelp"), targetDropHelp: $("#targetDropHelp"), loopOption: $("#loopOption"),
   duration: $("#duration"), seamlessLoop: $("#seamlessLoop"), durationOutput: $("#durationOutput"),
-  anchorCount: $("#anchorCount"), anchorCountOutput: $("#anchorCountOutput"),
   scaleMin: $("#scaleMin"), scaleMax: $("#scaleMax"), generate: $("#generate"),
   generateLabel: $("#generateLabel"), generateHelp: $("#generateHelp"), error: $("#formError"),
   progressMessage: $("#progressMessage"), progressBar: $("#progressBar"),
@@ -128,7 +121,6 @@ const elements = {
   systemPanel: $("#systemPanel"), langJa: $("#langJa"), langEn: $("#langEn"),
   motionBrush: $("#motionBrush"), brushImage: $("#brushImage"),
   brushCanvas: $("#brushCanvas"), clearBrush: $("#clearBrush"),
-  upgradePanel: $("#upgradePanel"), upgrade: $("#upgrade"), upgradeCount: $("#upgradeCount"),
 };
 
 const state = {
@@ -180,15 +172,6 @@ function selectMode(value) {
   document.querySelectorAll(".mode").forEach((label) => {
     label.classList.toggle("selected", label.querySelector("input").value === value);
   });
-  elements.anchorCount.value = value === "wow" ? "20" : "12";
-  renderAnchorCount();
-}
-
-function renderAnchorCount() {
-  const count = Number(elements.anchorCount.value);
-  elements.anchorCountOutput.value = state.language === "en"
-    ? `${count} frames${count === 12 ? ` · ${t("recommended")}` : ""}`
-    : `${count}枚${count === 12 ? `・${t("recommended")}` : ""}`;
 }
 
 function selectCreationMode(value) {
@@ -241,7 +224,6 @@ function applyLanguage(language) {
   elements.removeImage.textContent = t("removeImage"); elements.removeTargetImage.textContent = t("removeImage");
   elements.targetDropzone.setAttribute("aria-label", t("chooseB"));
   elements.durationOutput.value = durationText(elements.duration.value);
-  renderAnchorCount();
   elements.scaleMin.textContent = durationText(2); elements.scaleMax.textContent = durationText(10);
   selectCreationMode(state.creationMode); renderSystem(); clearError();
   if (state.busy) {
@@ -262,17 +244,6 @@ elements.langEn.addEventListener("click", () => applyLanguage("en"));
 elements.duration.addEventListener("input", () => {
   elements.durationOutput.value = durationText(elements.duration.value);
 });
-elements.anchorCount.addEventListener("input", () => {
-  renderAnchorCount();
-  const count = Number(elements.anchorCount.value);
-  const preset = count === 12 ? "fun" : count === 20 ? "wow" : null;
-  document.querySelectorAll(".mode").forEach((label) => {
-    const selected = preset && label.querySelector("input").value === preset;
-    label.classList.toggle("selected", Boolean(selected));
-    label.querySelector("input").checked = Boolean(selected);
-  });
-});
-
 const imageSlots = {
   start: {stateKey: "imageDataUrl", input: elements.imageInput, dropzone: elements.dropzone,
     prompt: elements.dropPrompt, preview: elements.imagePreview, shade: elements.imageShade,
@@ -493,12 +464,6 @@ function showArtifact(job) {
   }
   elements.download.href = job.artifact_url; elements.download.download = "";
   state.resultJob = job;
-  const canUpgrade = job.kind === "preview" && job.upgrade_available;
-  elements.upgradePanel.hidden = !canUpgrade;
-  if (canUpgrade) {
-    const count = Number(job.upgrade_anchor_count) || 12;
-    elements.upgradeCount.textContent = `${count} NPU frames`;
-  }
 }
 function finishWithError(message) {
   stopTimers(); state.activeJobId = null; setBusy(false); show("emptyState"); showError(message);
@@ -569,19 +534,20 @@ async function submit() {
   await loadRuntimeSettings();
   if (!state.engineReady) { showError(t("stillPreparing")); return; }
   setBusy(true); show("workingState"); state.currentStage = "analysis";
-  elements.upgradePanel.hidden = true;
   state.currentJobMessage = t("gettingReady"); state.resultElapsed = null; state.resultUnderstood = "";
   updateProgress(4); updatePipeline("analysis"); elements.progressMessage.textContent = t("gettingReady");
   startCountdown();
   try {
     const selectedQuality = $('input[name="mode"]:checked');
+    const selectedMode = selectedQuality?.value || "fun";
+    const anchorCounts = {fast: 8, fun: 12, wow: 20};
     const body = {
-      prompt: elements.prompt.value, mode: selectedQuality?.value || "wow",
+      prompt: elements.prompt.value, mode: selectedMode,
       creation_mode: state.creationMode, duration_seconds: Number(elements.duration.value),
       seamless_loop: state.creationMode === "animate" && elements.seamlessLoop.checked,
       input_image_data_url: state.imageDataUrl, target_image_data_url: state.targetImageDataUrl,
-      preview_first: true,
-      upgrade_anchor_count: Number(elements.anchorCount.value),
+      preview_first: false,
+      upgrade_anchor_count: anchorCounts[selectedMode],
       ...brushPayload(),
     };
     const job = await readJson(await fetch("/api/jobs", {
@@ -594,19 +560,6 @@ async function submit() {
 elements.form.addEventListener("submit", (event) => { event.preventDefault(); submit(); });
 elements.prompt.addEventListener("keydown", (event) => {
   if (event.key === "Enter" && (event.ctrlKey || event.metaKey)) { event.preventDefault(); submit(); }
-});
-elements.upgrade.addEventListener("click", async () => {
-  if (state.busy || !state.resultJob?.upgrade_available) return;
-  clearError(); setBusy(true); show("workingState"); elements.upgradePanel.hidden = true;
-  state.currentStage = "analysis"; state.currentJobMessage = t("upgrading");
-  updateProgress(4); updatePipeline("analysis"); elements.progressMessage.textContent = t("upgrading");
-  startCountdown();
-  try {
-    const job = await readJson(await fetch(`/api/jobs/${state.resultJob.id}/upgrade`, {
-      method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({}),
-    }));
-    state.activeJobId = job.id; pollJob(job.id);
-  } catch (error) { finishWithError(error.message); }
 });
 $("#remix").addEventListener("click", () => { if (!state.busy) submit(); });
 

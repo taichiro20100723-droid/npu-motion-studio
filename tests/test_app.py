@@ -34,9 +34,12 @@ def test_health_and_home(tmp_path: Path) -> None:
         assert 'id="overlayText"' not in home.text
         assert 'id="motionBrush"' in home.text
         assert 'id="brushCanvas"' in home.text
-        assert 'id="upgradePanel"' in home.text
-        assert 'id="anchorCount" type="range" min="8" max="24" step="4" value="12"' in home.text
-        assert 'data-i18n="upgradeAction"' in home.text
+        assert 'name="mode" value="fast"' in home.text
+        assert 'name="mode" value="fun" checked' in home.text
+        assert 'name="mode" value="wow"' in home.text
+        assert 'id="upgradePanel"' not in home.text
+        assert 'id="anchorCount"' not in home.text
+        assert 'data-i18n="upgradeAction"' not in home.text
 
 
 def test_ui_shows_elapsed_time_and_guards_duplicate_submits(tmp_path: Path) -> None:
@@ -58,17 +61,23 @@ def test_ui_shows_elapsed_time_and_guards_duplicate_submits(tmp_path: Path) -> N
         assert 'selectCreationMode("transition")' in script.text
         assert "prompt: elements.prompt.value" in script.text
         assert "deadlineSeconds: 10" not in script.text
-        assert "preview_first: true" in script.text
+        assert "preview_first: false" in script.text
         assert "upgrade_anchor_count:" in script.text
         assert "motion_mask_data_url:" in script.text
-        assert "/upgrade`" in script.text
+        assert "/upgrade`" not in script.text
 
 
 def test_job_lifecycle_and_artifact(tmp_path: Path) -> None:
     with make_client(tmp_path) as client:
         response = client.post(
             "/api/jobs",
-            json={"prompt": "ネオンの街", "mode": "fast", "duration_seconds": 2},
+            json={
+                "prompt": "ネオンの街",
+                "mode": "fast",
+                "duration_seconds": 2,
+                "preview_first": False,
+                "upgrade_anchor_count": 8,
+            },
         )
         assert response.status_code == 202
         job = response.json()
@@ -81,24 +90,36 @@ def test_job_lifecycle_and_artifact(tmp_path: Path) -> None:
         artifact = client.get(job["artifact_url"])
         assert artifact.status_code == 200
         assert artifact.headers["content-type"].startswith("image/svg+xml")
-        assert job["kind"] == "preview"
-        assert job["upgrade_available"] is True
+        assert job["kind"] == "final"
+        assert job["upgrade_available"] is False
 
-        upgraded = client.post(f"/api/jobs/{job['id']}/upgrade", json={"anchor_count": 24})
+        preview = client.post(
+            "/api/jobs",
+            json={"prompt": "ネオンの街", "preview_first": True},
+        )
+        assert preview.status_code == 202
+        preview_job = preview.json()
+        for _ in range(30):
+            preview_job = client.get(f"/api/jobs/{preview_job['id']}").json()
+            if preview_job["state"] in {"completed", "failed"}:
+                break
+            time.sleep(0.05)
+        assert preview_job["kind"] == "preview"
+        upgraded = client.post(f"/api/jobs/{preview_job['id']}/upgrade", json={"anchor_count": 24})
         assert upgraded.status_code == 202
-        upgraded_job = upgraded.json()
-        assert upgraded_job["kind"] == "upgrade"
-        assert upgraded_job["source_job_id"] == job["id"]
+        assert upgraded.json()["kind"] == "upgrade"
 
 
 def test_npu_frame_count_uses_safe_four_frame_steps(tmp_path: Path) -> None:
     with make_client(tmp_path) as client:
         invalid = client.post(
-            "/api/jobs", json={"prompt": "走る犬", "upgrade_anchor_count": 15}
+            "/api/jobs",
+            json={"prompt": "走る犬", "preview_first": True, "upgrade_anchor_count": 15},
         )
         assert invalid.status_code == 422
         accepted = client.post(
-            "/api/jobs", json={"prompt": "走る犬", "upgrade_anchor_count": 16}
+            "/api/jobs",
+            json={"prompt": "走る犬", "preview_first": True, "upgrade_anchor_count": 16},
         )
         assert accepted.status_code == 202
         assert accepted.json()["upgrade_anchor_count"] == 16
