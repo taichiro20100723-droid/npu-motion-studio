@@ -3,6 +3,10 @@
 This file is a ready-to-copy application draft for the [Intel Software Innovator Program for OpenVINO](https://www.intel.com/content/www/us/en/developer/community/edge-innovator-program.html).
 It is deliberately written from measured facts in this repository. Replace the fields marked `TODO` with your own name and contact details before submitting.
 
+## Current form gate (verified 2026-08-23)
+
+The current Intel Smartsheet form requires the applicant to confirm that they are **18 years of age or older**. It also requires a real mailing address, phone number, email address, and LinkedIn URL. If you are under 18, do not submit this form or claim eligibility; ask Intel whether a parent/guardian or another route is available.
+
 ## Applicant fields
 
 - Name: `TODO — your name`
@@ -119,6 +123,8 @@ Do not describe yourself as an Intel Software Innovator until Intel accepts the 
 ## Final checklist before clicking Apply
 
 - [ ] Replace the applicant fields at the top.
+- [ ] Confirm that the current form's 18+ requirement applies to you.
+- [ ] Prepare your real address, phone number, email address, and LinkedIn URL; these are transmitted to Intel by the form.
 - [ ] Open every GitHub link in a private browser window and confirm it is public.
 - [ ] Record the 60–75 second robot→dog demo using the included prompt.
 - [ ] Show the actual application UI and the actual measured time; do not use an unverified claim.
