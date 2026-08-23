@@ -30,6 +30,8 @@ def test_health_and_home(tmp_path: Path) -> None:
         assert 'name="creationMode" value="animate"' in home.text
         assert 'name="creationMode" value="glyph"' in home.text
         assert 'id="glyphEditor"' in home.text
+        assert 'id="glyphImageDropzone"' in home.text
+        assert 'id="glyphImageInput"' in home.text
         assert 'id="glyphResultExports"' in home.text
         assert 'id="targetImageInput"' in home.text
         assert 'id="langJa"' in home.text
@@ -65,7 +67,10 @@ def test_ui_shows_elapsed_time_and_guards_duplicate_submits(tmp_path: Path) -> N
         assert "overlay_text" not in script.text
         assert 'applyLanguage("ja")' in script.text
         assert 'selectCreationMode("transition")' in script.text
-        assert "prompt: elements.prompt.value" in script.text
+        assert "prompt: promptValue" in script.text
+        assert 'glyph_mode: state.creationMode === "glyph"' in script.text
+        assert "glyphCustomImageDataUrl" in script.text
+        assert "character-sheet image" in script.text
         assert "deadlineSeconds: 10" not in script.text
         assert "preview_first: false" in script.text
         assert "upgrade_anchor_count:" in script.text
@@ -81,8 +86,12 @@ def test_glyph_endpoint_serves_svg_text_and_font(tmp_path: Path) -> None:
         assert data["glyph_id"]
         assert data["glyph_text"]
         assert "<svg" in data["svg"]
+        assert "npu-character-sheet" in data["source_svg"]
         assert data["font_format"] == "ttf"
         assert client.get(data["svg_url"]).headers["content-type"].startswith("image/svg+xml")
+        assert (
+            client.get(data["source_svg_url"]).headers["content-type"].startswith("image/svg+xml")
+        )
         assert client.get(data["text_url"]).status_code == 200
         assert client.get(data["font_url"]).headers["content-type"].startswith("font/ttf")
 
@@ -149,6 +158,24 @@ def test_job_requires_prompt_or_image(tmp_path: Path) -> None:
     with make_client(tmp_path) as client:
         response = client.post("/api/jobs", json={"prompt": ""})
         assert response.status_code == 422
+
+
+def test_glyph_job_accepts_empty_user_prompt(tmp_path: Path) -> None:
+    image = (
+        "data:image/png;base64,"
+        "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII="
+    )
+    with make_client(tmp_path) as client:
+        response = client.post(
+            "/api/jobs",
+            json={
+                "prompt": "",
+                "glyph_mode": True,
+                "input_image_data_url": image,
+                "creation_mode": "animate",
+            },
+        )
+        assert response.status_code == 202
 
 
 def test_transition_requires_both_a_and_b(tmp_path: Path) -> None:

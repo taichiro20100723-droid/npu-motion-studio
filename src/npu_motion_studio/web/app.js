@@ -8,15 +8,17 @@ const copy = {
     creationLegend: "動画の基本モード", transitionTitle: "AからBへ変化",
     transitionSub: "2枚の間をAIが描く・おすすめ", animateTitle: "1枚を動かす",
     animateSub: "Aを残して大きく動かす", shortPrompt: "短い文章でもOK",
-    glyphTitle: "変形文字を動かす", glyphSub: "文字→グリフ→動画・SVG・フォント",
-    glyphSourceTitle: "変形させる文字", glyphSourceHelp: "普通の文字から、読めそうで読めないグリフを作ります。",
-    glyphSourceLabel: "元の文字", glyphStyleTitle: "雰囲気",
-    glyphStyleHelp: "選んだスタイルで毎回同じ文字を再現できます。",
+    glyphTitle: "AI文字を変化させる", glyphSub: "文字シート→NPU→自然な変化",
+    glyphSourceTitle: "AIに変化させる文字", glyphSourceHelp: "文字をシートに並べ、変化の途中はNPUが自然に描きます。",
+    glyphSourceLabel: "元の文字", glyphStyleTitle: "雰囲気のヒント",
+    glyphStyleHelp: "色や雰囲気のヒントです。文字の形はNPUが決めます。",
+    glyphImageTitle: "画像の文字シートも使う", glyphImageHelp: "フリー素材・自作・生成画像をクリックまたはドロップ",
+    glyphImageRemove: "外す", glyphImageStatus: "画像を選ばなければ、入力文字からシートを作ります。", glyphImagePreview: "画像シートを使用中",
     glyphAlien: "ALIEN", glyphRune: "RUNE", glyphSignal: "SIGNAL", glyphCyber: "CYBER",
-    glyphPreviewLabel: "コピーできる変形文字", glyphRefresh: "素材を作る", glyphCopy: "文字をコピー",
-    glyphTextDownload: "TXT", glyphSvgDownload: "SVG", glyphFontDownload: "フォント",
-    glyphStatus: "素材を作ると、文字・SVG・フォントを保存できます。",
-    glyphResultTitle: "この動画の文字素材", glyphResultHelp: "同じグリフを別の動画やデザインにも使えます。",
+    glyphPreviewLabel: "NPUに渡す文字シート", glyphRefresh: "文字シートを作る", glyphCopy: "元の文字をコピー",
+    glyphTextDownload: "TXT", glyphSvgDownload: "文字シートSVG", glyphFontDownload: "フォント",
+    glyphStatus: "文字シートを作ると、NPUが変化を描く準備ができます。",
+    glyphResultTitle: "AI変化の元になる文字シート", glyphResultHelp: "動画ではこのシートを元に、NPUが文字を自然に変化させます。",
     shortcutTail: "で作成", qualityTitle: "品質を選ぶ",
     qualityHelp: "小・中・大から選べます。迷ったら中がおすすめです。", fastTitle: "小",
     fastSub: "NPU画像8枚・速い", funTitle: "中",
@@ -36,7 +38,7 @@ const copy = {
     glyphMotionTitle: "文字の動きを書いてください", glyphMotionHelp: "文字が割れる、伸びる、光になるなど、短い文章で大丈夫です。",
     emptyTransitionTitle: "AからBへの変化がここに現れます", emptyTransitionBody: "2枚の画像と動きを指定して、下の大きなボタンを押してください。",
     emptyAnimateTitle: "1枚の画像の動きがここに現れます", emptyAnimateBody: "文章または画像を指定して、下の大きなボタンを押してください。",
-    emptyGlyphTitle: "変形文字の動画がここに現れます", emptyGlyphBody: "元の文字と雰囲気を選び、下の大きなボタンを押してください。",
+    emptyGlyphTitle: "AI文字の動画がここに現れます", emptyGlyphBody: "文字または文字シート画像を選び、下の大きなボタンを押してください。",
     promptTransition: "例：ロボットが部品を展開しながら、赤いスポーツカーへ変形する。",
     promptAnimate: "例：雨の夜。巨大ロボットが勢いよく走り出す。",
     promptLabel: "変化や動きの説明", orTransition: "AからBへの動きを文章で指定", orAnimate: "または",
@@ -45,8 +47,9 @@ const copy = {
     chooseA: "Aの画像を選ぶ", chooseImage: "画像を選ぶ", chooseB: "Bの画像を選ぶ",
     preparing: "AIを準備しています", generateTransition: "AからBの動画を作る",
     generateAnimate: "動画を作る", creating: "作品を作っています",
-    glyphPrompt: "例：文字が割れて、金属の光になり、また別の記号へ再構成される。",
-    glyphPromptDefault: "the glyphs stretch, fracture into light, and reassemble as a living alien alphabet",
+    glyphPrompt: "任意：文字の変化を文章で追加できます。空欄でもNPUが自動で変化させます。",
+    glyphAutoPrompt: "naturally transform each printed character into an expressive alien glyph, preserve the exact character sheet grid and spacing, one symbol per cell, fluid ink metamorphosis, no extra objects",
+    glyphPromptDefault: "",
     waitBusy: "続けて押さず、そのままお待ちください", qualityFirst: "選んだ品質で最初から生成します",
     startupWait: "起動時だけ少しお待ちください", genericError: "うまく処理できませんでした。もう一度お試しください。",
     invalidImage: "PNG、JPEG、WebPの画像を選んでください。", imageTooLarge: "画像は5MB以下にしてください。",
@@ -72,15 +75,17 @@ const copy = {
     creationLegend: "Creation mode", transitionTitle: "Transform A to B",
     transitionSub: "AI draws between two images · Recommended", animateTitle: "Animate one image",
     animateSub: "Move boldly, then return to A", shortPrompt: "A short prompt works",
-    glyphTitle: "Animate strange glyphs", glyphSub: "Text → glyph → video, SVG, and font",
-    glyphSourceTitle: "Source text", glyphSourceHelp: "Turn ordinary text into a readable-looking alien alphabet.",
-    glyphSourceLabel: "Source text", glyphStyleTitle: "Visual language",
-    glyphStyleHelp: "The same source and style always reproduce the same glyphs.",
+    glyphTitle: "Transform text with AI", glyphSub: "Character sheet → NPU → natural morph",
+    glyphSourceTitle: "Text for the AI to transform", glyphSourceHelp: "The NPU receives a character sheet and invents the in-between naturally.",
+    glyphSourceLabel: "Source text", glyphStyleTitle: "Mood hint",
+    glyphStyleHelp: "A color and mood hint; the NPU decides the new character shapes.",
+    glyphImageTitle: "Use a character-sheet image", glyphImageHelp: "Drop a free, self-made, or generated image here",
+    glyphImageRemove: "Remove", glyphImageStatus: "Without an image, a sheet is made from the source text.", glyphImagePreview: "Using the image sheet",
     glyphAlien: "ALIEN", glyphRune: "RUNE", glyphSignal: "SIGNAL", glyphCyber: "CYBER",
-    glyphPreviewLabel: "Copyable transformed text", glyphRefresh: "Make assets", glyphCopy: "Copy glyphs",
-    glyphTextDownload: "TXT", glyphSvgDownload: "SVG", glyphFontDownload: "FONT",
-    glyphStatus: "Make assets to save the text, SVG, and font.",
-    glyphResultTitle: "Glyph assets for this video", glyphResultHelp: "Reuse the same glyphs in another video or design.",
+    glyphPreviewLabel: "Character sheet sent to the NPU", glyphRefresh: "Make character sheet", glyphCopy: "Copy source text",
+    glyphTextDownload: "TXT", glyphSvgDownload: "CHARACTER SHEET SVG", glyphFontDownload: "FONT",
+    glyphStatus: "Make the character sheet, then the NPU will draw the transformation.",
+    glyphResultTitle: "Character sheet used by the AI", glyphResultHelp: "The video starts here and the NPU morphs each character naturally.",
     shortcutTail: "to create", qualityTitle: "Choose quality",
     qualityHelp: "Pick Small, Medium, or Large. Medium is recommended.", fastTitle: "Small", fastSub: "8 NPU frames · fast",
     funTitle: "Medium", funSub: "12 NPU frames · recommended", wowTitle: "Large",
@@ -99,11 +104,12 @@ const copy = {
     glyphMotionTitle: "Describe the glyph motion", glyphMotionHelp: "Say what happens: fracture, stretch, glow, or reassemble.",
     emptyTransitionTitle: "Your A-to-B transformation appears here", emptyTransitionBody: "Choose two images, describe the motion, and press the big button.",
     emptyAnimateTitle: "Your one-image motion appears here", emptyAnimateBody: "Choose a prompt or image, then press the big button.",
-    emptyGlyphTitle: "Your strange glyph video appears here", emptyGlyphBody: "Choose source text and a visual language, then press the big button.",
+    emptyGlyphTitle: "Your AI-transformed character video appears here", emptyGlyphBody: "Choose source text or a character-sheet image, then press the big button.",
     promptTransition: "Example: A robot unfolds its parts and transforms into a red sports car.",
     promptAnimate: "Example: A giant robot bursts into a sprint through a rainy neon street.",
-    glyphPrompt: "Example: The glyphs fracture into light, then reassemble as a living alien alphabet.",
-    glyphPromptDefault: "the glyphs stretch, fracture into light, and reassemble as a living alien alphabet",
+    glyphPrompt: "Optional: describe the change. Leave it blank and the NPU will choose a natural morph.",
+    glyphAutoPrompt: "naturally transform each printed character into an expressive alien glyph, preserve the exact character sheet grid and spacing, one symbol per cell, fluid ink metamorphosis, no extra objects",
+    glyphPromptDefault: "",
     promptLabel: "Motion or transformation prompt", orTransition: "Tell AI how A should become B", orAnimate: "or",
     firstTransition: "A · First image", firstAnimate: "Choose one image", targetLabel: "B · Last image",
     clickDrop: "Click or drop an image here", removeImage: "Remove image",
@@ -139,6 +145,8 @@ const elements = {
   targetImageShade: $("#targetImageShade"), removeTargetImage: $("#removeTargetImage"),
   transitionTargetGroup: $("#transitionTargetGroup"), imagePair: $("#imagePair"),
   glyphEditor: $("#glyphEditor"), glyphSource: $("#glyphSource"), glyphPreview: $("#glyphPreview"),
+  glyphImageInput: $("#glyphImageInput"), glyphImageDropzone: $("#glyphImageDropzone"),
+  glyphImagePreview: $("#glyphImagePreview"), glyphImageRemove: $("#glyphImageRemove"), glyphImageStatus: $("#glyphImageStatus"),
   glyphRefresh: $("#glyphRefresh"), glyphCopy: $("#glyphCopy"), glyphStatus: $("#glyphStatus"),
   glyphTextDownload: $("#glyphTextDownload"), glyphSvgDownload: $("#glyphSvgDownload"),
   glyphFontDownload: $("#glyphFontDownload"), glyphResultExports: $("#glyphResultExports"),
@@ -161,7 +169,7 @@ const elements = {
 
 const state = {
   language: "ja", creationMode: "transition", imageDataUrl: null, targetImageDataUrl: null,
-  glyphData: null, glyphSignature: "", glyphImageDataUrl: null,
+  glyphData: null, glyphSignature: "", glyphImageDataUrl: null, glyphCustomImageDataUrl: null, glyphCustomImageName: "",
   busy: false, activeJobId: null, engineReady: false, readinessTimer: null,
   pollTimer: null, countdownTimer: null, countdownStartedAt: null,
   currentStage: "analysis", currentJobMessage: "", system: null,
@@ -184,29 +192,12 @@ function show(viewName) {
 
 function durationText(value) { return state.language === "en" ? `${value} sec` : `${value}秒`; }
 
-const glyphPalettes = {
-  alien: "ȺƵƦƎØȜƟƧƸȢƩȽƱ", rune: "ᚫᛇᚱᛟᚦᛉᚲᛞᛃᛒᛗᛏᛁ",
-  signal: "⌁⟟⟒⧖⫷⨳⟡◈⟁⌬⧉⟐", cyber: "ΛƵΞØƧ∅ⱫɌƎ⟟◈ϟȻŦ",
-};
-const glyphMarks = ["", "\u0336", "\u0338", "\u035e", "\u0307", "\u0336\u0307"];
-
 function selectedGlyphStyle() {
   return document.querySelector('input[name="glyphStyle"]:checked')?.value || "alien";
 }
 
-function fallbackGlyphText(source, style) {
-  const text = source.trim().replace(/\s+/g, " ").slice(0, 120) || "NPU MOTION";
-  const palette = glyphPalettes[style] || glyphPalettes.alien;
-  return Array.from(text).map((char, index) => {
-    if (char === " ") return "  ";
-    let hash = 0;
-    for (const byte of new TextEncoder().encode(`${style}:${char}:${index}`)) hash = (hash * 33 + byte) >>> 0;
-    return palette[hash % palette.length] + glyphMarks[(hash >>> 8) % glyphMarks.length];
-  }).join("").trim();
-}
-
 function resetGlyphAssets() {
-  state.glyphData = null; state.glyphSignature = ""; state.glyphImageDataUrl = null;
+  state.glyphData = null; state.glyphSignature = ""; state.glyphImageDataUrl = state.glyphCustomImageDataUrl;
   for (const link of [elements.glyphTextDownload, elements.glyphSvgDownload, elements.glyphFontDownload]) {
     link.hidden = true; link.removeAttribute("href");
   }
@@ -214,12 +205,17 @@ function resetGlyphAssets() {
     link.hidden = true; link.removeAttribute("href");
   }
   elements.glyphStatus.textContent = t("glyphStatus");
+  if (elements.glyphImageStatus) {
+    elements.glyphImageStatus.textContent = state.glyphCustomImageName
+      ? `${t("glyphImagePreview")}: ${state.glyphCustomImageName}` : t("glyphImageStatus");
+  }
   elements.glyphResultExports.hidden = true;
 }
 
 function updateGlyphPreview() {
   if (!elements.glyphSource) return;
-  elements.glyphPreview.textContent = fallbackGlyphText(elements.glyphSource.value, selectedGlyphStyle());
+  elements.glyphPreview.textContent = state.glyphCustomImageDataUrl
+    ? t("glyphImagePreview") : (elements.glyphSource.value.trim() || "NPU MOTION");
   resetGlyphAssets();
 }
 
@@ -237,25 +233,32 @@ function svgToPngDataUrl(svg) {
 }
 
 function setGlyphAssetLinks(data) {
-  elements.glyphPreview.textContent = data.glyph_text;
-  const links = [[elements.glyphTextDownload, data.text_url], [elements.glyphSvgDownload, data.svg_url]];
-  if (data.font_url) links.push([elements.glyphFontDownload, data.font_url]);
-  for (const [link, href] of links) { link.href = href; link.hidden = false; }
-  elements.glyphFontDownload.hidden = !data.font_url;
-  elements.glyphStatus.textContent = data.font_url
-    ? (state.language === "ja" ? "文字・SVG・TTFフォントを保存できます。" : "Text, SVG, and a TTF font are ready to save.")
-    : (state.language === "ja" ? "文字とSVGを保存できます。フォントはセットアップ後に有効になります。" : "Text and SVG are ready. The font export becomes available after setup.");
+  elements.glyphPreview.textContent = data.source_text;
+  elements.glyphTextDownload.hidden = true;
+  elements.glyphFontDownload.hidden = true;
+  elements.glyphTextDownload.removeAttribute("href");
+  elements.glyphFontDownload.removeAttribute("href");
+  elements.glyphSvgDownload.href = data.source_svg_url || data.svg_url;
+  elements.glyphSvgDownload.hidden = false;
+  elements.glyphStatus.textContent = state.glyphCustomImageDataUrl
+    ? (state.language === "ja"
+      ? "選んだ画像をNPUへ渡します。文字の形はNPUが自然に変化させます。"
+      : "Your image will go to the NPU. It will invent the character morph naturally.")
+    : (state.language === "ja"
+      ? "NPUに渡す文字シートを作りました。動画ではNPUが形を自然に変化させます。"
+      : "The NPU character sheet is ready. The video will let the NPU invent the morph.");
 }
 
 async function ensureGlyphAssets(force = false) {
   const source = elements.glyphSource.value.trim();
-  if (!source) throw new Error(state.language === "ja" ? "変形させる文字を入力してください。" : "Enter source text for the glyphs.");
-  const style = selectedGlyphStyle(); const signature = `${style}:${source}`;
+  if (!source && !state.glyphCustomImageDataUrl) throw new Error(state.language === "ja" ? "文字を入力するか、文字シート画像を選んでください。" : "Enter source text or choose a character-sheet image.");
+  const apiSource = source || "NPU MOTION";
+  const style = selectedGlyphStyle(); const signature = `${style}:${apiSource}:${state.glyphCustomImageName}:${state.glyphCustomImageDataUrl?.length || 0}`;
   if (!force && state.glyphData && state.glyphSignature === signature) return state.glyphData;
   const data = await readJson(await fetch("/api/glyphs", {
-    method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({text: source, style}),
+    method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({text: apiSource, style}),
   }));
-  data.png_data_url = await svgToPngDataUrl(data.svg);
+  data.png_data_url = state.glyphCustomImageDataUrl || await svgToPngDataUrl(data.source_svg || data.svg);
   state.glyphData = data; state.glyphSignature = signature; state.glyphImageDataUrl = data.png_data_url;
   setGlyphAssetLinks(data); return data;
 }
@@ -311,7 +314,9 @@ function selectCreationMode(value) {
   elements.prompt.placeholder = transition ? t("promptTransition") : glyph ? t("glyphPrompt") : t("promptAnimate");
   elements.dropzone.setAttribute("aria-label", transition ? t("chooseA") : t("chooseImage"));
   elements.loopOption.hidden = transition; elements.seamlessLoop.checked = !transition;
-  if (glyph && !elements.prompt.value.trim()) elements.prompt.value = t("glyphPromptDefault");
+  if (glyph && (elements.prompt.value === copy.ja.glyphPromptDefault || elements.prompt.value === copy.en.glyphPromptDefault)) {
+    elements.prompt.value = "";
+  }
   if (!state.busy) setBusy(false);
 }
 
@@ -348,7 +353,7 @@ function applyLanguage(language) {
   elements.targetDropzone.setAttribute("aria-label", t("chooseB"));
   elements.durationOutput.value = durationText(elements.duration.value);
   elements.scaleMin.textContent = durationText(2); elements.scaleMax.textContent = durationText(10);
-  selectCreationMode(state.creationMode); renderSystem(); clearError();
+  selectCreationMode(state.creationMode); renderGlyphImageStatus(); renderSystem(); clearError();
   if (state.busy) {
     elements.progressMessage.textContent = progressMessageFor(state.currentStage)
       || state.currentJobMessage || t("gettingReady");
@@ -380,10 +385,64 @@ elements.glyphRefresh.addEventListener("click", async () => {
 elements.glyphCopy.addEventListener("click", async () => {
   try {
     const data = await ensureGlyphAssets();
-    await navigator.clipboard.writeText(data.glyph_text);
-    elements.glyphStatus.textContent = state.language === "ja" ? "変形文字をコピーしました。" : "Glyphs copied to the clipboard.";
+    await navigator.clipboard.writeText(data.source_text);
+    elements.glyphStatus.textContent = state.language === "ja" ? "元の文字をコピーしました。" : "Source text copied to the clipboard.";
   } catch (error) { showError(error.message); }
 });
+
+function renderGlyphImageStatus() {
+  if (!elements.glyphImageStatus) return;
+  elements.glyphImageStatus.textContent = state.glyphCustomImageName
+    ? `${t("glyphImagePreview")}: ${state.glyphCustomImageName}` : t("glyphImageStatus");
+}
+
+function acceptGlyphImage(file) {
+  clearError();
+  if (!file || !["image/png", "image/jpeg", "image/webp"].includes(file.type)) {
+    showError(t("invalidImage")); return;
+  }
+  if (file.size > 5 * 1024 * 1024) { showError(t("imageTooLarge")); return; }
+  const reader = new FileReader();
+  reader.addEventListener("load", () => {
+    state.glyphCustomImageDataUrl = reader.result; state.glyphCustomImageName = file.name;
+    elements.glyphImagePreview.src = reader.result; elements.glyphImagePreview.hidden = false;
+    elements.glyphImageRemove.hidden = false; elements.glyphImageDropzone.classList.add("has-image");
+    renderGlyphImageStatus(); updateGlyphPreview();
+  });
+  reader.addEventListener("error", () => showError(t("readImageError")));
+  reader.readAsDataURL(file);
+}
+
+function clearGlyphImage() {
+  state.glyphCustomImageDataUrl = null; state.glyphCustomImageName = "";
+  elements.glyphImageInput.value = ""; elements.glyphImagePreview.removeAttribute("src");
+  elements.glyphImagePreview.hidden = true; elements.glyphImageRemove.hidden = true;
+  elements.glyphImageDropzone.classList.remove("has-image"); renderGlyphImageStatus(); updateGlyphPreview();
+}
+
+elements.glyphImageDropzone.addEventListener("click", (event) => {
+  if (event.target !== elements.glyphImageRemove && !state.busy) elements.glyphImageInput.click();
+});
+elements.glyphImageDropzone.addEventListener("keydown", (event) => {
+  if (["Enter", " "].includes(event.key) && !state.busy) {
+    event.preventDefault(); elements.glyphImageInput.click();
+  }
+});
+elements.glyphImageInput.addEventListener("change", () => acceptGlyphImage(elements.glyphImageInput.files[0]));
+for (const eventName of ["dragenter", "dragover"]) {
+  elements.glyphImageDropzone.addEventListener(eventName, (event) => {
+    event.preventDefault(); if (!state.busy) elements.glyphImageDropzone.classList.add("dragging");
+  });
+}
+for (const eventName of ["dragleave", "drop"]) {
+  elements.glyphImageDropzone.addEventListener(eventName, (event) => {
+    event.preventDefault(); elements.glyphImageDropzone.classList.remove("dragging");
+  });
+}
+elements.glyphImageDropzone.addEventListener("drop", (event) => {
+  if (!state.busy) acceptGlyphImage(event.dataTransfer.files[0]);
+});
+elements.glyphImageRemove.addEventListener("click", (event) => { event.stopPropagation(); clearGlyphImage(); });
 const imageSlots = {
   start: {stateKey: "imageDataUrl", input: elements.imageInput, dropzone: elements.dropzone,
     prompt: elements.dropPrompt, preview: elements.imagePreview, shade: elements.imageShade,
@@ -646,10 +705,10 @@ async function pollJob(jobId) {
       renderResultMeta();
       if (state.creationMode === "glyph" && state.glyphData) {
         const data = state.glyphData;
-        const resultLinks = [[elements.glyphResultSvg, data.svg_url], [elements.glyphResultText, data.text_url]];
-        if (data.font_url) resultLinks.push([elements.glyphResultFont, data.font_url]);
-        for (const [link, href] of resultLinks) { link.href = href; link.hidden = false; }
-        elements.glyphResultFont.hidden = !data.font_url; elements.glyphResultExports.hidden = false;
+        elements.glyphResultSvg.href = data.source_svg_url || data.svg_url;
+        elements.glyphResultSvg.hidden = false;
+        elements.glyphResultText.hidden = true; elements.glyphResultFont.hidden = true;
+        elements.glyphResultExports.hidden = false;
       }
       setBusy(false); show("resultState"); $("#resultState").focus({preventScroll: true}); return;
     }
@@ -693,9 +752,12 @@ async function submit() {
     const selectedQuality = $('input[name="mode"]:checked');
     const selectedMode = selectedQuality?.value || "fun";
     const anchorCounts = {fast: 8, fun: 12, wow: 20};
+    const promptValue = state.creationMode === "glyph" && !elements.prompt.value.trim()
+      ? t("glyphAutoPrompt") : elements.prompt.value;
     const body = {
-      prompt: elements.prompt.value, mode: selectedMode,
+      prompt: promptValue, mode: selectedMode,
       creation_mode: state.creationMode === "transition" ? "transition" : "animate",
+      glyph_mode: state.creationMode === "glyph",
       duration_seconds: Number(elements.duration.value),
       seamless_loop: state.creationMode !== "transition" && elements.seamlessLoop.checked,
       input_image_data_url: glyphData?.png_data_url || state.imageDataUrl,

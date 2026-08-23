@@ -24,6 +24,7 @@ class MotionRequest:
     lock_mask_data_url: str | None = None
     motion_vector_x: float = 0.0
     motion_vector_y: float = 0.0
+    glyph_mode: bool = False
 
 
 @dataclass(frozen=True, slots=True)

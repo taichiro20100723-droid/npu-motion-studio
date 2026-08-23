@@ -195,6 +195,25 @@ def _transition_strength(mode: str, phase: float) -> float:
     return edge + (peak - edge) * middle_weight
 
 
+def _glyph_frame_prompt(base_prompt: str, index: int, count: int) -> str:
+    """Prompt the NPU to morph a character sheet without deleting its layout."""
+    phase = 0.0 if count <= 1 else index / (count - 1)
+    if phase < 0.25:
+        stage = "the original printed characters are still clearly readable"
+    elif phase < 0.58:
+        stage = "each character is halfway through a fluid alien-symbol metamorphosis"
+    elif phase < 0.86:
+        stage = "the new expressive glyph shapes are dominant but each cell stays aligned"
+    else:
+        stage = "a finished set of distinct original glyphs fills the same character cells"
+    return (
+        f"{base_prompt}, {stage}, preserve the exact grid, spacing, cell count, "
+        "and one symbol per cell, "
+        "transform the ink naturally with organic strokes and luminous material, no extra objects, "
+        "no split screen, no collage, no watermark"
+    )
+
+
 class OpenVINOLCMEngine(MotionEngine):
     key = "openvino-lcm"
 
@@ -282,17 +301,23 @@ class OpenVINOLCMEngine(MotionEngine):
         started = time.monotonic()
         is_transition = request.creation_mode == "transition"
         prompt_source = request.prompt or (
-            "smooth cinematic transformation from the first image to the second image"
+            "natural AI transformation of the printed characters into expressive alien glyphs"
+            if request.glyph_mode
+            else "smooth cinematic transformation from the first image to the second image"
         )
         route = route_motion(prompt_source)
-        action = classify_action(prompt_source)
+        action = ActionKind.TRANSFORM if request.glyph_mode else classify_action(prompt_source)
         seed = _seed(request.prompt, request.mode)
         notes: list[str] = [
             f"NPU anchors / action={action.value} / route={route.kind.value}",
             (
                 "AとBを固定し、途中だけをNPUで描画"
                 if is_transition
-                else "元画像を残しながら時間別の指示でNPU再描画"
+                else (
+                    "文字シートを元に、各文字の形をNPUで自然に変化"
+                    if request.glyph_mode
+                    else "元画像を残しながら時間別の指示でNPU再描画"
+                )
             ),
         ]
 
@@ -464,7 +489,11 @@ class OpenVINOLCMEngine(MotionEngine):
                     phase=index / max(1, desired - 1),
                     loop=loop_enabled,
                 )
-                prompt = frame_prompt(translated_prompt, action, index, desired)
+                prompt = (
+                    _glyph_frame_prompt(translated_prompt, index, desired)
+                    if request.glyph_mode
+                    else frame_prompt(translated_prompt, action, index, desired)
+                )
                 tensor = image_pipeline.generate(
                     prompt,
                     ov.Tensor(_array(condition)[None]),

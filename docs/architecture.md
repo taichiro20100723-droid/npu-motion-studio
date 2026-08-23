@@ -30,18 +30,20 @@ EngineRegistry ── MockMotionEngine
                       ├── Small / Medium / Large anchor presets
                       ├── NPU generation ↔ Arc GPU RIFE overlap queue
                       ├── Endpoint lock / seamless loop / Quick Sync MP4
-                      └── Glyph Stage: deterministic pseudo-alphabet → SVG / TTF → NPU input
+                      └── AI Character Stage: source character sheet → NPU image-to-image morph
 ```
 
 ### UI
 
 HTML/CSS/JavaScriptだけで構成し、ビルドツールを不要にしています。APIは同じ `127.0.0.1` のFastAPIから配信するため、外部サービスへ入力画像や文章を送信しません。
 
-「変形文字を動かす」モードは、元の文字と4種類のスタイルから決定的なグリフ列を作ります。同じ入力を
-再利用すると同じ文字形を再現できます。`POST /api/glyphs` は、アニメーションSVG、コピー用TXT、
-FontToolsで作ったTTFをローカルの `glyphs/` フォルダへ保存し、各ダウンロードURLを返します。
-SVGをPNGへ一度変換してから通常のNPU入力へ渡すため、既存のA→B／1枚モードの生成経路とGPU補間を
-変更せずに利用できます。
+「AI文字を変化させる」モードは、元の文字をセルへ並べたキャラクターシートを作り、PNGへ変換して
+通常のNPU image-to-image経路へ渡します。変形後の各文字をPythonの置換表で決めることはしません。
+`glyph_mode=true` のジョブでは、ユーザーの文章が空でも、エンジンが文字シート専用の内部指示を使い、
+グリッドと1セル1文字を守りながらNPUへ自然な変化を描かせます。`POST /api/glyphs` のSVGは動画へ渡す
+元シートとしてもダウンロードできます。
+任意のPNG/JPEG/WebP文字シートを選んだ場合は、同じジョブへその画像を直接渡します。フリー素材や
+別ツールで生成した画像にも対応しますが、素材の利用条件はユーザーが確認します。
 
 ### GenerationService
 

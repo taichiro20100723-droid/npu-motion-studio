@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="dark">
   <meta name="description" content="Create local A-to-B AI motion with Intel NPU and Arc GPU.">
   <title>NPU Motion Studio</title>
-    <link rel="stylesheet" href="/styles.css?v=0.6.0">
+    <link rel="stylesheet" href="/styles.css?v=0.7.0">
 </head>
 <body>
   <main class="shell">
@@ -52,7 +52,7 @@
             <label class="creation-mode glyph-mode-card">
               <input type="radio" name="creationMode" value="glyph">
               <span class="creation-mode-icon" aria-hidden="true">Ƶ</span>
-              <span><strong data-i18n="glyphTitle">変形文字を動かす</strong><small data-i18n="glyphSub">文字→グリフ→動画・SVG・フォント</small></span>
+              <span><strong data-i18n="glyphTitle">AI文字を変化させる</strong><small data-i18n="glyphSub">文字シート→NPU→自然な変化</small></span>
               <span class="check" aria-hidden="true">✓</span>
             </label>
           </div>
@@ -71,11 +71,21 @@
 
         <section id="glyphEditor" class="glyph-editor" hidden aria-labelledby="glyphEditorTitle">
           <div class="glyph-editor-heading">
-            <div><h3 id="glyphEditorTitle" data-i18n="glyphSourceTitle">変形させる文字</h3><p data-i18n="glyphSourceHelp">普通の文字から、読めそうで読めないグリフを作ります。</p></div>
-            <span class="glyph-badge">SVG / TTF</span>
+            <div><h3 id="glyphEditorTitle" data-i18n="glyphSourceTitle">AIに変化させる文字</h3><p data-i18n="glyphSourceHelp">文字シートを用意すると、変化の途中はNPUが自然に描きます。</p></div>
+            <span class="glyph-badge">NPU CHARACTER SHEET</span>
           </div>
           <label class="sr-only" for="glyphSource" data-i18n="glyphSourceLabel">元の文字</label>
           <input id="glyphSource" class="glyph-source" type="text" maxlength="120" value="NPU MOTION" autocomplete="off">
+          <div class="glyph-image-source">
+            <div id="glyphImageDropzone" class="glyph-image-dropzone" tabindex="0" role="button" aria-describedby="glyphImageHelp">
+              <input id="glyphImageInput" type="file" accept="image/png,image/jpeg,image/webp" hidden>
+              <span class="glyph-image-icon" aria-hidden="true">▧</span>
+              <span><strong data-i18n="glyphImageTitle">画像の文字シートも使う</strong><small id="glyphImageHelp" data-i18n="glyphImageHelp">フリー素材・自作・生成画像をクリックまたはドロップ</small></span>
+              <button id="glyphImageRemove" class="glyph-image-remove" type="button" hidden data-i18n="glyphImageRemove">外す</button>
+              <img id="glyphImagePreview" class="glyph-image-preview" alt="Character sheet image preview" hidden>
+            </div>
+            <p id="glyphImageStatus" class="glyph-image-status" data-i18n="glyphImageStatus">画像を選ばなければ、入力文字からシートを作ります。</p>
+          </div>
           <div class="glyph-style-heading"><strong data-i18n="glyphStyleTitle">雰囲気</strong><small data-i18n="glyphStyleHelp">選んだスタイルで毎回同じ文字を再現できます。</small></div>
           <div class="glyph-styles" role="group" aria-label="Glyph style">
             <label class="glyph-style selected"><input type="radio" name="glyphStyle" value="alien" checked><span class="glyph-style-symbol">ȺƵ</span><b data-i18n="glyphAlien">ALIEN</b></label>
@@ -88,13 +98,13 @@
             <output id="glyphPreview" aria-live="polite">ȺƵ</output>
           </div>
           <div class="glyph-actions">
-            <button id="glyphRefresh" type="button" class="glyph-action" data-i18n="glyphRefresh">素材を作る</button>
+            <button id="glyphRefresh" type="button" class="glyph-action" data-i18n="glyphRefresh">文字シートを作る</button>
             <button id="glyphCopy" type="button" class="glyph-action" data-i18n="glyphCopy">文字をコピー</button>
             <a id="glyphTextDownload" class="glyph-download" download hidden data-i18n="glyphTextDownload">TXT</a>
-            <a id="glyphSvgDownload" class="glyph-download" download hidden data-i18n="glyphSvgDownload">SVG</a>
+            <a id="glyphSvgDownload" class="glyph-download" download hidden data-i18n="glyphSvgDownload">文字シートSVG</a>
             <a id="glyphFontDownload" class="glyph-download" download hidden data-i18n="glyphFontDownload">フォント</a>
           </div>
-          <p id="glyphStatus" class="glyph-status" data-i18n="glyphStatus">素材を作ると、文字・SVG・フォントを保存できます。</p>
+          <p id="glyphStatus" class="glyph-status" data-i18n="glyphStatus">文字シートを作ると、NPUが変化を描く準備ができます。</p>
         </section>
 
         <div id="imagePair" class="image-pair transition-active">
@@ -225,7 +235,7 @@
           <div id="glyphResultExports" class="glyph-result-exports" hidden>
             <strong data-i18n="glyphResultTitle">この動画の文字素材</strong>
             <span data-i18n="glyphResultHelp">同じグリフを別の動画やデザインにも使えます。</span>
-            <div><a id="glyphResultSvg" class="glyph-download" download hidden data-i18n="glyphSvgDownload">SVG</a><a id="glyphResultFont" class="glyph-download" download hidden data-i18n="glyphFontDownload">フォント</a><a id="glyphResultText" class="glyph-download" download hidden data-i18n="glyphTextDownload">TXT</a></div>
+            <div><a id="glyphResultSvg" class="glyph-download" download hidden data-i18n="glyphSvgDownload">文字シートSVG</a><a id="glyphResultFont" class="glyph-download" download hidden data-i18n="glyphFontDownload">フォント</a><a id="glyphResultText" class="glyph-download" download hidden data-i18n="glyphTextDownload">TXT</a></div>
           </div>
         </div>
       </section>
@@ -233,6 +243,6 @@
 
     <footer><span>NPU Motion Studio — Local AI</span><span data-i18n="privacy">入力は外部へ送信しません</span></footer>
   </main>
-  <script src="/app.js?v=0.6.0" defer></script>
+  <script src="/app.js?v=0.7.0" defer></script>
 </body>
 </html>

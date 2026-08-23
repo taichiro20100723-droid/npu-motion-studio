@@ -41,9 +41,10 @@ memes, and weird visual experiments. The included robot→dog clip is a real out
 - **Motion Brush** — paint moving areas red, locked areas blue, and drag an arrow to direct the subject.
 - **Overlapped hardware pipeline** — completed NPU intervals enter Arc RIFE while the NPU draws the next anchor,
   then Quick Sync finishes the MP4.
-- **Glyph Stage** — turn ordinary text into deterministic ALIEN, RUNE, SIGNAL, or CYBER glyphs, then animate the
-  same artwork as a video.
-- **Export the identity** — save the exact glyphs as copyable TXT, editable animated SVG, or an installable TTF font.
+- **AI Character Stage** — lay ordinary characters out as a visual sheet, then let the NPU invent the strange
+  in-between shapes naturally. The program does not decide a replacement glyph for each letter.
+- **No prompt required** — the motion instruction is optional; an internal typography-aware transformation cue is
+  used when the field is left blank.
 
 [Watch a real Motion Brush robot→dog run](examples/motion-brush/robot-to-dog-motion-brush.mp4) — the robot was
 painted red and directed to the right; the same brush data was used for the 12-anchor render.
@@ -77,12 +78,14 @@ fold into orange fur, mechanical legs become paws, and the final real dog runs j
 
 Use a prompt, one image, or both. With seamless loop enabled, the final frame returns to A.
 
-### 3. Animate strange glyphs
+### 3. Transform characters with AI
 
-Choose **Animate strange glyphs**, enter source text such as `NPU MOTION`, and pick a visual language. **Make
-assets** gives you the deterministic transformed text plus SVG, TXT, and TTF downloads. Press **Create** to feed
-the same SVG artwork into the local NPU image-to-video pipeline. Reusing the same text and style reproduces the
-same glyph identity in later videos, titles, or posters.
+Choose **Transform text with AI**, enter source text such as `NPU MOTION`, and pick a mood hint. **Make character
+sheet** lays the original characters out into a clean visual reference. Press **Create** and the local NPU
+image-to-image pipeline morphs each character while preserving the sheet layout. The motion prompt is optional;
+leave it blank for the built-in typography transformation cue, or add a short idea such as “turn into liquid light.”
+You can also drop in your own character-sheet image, including a free-to-use asset, a photo you made, or an image
+generated in another tool. The app sends that image to the local NPU as-is; check the license of any external asset.
 
 ## Measured on a Core Ultra 7 258V
 

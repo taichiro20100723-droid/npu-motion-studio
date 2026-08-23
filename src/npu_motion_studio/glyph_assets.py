@@ -32,7 +32,9 @@ _SAFE_TEXT = re.compile(r"\s+")
 class GlyphAssets:
     glyph_text: str
     svg_text: str
+    source_svg_text: str
     svg_path: Path
+    source_svg_path: Path
     text_path: Path
     font_path: Path | None
     font_format: str | None
@@ -62,6 +64,58 @@ def make_glyph_text(text: str, style: str = "alien") -> str:
         mark_b = _MARKS[digest[2] % len(_MARKS)] if digest[3] % 3 == 0 else ""
         output.append(base + mark_a + mark_b)
     return "".join(output).strip()
+
+
+def render_source_sheet_svg(text: str, style: str = "alien") -> str:
+    """Render ordinary source characters as an NPU-ready character sheet.
+
+    This is deliberately *not* the transformed glyph artwork. It gives the
+    image-to-image model a clean, spatially separated set of characters so the
+    NPU can invent the change naturally instead of a Python substitution table
+    deciding the final appearance.
+    """
+    if style not in GLYPH_STYLES:
+        raise ValueError(f"unknown glyph style: {style}")
+    source = normalize_source(text) or "NPU MOTION"
+    label, accent, accent_two, background = _STYLE_LABELS[style]
+    characters = [char for char in source if not char.isspace()][:24]
+    columns = 6
+    rows = max(1, (len(characters) + columns - 1) // columns)
+    cell_width, cell_height = 144, 88
+    start_x, start_y = 62, 116
+    sheet_height = max(576, start_y + rows * cell_height + 82)
+    escaped_source = html.escape(source, quote=True)
+    cells: list[str] = []
+    for index, char in enumerate(characters):
+        row, column = divmod(index, columns)
+        x = start_x + column * cell_width
+        y = start_y + row * cell_height
+        escaped_char = html.escape(char, quote=True)
+        cells.append(
+            f'''<g transform="translate({x} {y})">
+    <rect width="124" height="66" rx="12" fill="#05070c" fill-opacity=".58" stroke="{accent}" stroke-opacity=".38"/>
+    <text x="62" y="47" text-anchor="middle" fill="#fff" font-family="'Segoe UI','Yu Gothic UI',sans-serif" font-size="34" font-weight="700">{escaped_char}</text>
+    <text x="10" y="17" fill="{accent_two}" font-family="monospace" font-size="10">{index + 1:02d}</text>
+  </g>'''
+        )
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="{sheet_height}" viewBox="0 0 1024 {sheet_height}" role="img" aria-labelledby="source-title source-desc">
+  <title id="source-title">NPU character sheet</title>
+  <desc id="source-desc">Original characters arranged for natural NPU transformation: {escaped_source}</desc>
+  <metadata data-source="{escaped_source}" data-style="{style}" data-stage="npu-character-sheet" />
+  <defs>
+    <linearGradient id="source-bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="{background}"/><stop offset="1" stop-color="#05070c"/></linearGradient>
+    <filter id="source-glow"><feGaussianBlur stdDeviation="18"/></filter>
+    <pattern id="source-grid" width="42" height="42" patternUnits="userSpaceOnUse"><path d="M42 0H0V42" fill="none" stroke="#fff" stroke-opacity=".055"/></pattern>
+  </defs>
+  <rect width="1024" height="{sheet_height}" fill="url(#source-bg)"/>
+  <rect width="1024" height="{sheet_height}" fill="url(#source-grid)"/>
+  <circle cx="160" cy="140" r="118" fill="{accent}" opacity=".16" filter="url(#source-glow)"/>
+  <circle cx="860" cy="{max(260, sheet_height - 110)}" r="150" fill="{accent_two}" opacity=".14" filter="url(#source-glow)"/>
+  <text x="62" y="56" fill="{accent}" font-family="monospace" font-size="18" letter-spacing="5">NPU / CHARACTER SHEET / {label}</text>
+  <text x="62" y="82" fill="#fff" fill-opacity=".58" font-family="monospace" font-size="12">THE NPU CHANGES THE SHAPES — THIS IS ONLY THE STARTING LAYOUT</text>
+  {''.join(cells)}
+  <text x="62" y="{sheet_height - 34}" fill="#fff" fill-opacity=".54" font-family="monospace" font-size="14" letter-spacing="2">SOURCE: {escaped_source[:72]}</text>
+</svg>'''
 
 
 def render_glyph_svg(text: str, style: str = "alien") -> tuple[str, str]:
@@ -218,12 +272,15 @@ def create_glyph_assets(output_directory: Path, text: str, style: str) -> GlyphA
         raise ValueError(f"unknown glyph style: {style}")
     source = normalize_source(text) or "NPU MOTION"
     glyph_text, svg_text = render_glyph_svg(source, style)
+    source_svg_text = render_source_sheet_svg(source, style)
     digest = hashlib.blake2s(f"{style}:{source}".encode(), digest_size=10).hexdigest()
     directory = output_directory / "glyphs"
     directory.mkdir(parents=True, exist_ok=True)
     svg_path = directory / f"{digest}.svg"
+    source_svg_path = directory / f"{digest}-source.svg"
     text_path = directory / f"{digest}.txt"
     svg_path.write_text(svg_text, encoding="utf-8")
+    source_svg_path.write_text(source_svg_text, encoding="utf-8")
     text_path.write_text(glyph_text + "\n", encoding="utf-8")
     font_path = directory / f"{digest}-{style}.ttf"
     font_available = _build_ttf(font_path, source, style)
@@ -232,7 +289,9 @@ def create_glyph_assets(output_directory: Path, text: str, style: str) -> GlyphA
     return GlyphAssets(
         glyph_text=glyph_text,
         svg_text=svg_text,
+        source_svg_text=source_svg_text,
         svg_path=svg_path,
+        source_svg_path=source_svg_path,
         text_path=text_path,
         font_path=font_path,
         font_format="ttf" if font_available else None,

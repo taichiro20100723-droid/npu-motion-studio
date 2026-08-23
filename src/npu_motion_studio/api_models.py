@@ -21,6 +21,7 @@ class GenerateRequest(BaseModel):
     lock_mask_data_url: str | None = Field(default=None, max_length=7_000_000)
     motion_vector_x: float = Field(default=0.0, ge=-1.0, le=1.0)
     motion_vector_y: float = Field(default=0.0, ge=-1.0, le=1.0)
+    glyph_mode: bool = False
 
     @field_validator(
         "input_image_data_url",
@@ -55,6 +56,8 @@ class GlyphResponse(BaseModel):
     glyph_text: str
     svg: str
     svg_url: str
+    source_svg: str
+    source_svg_url: str
     text_url: str
     font_url: str | None
     font_format: str | None

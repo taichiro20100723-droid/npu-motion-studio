@@ -95,6 +95,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             "glyph_text": assets.glyph_text,
             "svg": assets.svg_text,
             "svg_url": f"/api/glyphs/{glyph_id}/svg",
+            "source_svg": assets.source_svg_text,
+            "source_svg_url": f"/api/glyphs/{glyph_id}/source",
             "text_url": f"/api/glyphs/{glyph_id}/text",
             "font_url": f"/api/glyphs/{glyph_id}/font" if assets.font_path else None,
             "font_format": assets.font_format,
@@ -107,6 +109,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         directory = resolved.output_directory.resolve() / "glyphs"
         candidates = {
             "svg": (directory / f"{glyph_id}.svg", "image/svg+xml"),
+            "source": (directory / f"{glyph_id}-source.svg", "image/svg+xml"),
             "text": (directory / f"{glyph_id}.txt", "text/plain; charset=utf-8"),
         }
         if asset_kind == "font":
@@ -149,6 +152,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                 lock_mask_data_url=payload.lock_mask_data_url,
                 motion_vector_x=payload.motion_vector_x,
                 motion_vector_y=payload.motion_vector_y,
+                glyph_mode=payload.glyph_mode,
             ),
             kind="preview" if preview else "final",
         )
