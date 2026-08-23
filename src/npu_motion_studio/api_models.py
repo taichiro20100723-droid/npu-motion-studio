@@ -44,6 +44,22 @@ class GenerateRequest(BaseModel):
         return value
 
 
+class GlyphRequest(BaseModel):
+    text: str = Field(default="NPU MOTION", min_length=1, max_length=120)
+    style: Literal["alien", "rune", "signal", "cyber"] = "alien"
+
+
+class GlyphResponse(BaseModel):
+    glyph_id: str
+    source_text: str
+    glyph_text: str
+    svg: str
+    svg_url: str
+    text_url: str
+    font_url: str | None
+    font_format: str | None
+
+
 class UpgradeRequest(BaseModel):
     anchor_count: int | None = Field(default=None, ge=8, le=24)
 

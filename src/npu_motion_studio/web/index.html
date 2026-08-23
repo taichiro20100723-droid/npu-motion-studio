@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="dark">
   <meta name="description" content="Create local A-to-B AI motion with Intel NPU and Arc GPU.">
   <title>NPU Motion Studio</title>
-  <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/styles.css?v=0.6.0">
 </head>
 <body>
   <main class="shell">
@@ -49,6 +49,12 @@
               <span><strong data-i18n="animateTitle">1枚を動かす</strong><small data-i18n="animateSub">Aを残して大きく動かす</small></span>
               <span class="check" aria-hidden="true">✓</span>
             </label>
+            <label class="creation-mode glyph-mode-card">
+              <input type="radio" name="creationMode" value="glyph">
+              <span class="creation-mode-icon" aria-hidden="true">Ƶ</span>
+              <span><strong data-i18n="glyphTitle">変形文字を動かす</strong><small data-i18n="glyphSub">文字→グリフ→動画・SVG・フォント</small></span>
+              <span class="check" aria-hidden="true">✓</span>
+            </label>
           </div>
         </fieldset>
 
@@ -62,6 +68,34 @@
         <div id="promptHint" class="input-hint"><span data-i18n="shortPrompt">短い文章でもOK</span><span><kbd>Ctrl</kbd> + <kbd>Enter</kbd> <span data-i18n="shortcutTail">で作成</span></span></div>
 
         <div class="or-divider"><span id="orLabel">AからBへの動きを文章で指定</span></div>
+
+        <section id="glyphEditor" class="glyph-editor" hidden aria-labelledby="glyphEditorTitle">
+          <div class="glyph-editor-heading">
+            <div><h3 id="glyphEditorTitle" data-i18n="glyphSourceTitle">変形させる文字</h3><p data-i18n="glyphSourceHelp">普通の文字から、読めそうで読めないグリフを作ります。</p></div>
+            <span class="glyph-badge">SVG / TTF</span>
+          </div>
+          <label class="sr-only" for="glyphSource" data-i18n="glyphSourceLabel">元の文字</label>
+          <input id="glyphSource" class="glyph-source" type="text" maxlength="120" value="NPU MOTION" autocomplete="off">
+          <div class="glyph-style-heading"><strong data-i18n="glyphStyleTitle">雰囲気</strong><small data-i18n="glyphStyleHelp">選んだスタイルで毎回同じ文字を再現できます。</small></div>
+          <div class="glyph-styles" role="group" aria-label="Glyph style">
+            <label class="glyph-style selected"><input type="radio" name="glyphStyle" value="alien" checked><span class="glyph-style-symbol">ȺƵ</span><b data-i18n="glyphAlien">ALIEN</b></label>
+            <label class="glyph-style"><input type="radio" name="glyphStyle" value="rune"><span class="glyph-style-symbol">ᚫᛇ</span><b data-i18n="glyphRune">RUNE</b></label>
+            <label class="glyph-style"><input type="radio" name="glyphStyle" value="signal"><span class="glyph-style-symbol">⟒⌁</span><b data-i18n="glyphSignal">SIGNAL</b></label>
+            <label class="glyph-style"><input type="radio" name="glyphStyle" value="cyber"><span class="glyph-style-symbol">ΛΞ</span><b data-i18n="glyphCyber">CYBER</b></label>
+          </div>
+          <div class="glyph-preview-card">
+            <span data-i18n="glyphPreviewLabel">コピーできる変形文字</span>
+            <output id="glyphPreview" aria-live="polite">ȺƵ</output>
+          </div>
+          <div class="glyph-actions">
+            <button id="glyphRefresh" type="button" class="glyph-action" data-i18n="glyphRefresh">素材を作る</button>
+            <button id="glyphCopy" type="button" class="glyph-action" data-i18n="glyphCopy">文字をコピー</button>
+            <a id="glyphTextDownload" class="glyph-download" download hidden data-i18n="glyphTextDownload">TXT</a>
+            <a id="glyphSvgDownload" class="glyph-download" download hidden data-i18n="glyphSvgDownload">SVG</a>
+            <a id="glyphFontDownload" class="glyph-download" download hidden data-i18n="glyphFontDownload">フォント</a>
+          </div>
+          <p id="glyphStatus" class="glyph-status" data-i18n="glyphStatus">素材を作ると、文字・SVG・フォントを保存できます。</p>
+        </section>
 
         <div id="imagePair" class="image-pair transition-active">
           <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Aの画像を選ぶ" aria-describedby="dropHelp">
@@ -155,8 +189,8 @@
       <section class="stage" aria-label="Preview" aria-live="polite">
         <div id="emptyState" class="empty-state">
           <div class="orb" aria-hidden="true"><span></span><i></i></div>
-          <h3 data-i18n="emptyTitle">AからBへの変化がここに現れます</h3>
-          <p data-i18n="emptyBody">2枚の画像と動きを指定して、下の大きなボタンを押してください。</p>
+          <h3 id="emptyTitle" data-i18n="emptyTitle">AからBへの変化がここに現れます</h3>
+          <p id="emptyBody" data-i18n="emptyBody">2枚の画像と動きを指定して、下の大きなボタンを押してください。</p>
           <ul class="promise-list" aria-label="Features">
             <li><span>✓</span><span data-i18n="promise1">AとBを正確に固定</span></li>
             <li><span>✓</span><span data-i18n="promise2">NPUで途中を描く</span></li>
@@ -188,12 +222,17 @@
             <a id="download" class="download" download data-i18n="save">保存する</a>
           </div>
           <button id="remix" class="remix" type="button" data-i18n="remix">同じAとBで、別の動きを作る</button>
+          <div id="glyphResultExports" class="glyph-result-exports" hidden>
+            <strong data-i18n="glyphResultTitle">この動画の文字素材</strong>
+            <span data-i18n="glyphResultHelp">同じグリフを別の動画やデザインにも使えます。</span>
+            <div><a id="glyphResultSvg" class="glyph-download" download hidden data-i18n="glyphSvgDownload">SVG</a><a id="glyphResultFont" class="glyph-download" download hidden data-i18n="glyphFontDownload">フォント</a><a id="glyphResultText" class="glyph-download" download hidden data-i18n="glyphTextDownload">TXT</a></div>
+          </div>
         </div>
       </section>
     </section>
 
     <footer><span>NPU Motion Studio — Local AI</span><span data-i18n="privacy">入力は外部へ送信しません</span></footer>
   </main>
-  <script src="/app.js" defer></script>
+  <script src="/app.js?v=0.6.0" defer></script>
 </body>
 </html>

@@ -28,6 +28,9 @@ def test_health_and_home(tmp_path: Path) -> None:
         assert 'id="resultImage"' in home.text
         assert 'name="creationMode" value="transition" checked' in home.text
         assert 'name="creationMode" value="animate"' in home.text
+        assert 'name="creationMode" value="glyph"' in home.text
+        assert 'id="glyphEditor"' in home.text
+        assert 'id="glyphResultExports"' in home.text
         assert 'id="targetImageInput"' in home.text
         assert 'id="langJa"' in home.text
         assert 'id="langEn"' in home.text
@@ -53,9 +56,12 @@ def test_ui_shows_elapsed_time_and_guards_duplicate_submits(tmp_path: Path) -> N
         assert "if (state.busy) return" in script.text
         assert 'startsWith("video/")' in script.text
         assert 'startsWith("image/")' in script.text
-        assert 'state.creationMode === "animate" && elements.seamlessLoop.checked' in script.text
-        assert "creation_mode: state.creationMode" in script.text
-        assert "target_image_data_url: state.targetImageDataUrl" in script.text
+        assert 'state.creationMode === "transition" ? "transition" : "animate"' in script.text
+        assert 'state.creationMode === "glyph"' in script.text
+        assert (
+            'target_image_data_url: state.creationMode === "transition" ? '
+            'state.targetImageDataUrl : null'
+        ) in script.text
         assert "overlay_text" not in script.text
         assert 'applyLanguage("ja")' in script.text
         assert 'selectCreationMode("transition")' in script.text
@@ -65,6 +71,20 @@ def test_ui_shows_elapsed_time_and_guards_duplicate_submits(tmp_path: Path) -> N
         assert "upgrade_anchor_count:" in script.text
         assert "motion_mask_data_url:" in script.text
         assert "/upgrade`" not in script.text
+
+
+def test_glyph_endpoint_serves_svg_text_and_font(tmp_path: Path) -> None:
+    with make_client(tmp_path) as client:
+        response = client.post("/api/glyphs", json={"text": "NPU MOTION", "style": "cyber"})
+        assert response.status_code == 200
+        data = response.json()
+        assert data["glyph_id"]
+        assert data["glyph_text"]
+        assert "<svg" in data["svg"]
+        assert data["font_format"] == "ttf"
+        assert client.get(data["svg_url"]).headers["content-type"].startswith("image/svg+xml")
+        assert client.get(data["text_url"]).status_code == 200
+        assert client.get(data["font_url"]).headers["content-type"].startswith("font/ttf")
 
 
 def test_job_lifecycle_and_artifact(tmp_path: Path) -> None:

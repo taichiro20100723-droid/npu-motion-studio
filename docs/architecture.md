@@ -29,12 +29,19 @@ EngineRegistry ── MockMotionEngine
                       ├── Motion Brush move / lock / direction masks
                       ├── Small / Medium / Large anchor presets
                       ├── NPU generation ↔ Arc GPU RIFE overlap queue
-                      └── Endpoint lock / seamless loop / Quick Sync MP4
+                      ├── Endpoint lock / seamless loop / Quick Sync MP4
+                      └── Glyph Stage: deterministic pseudo-alphabet → SVG / TTF → NPU input
 ```
 
 ### UI
 
 HTML/CSS/JavaScriptだけで構成し、ビルドツールを不要にしています。APIは同じ `127.0.0.1` のFastAPIから配信するため、外部サービスへ入力画像や文章を送信しません。
+
+「変形文字を動かす」モードは、元の文字と4種類のスタイルから決定的なグリフ列を作ります。同じ入力を
+再利用すると同じ文字形を再現できます。`POST /api/glyphs` は、アニメーションSVG、コピー用TXT、
+FontToolsで作ったTTFをローカルの `glyphs/` フォルダへ保存し、各ダウンロードURLを返します。
+SVGをPNGへ一度変換してから通常のNPU入力へ渡すため、既存のA→B／1枚モードの生成経路とGPU補間を
+変更せずに利用できます。
 
 ### GenerationService
 

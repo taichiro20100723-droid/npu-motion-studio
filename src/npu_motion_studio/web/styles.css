@@ -87,10 +87,34 @@ h1 { margin: 0; font-size: 1.06rem; letter-spacing: -.02em; }
 .creation-mode.selected { border-color: rgba(76,227,217,.65); background: rgba(76,227,217,.065); }
 .creation-mode .check { right: 8px; top: 8px; }
 .creation-mode.selected .check { opacity: 1; transform: scale(1); }
+.glyph-mode-card { grid-column: span 2; border-color: rgba(156,124,255,.32); }
+.glyph-mode-card .creation-mode-icon { color: #ff8de1; background: rgba(156,124,255,.12); font-size: 1.05rem; }
 
 textarea { resize: vertical; width: 100%; min-height: 118px; margin-top: 15px; border: 1px solid var(--line); border-radius: 15px; color: var(--text); background: #0a0e15; padding: 14px 15px; outline: none; line-height: 1.65; transition: border-color .18s, box-shadow .18s; }
 textarea::placeholder { color: #697486; }
 textarea:focus { border-color: rgba(76,227,217,.65); box-shadow: 0 0 0 4px rgba(76,227,217,.07); }
+.glyph-editor { margin: 14px 0 4px; padding: 14px; border: 1px solid rgba(156,124,255,.35); border-radius: 16px; background: linear-gradient(145deg, rgba(156,124,255,.1), rgba(76,227,217,.035)); }
+.glyph-editor-heading, .glyph-style-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 9px; }
+.glyph-editor-heading h3 { margin: 0 0 3px; font-size: .92rem; }
+.glyph-editor-heading p, .glyph-style-heading small, .glyph-status { margin: 0; color: var(--muted); font-size: .64rem; line-height: 1.45; }
+.glyph-badge { color: #ffb6ec; border: 1px solid rgba(255,182,236,.28); border-radius: 999px; padding: 4px 7px; font: 800 .57rem/1 monospace; letter-spacing: .06em; }
+.glyph-source { width: 100%; margin: 13px 0 11px; border: 1px solid var(--line-strong); border-radius: 11px; color: var(--text); background: #080b12; padding: 10px 12px; outline: none; }
+.glyph-source:focus { border-color: #b08cff; box-shadow: 0 0 0 4px rgba(156,124,255,.09); }
+.glyph-style-heading { margin: 4px 0 8px; }
+.glyph-style-heading strong { font-size: .69rem; }
+.glyph-styles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.glyph-style { position: relative; display: grid; justify-items: center; gap: 4px; padding: 8px 3px; border: 1px solid var(--line); border-radius: 10px; cursor: pointer; background: rgba(0,0,0,.12); }
+.glyph-style input { position: absolute; opacity: 0; pointer-events: none; }
+.glyph-style.selected { border-color: #b08cff; background: rgba(156,124,255,.12); }
+.glyph-style-symbol { color: #f3d6ff; font: 700 1.15rem/1.1 "Segoe UI Symbol", sans-serif; letter-spacing: .06em; }
+.glyph-style b { color: var(--muted); font: 800 .53rem/1 monospace; letter-spacing: .08em; }
+.glyph-preview-card { margin-top: 10px; padding: 10px; border: 1px solid rgba(255,255,255,.13); border-radius: 12px; background: rgba(2,4,10,.44); }
+.glyph-preview-card > span { display: block; color: var(--muted); font-size: .59rem; }
+.glyph-preview-card output { display: block; margin-top: 7px; overflow-wrap: anywhere; color: #f4d5ff; font: 800 clamp(1.2rem, 3vw, 1.85rem)/1.25 "Segoe UI Symbol", "Noto Sans Symbols 2", sans-serif; letter-spacing: .1em; text-shadow: 0 0 18px rgba(156,124,255,.5); }
+.glyph-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 9px; }
+.glyph-action, .glyph-download { border: 1px solid rgba(255,255,255,.16); border-radius: 9px; padding: 7px 9px; color: #e9e6ff; background: rgba(255,255,255,.035); font-size: .62rem; font-weight: 800; text-decoration: none; cursor: pointer; }
+.glyph-action:hover, .glyph-download:hover { border-color: #b08cff; background: rgba(156,124,255,.12); }
+.glyph-status { margin-top: 9px; }
 .input-hint, .scale { display: flex; justify-content: space-between; color: #707b8f; font-size: .64rem; margin-top: 7px; }
 kbd { border: 1px solid var(--line-strong); border-bottom-width: 2px; border-radius: 4px; padding: 1px 4px; font-family: inherit; font-size: .6rem; }
 .or-divider { display: flex; align-items: center; gap: 8px; color: #687286; font-size: .65rem; margin: 10px 0; }
@@ -216,6 +240,10 @@ input[type="range"] { width: 100%; accent-color: var(--cyan); }
 .download { flex: 0 0 auto; text-decoration: none; color: #071016; background: var(--text); padding: 10px 15px; border-radius: 11px; font-size: .75rem; font-weight: 850; }
 .remix { width: 100%; margin-top: 12px; border: 1px solid var(--line); border-radius: 11px; padding: 11px; background: rgba(255,255,255,.035); cursor: pointer; color: #dfe4ee; font-size: .76rem; }
 .remix:hover { border-color: var(--line-strong); background: rgba(255,255,255,.06); }
+.glyph-result-exports { display: grid; gap: 5px; margin-top: 12px; padding: 12px; border: 1px solid rgba(156,124,255,.3); border-radius: 12px; background: linear-gradient(120deg, rgba(156,124,255,.1), rgba(76,227,217,.045)); }
+.glyph-result-exports strong { font-size: .75rem; }
+.glyph-result-exports > span { color: var(--muted); font-size: .65rem; line-height: 1.45; }
+.glyph-result-exports > div { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 3px; }
 
 footer { display: flex; justify-content: space-between; color: #596477; font-size: .65rem; padding: 17px 5px; }
 
@@ -237,6 +265,8 @@ footer { display: flex; justify-content: space-between; color: #596477; font-siz
   .intro > p:last-child { font-size: .82rem; }
   .composer { padding: 17px; border-radius: 20px; }
   .creation-modes { grid-template-columns: 1fr; }
+  .glyph-mode-card { grid-column: auto; }
+  .glyph-styles { grid-template-columns: repeat(2, 1fr); }
   .image-pair.transition-active { grid-template-columns: 1fr; }
   .transition-arrow { justify-self: center; transform: rotate(90deg); }
   .input-hint span:last-child { display: none; }

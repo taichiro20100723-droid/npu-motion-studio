@@ -8,10 +8,17 @@ from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
-from npu_motion_studio.api_models import GenerateRequest, JobResponse, UpgradeRequest
+from npu_motion_studio.api_models import (
+    GenerateRequest,
+    GlyphRequest,
+    GlyphResponse,
+    JobResponse,
+    UpgradeRequest,
+)
 from npu_motion_studio.config import Settings
 from npu_motion_studio.domain import MotionRequest
 from npu_motion_studio.engines.registry import build_engine_registry
+from npu_motion_studio.glyph_assets import create_glyph_assets, normalize_source
 from npu_motion_studio.hardware import HardwareDetector
 from npu_motion_studio.jobs import JobStore
 from npu_motion_studio.service import GenerationService
@@ -77,6 +84,39 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             {"key": key, **asdict(candidate.probe())}
             for key, candidate in registry.items()
         ]
+
+    @app.post("/api/glyphs", response_model=GlyphResponse, status_code=200)
+    def create_glyph(payload: GlyphRequest) -> dict[str, object]:
+        assets = create_glyph_assets(resolved.output_directory, payload.text, payload.style)
+        glyph_id = assets.svg_path.stem
+        return {
+            "glyph_id": glyph_id,
+            "source_text": normalize_source(payload.text),
+            "glyph_text": assets.glyph_text,
+            "svg": assets.svg_text,
+            "svg_url": f"/api/glyphs/{glyph_id}/svg",
+            "text_url": f"/api/glyphs/{glyph_id}/text",
+            "font_url": f"/api/glyphs/{glyph_id}/font" if assets.font_path else None,
+            "font_format": assets.font_format,
+        }
+
+    @app.get("/api/glyphs/{glyph_id}/{asset_kind}")
+    def glyph_asset(glyph_id: str, asset_kind: str) -> FileResponse:
+        if len(glyph_id) != 20 or any(char not in "0123456789abcdef" for char in glyph_id):
+            raise HTTPException(status_code=404, detail="グリフ素材が見つかりません")
+        directory = resolved.output_directory.resolve() / "glyphs"
+        candidates = {
+            "svg": (directory / f"{glyph_id}.svg", "image/svg+xml"),
+            "text": (directory / f"{glyph_id}.txt", "text/plain; charset=utf-8"),
+        }
+        if asset_kind == "font":
+            matches = sorted(directory.glob(f"{glyph_id}-*.ttf"))
+            candidate = (matches[0], "font/ttf") if matches else None
+        else:
+            candidate = candidates.get(asset_kind)
+        if candidate is None or not candidate[0].is_file():
+            raise HTTPException(status_code=404, detail="グリフ素材が見つかりません")
+        return FileResponse(candidate[0], media_type=candidate[1], filename=candidate[0].name)
 
     @app.post("/api/jobs", response_model=JobResponse, status_code=202)
     def create_job(payload: GenerateRequest) -> dict[str, object]:
