@@ -10,7 +10,7 @@ readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.12,<3.14"
 authors = [{ name = "NPU Motion Studio contributors" }]
-keywords = ["npu", "openvino", "intel", "image-to-video", "local-ai"]
+keywords = ["npu", "openvino", "intel", "intel-core-ultra", "intel-arc", "image-to-video", "image-morphing", "a-to-b", "motion-brush", "local-ai"]
 classifiers = [
   "Development Status :: 3 - Alpha",
   "Environment :: Win32 (MS Windows)",
