@@ -15,6 +15,13 @@
 
 ![A giant robot physically transforms into a real Shiba Inu](examples/robot-to-dog/robot-to-dog.gif)
 
+> **The 5-second demo:** a giant robot becomes a real Shiba Inu. The first frame is yours, the last frame is yours,
+> and the impossible middle is generated locally on your Intel laptop.
+
+[Watch the MP4](examples/robot-to-dog/robot-to-dog.mp4) · [Try the Motion Brush clip](examples/motion-brush/robot-to-dog-motion-brush.mp4) · [Share your own A→B](SHOWCASE.md)
+
+If this is the kind of demo you want to see more of, **⭐ star the repository** and post your strangest A→B result.
+
 Most image-to-video tools animate one still. **NPU Motion Studio starts with two exact endpoints and creates
 the impossible journey between them.** Drop in image A and image B, write one sentence—“metal armor folds into
 orange fur”—and the app asks the NPU to draw a transformation timeline while the Arc GPU turns it into a smooth
@@ -25,6 +32,17 @@ memes, and weird visual experiments. The included robot→dog clip is a real out
 
 > This is not a full video-diffusion model. It is a deliberately fast hybrid: prompt-aware NPU keyframes,
 > motion warping, GPU interpolation, and hardware video encoding.
+
+## The short version
+
+| You provide | The app creates |
+|---|---|
+| Image A + image B | A real transformation between exact endpoints |
+| One sentence | Motion-aware NPU keyframes, not a simple cross-fade |
+| An Intel Core Ultra laptop | A local MP4 using NPU + Arc GPU + Quick Sync |
+
+The result is designed to be shared: a clear before/after, a surprising middle, and a short MP4 that works for
+short films, music-video transitions, concept reveals, memes, and visual experiments.
 
 ## Why it feels different
 
@@ -103,7 +121,7 @@ Windows 11 · Intel AI Boost NPU · Intel Arc 140V · OpenVINO 2025.4.1.
 These are warm-run measurements from one laptop, not universal guarantees. The first NPU compilation can take
 minutes; cached launches took roughly 6–7 seconds on the test machine.
 
-## Quick start on Windows
+## Quick start on Windows — under 60 seconds
 
 Requirements: Windows 11, Python 3.12, an Intel Core Ultra NPU, an Intel Arc GPU, and current Intel drivers.
 
