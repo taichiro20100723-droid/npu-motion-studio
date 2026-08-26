@@ -14,7 +14,7 @@ def _as_bool(value: str) -> bool:
 
 @dataclass(frozen=True, slots=True)
 class Settings:
-    app_name: str = "NPU Motion Studio"
+    app_name: str = "NPU AI Video"
     host: str = "127.0.0.1"
     port: int = 7862
     engine: str = "mock"

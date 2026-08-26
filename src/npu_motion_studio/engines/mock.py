@@ -102,6 +102,6 @@ class MockMotionEngine(MotionEngine):
     <path d="M-28 20 L0-34 L28 20 Z" fill="white" fill-opacity=".9"/>
   </g>
   <rect x="32" y="30" width="704" height="92" rx="18" fill="#050812" fill-opacity=".58"/>
-  <text x="56" y="66" fill="white" font-family="'Yu Gothic UI',sans-serif" font-size="15" opacity=".7">NPU MOTION STUDIO / DEMO</text>
+  <text x="56" y="66" fill="white" font-family="'Yu Gothic UI',sans-serif" font-size="15" opacity=".7">NPU AI VIDEO / DEMO</text>
   <text x="56" y="101" fill="white" font-family="'Yu Gothic UI',sans-serif" font-size="25">{safe_prompt[:38]}</text>
 </svg>'''

@@ -21,7 +21,7 @@ def test_health_and_home(tmp_path: Path) -> None:
         assert client.get("/api/health").json()["status"] == "ok"
         home = client.get("/")
         assert home.status_code == 200
-        assert "NPU Motion Studio" in home.text
+        assert "NPU AI Video" in home.text
         assert 'id="advancedSettings"' in home.text
         assert 'id="seamlessLoop" type="checkbox"' in home.text
         assert 'id="resultVideo" autoplay muted loop controls playsinline' in home.text

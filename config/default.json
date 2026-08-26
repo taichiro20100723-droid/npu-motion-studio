@@ -1,5 +1,5 @@
 {
-  "app_name": "NPU Motion Studio",
+  "app_name": "NPU AI Video",
   "host": "127.0.0.1",
   "port": 7862,
   "engine": "mock",

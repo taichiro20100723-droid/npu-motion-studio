@@ -4,16 +4,16 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="dark">
-  <meta name="description" content="Create local A-to-B AI motion with Intel NPU and Arc GPU.">
-  <title>NPU Motion Studio</title>
-    <link rel="stylesheet" href="/styles.css?v=0.7.0">
+  <meta name="description" content="NPU AI Video turns one or two images into short local AI videos on your Windows PC.">
+  <title>NPU AI Video — Local Image-to-Video</title>
+    <link rel="stylesheet" href="/styles.css?v=0.8.0">
 </head>
 <body>
   <main class="shell">
     <header class="topbar">
       <div class="brand">
         <span class="brand-mark" aria-hidden="true">N</span>
-        <div><p class="eyebrow">LOCAL AI MOTION</p><h1>NPU Motion Studio</h1></div>
+        <div><p class="eyebrow">LOCAL AI VIDEO</p><h1>NPU AI Video</h1></div>
       </div>
       <div class="top-actions">
         <div class="language-switch" role="group" aria-label="Language">
@@ -21,38 +21,43 @@
           <button id="langEn" type="button" aria-pressed="false">EN</button>
         </div>
         <span class="runtime-badge" aria-live="polite">
-          <span id="systemDot" class="dot"></span><span id="systemLabel">準備を確認中</span>
+          <span id="systemDot" class="dot"></span><span id="systemLabel">ローカルAIを準備中</span>
         </span>
       </div>
     </header>
 
     <section class="intro" aria-labelledby="pageTitle">
-      <p class="intro-kicker" data-i18n="introKicker">NPUで描き、Arc GPUでつなぐ。</p>
-      <h2 id="pageTitle"><span data-i18n="heroLead">AからBへの変化を</span><br><em data-i18n="heroAccent">ローカルAI動画</em><span data-i18n="heroTail">に。</span></h2>
-      <p data-i18n="introBody">最初と最後の画像を選ぶだけ。AIが途中の変形や動きを描きます。1枚を動かすモードも選べます。</p>
+      <p class="intro-kicker" data-i18n="introKicker">MAKE SOMETHING MOVE</p>
+      <h2 id="pageTitle"><span data-i18n="heroLead">画像を選んで、</span><br><em data-i18n="heroAccent">動かしてみよう</em><span data-i18n="heroTail">。</span></h2>
+      <p data-i18n="introBody">写真でもイラストでもOK。1枚を動かす、AからBへ変える、文字を変身させる。まずは3つから選ぶだけ。</p>
+      <div class="trust-strip" role="list" aria-label="Local AI benefits">
+        <span role="listitem"><b>01</b><strong data-i18n="trustLocalTitle">このPCで作る</strong><small data-i18n="trustLocalBody">アカウント・待ち時間なし</small></span>
+        <span role="listitem"><b>02</b><strong data-i18n="trustPrivateTitle">外へ送らない</strong><small data-i18n="trustPrivateBody">写真も文章もローカル</small></span>
+        <span role="listitem"><b>03</b><strong data-i18n="trustEasyTitle">まず1本</strong><small data-i18n="trustEasyBody">短い動画ですぐ試せる</small></span>
+      </div>
     </section>
 
     <section class="workspace">
       <form id="creationForm" class="composer" novalidate>
         <fieldset class="creation-mode-fieldset">
-          <legend class="sr-only" data-i18n="creationLegend">動画の基本モード</legend>
+          <legend class="sr-only" data-i18n="creationLegend">何を作る？</legend>
           <div class="creation-modes">
             <label class="creation-mode selected">
               <input type="radio" name="creationMode" value="transition" checked>
               <span class="creation-mode-icon" aria-hidden="true">A→B</span>
-              <span><strong data-i18n="transitionTitle">AからBへ変化</strong><small data-i18n="transitionSub">2枚の間をAIが描く・おすすめ</small></span>
+              <span><strong data-i18n="transitionTitle">A → B 変身</strong><small data-i18n="transitionSub">2枚の画像をつないで変化</small></span>
               <span class="check" aria-hidden="true">✓</span>
             </label>
             <label class="creation-mode">
               <input type="radio" name="creationMode" value="animate">
               <span class="creation-mode-icon" aria-hidden="true">A↻</span>
-              <span><strong data-i18n="animateTitle">1枚を動かす</strong><small data-i18n="animateSub">Aを残して大きく動かす</small></span>
+              <span><strong data-i18n="animateTitle">画像を動かす</strong><small data-i18n="animateSub">1枚から、カメラや被写体を動かす</small></span>
               <span class="check" aria-hidden="true">✓</span>
             </label>
             <label class="creation-mode glyph-mode-card">
               <input type="radio" name="creationMode" value="glyph">
               <span class="creation-mode-icon" aria-hidden="true">Ƶ</span>
-              <span><strong data-i18n="glyphTitle">AI文字を変化させる</strong><small data-i18n="glyphSub">文字シート→NPU→自然な変化</small></span>
+              <span><strong data-i18n="glyphTitle">文字を変身</strong><small data-i18n="glyphSub">文字や記号を、不思議に変える</small></span>
               <span class="check" aria-hidden="true">✓</span>
             </label>
           </div>
@@ -65,7 +70,8 @@
 
         <label id="promptLabel" class="sr-only" for="prompt">変化や動きの説明</label>
         <textarea id="prompt" maxlength="500" rows="4" aria-describedby="promptHint" placeholder="例：ロボットが部品を展開しながら、赤いスポーツカーへ変形する。"></textarea>
-        <div id="promptHint" class="input-hint"><span data-i18n="shortPrompt">短い文章でもOK</span><span><kbd>Ctrl</kbd> + <kbd>Enter</kbd> <span data-i18n="shortcutTail">で作成</span></span></div>
+        <div id="promptHint" class="input-hint"><span data-i18n="shortPrompt">短い一言でOK</span><span><kbd>Ctrl</kbd> + <kbd>Enter</kbd> <span data-i18n="shortcutTail">で作成</span></span></div>
+        <div id="promptSuggestions" class="prompt-suggestions" role="group" aria-label="Prompt ideas"></div>
 
         <div class="or-divider"><span id="orLabel">AからBへの動きを文章で指定</span></div>
 
@@ -112,7 +118,7 @@
             <input id="imageInput" type="file" accept="image/png,image/jpeg,image/webp" hidden>
             <div id="dropPrompt" class="drop-prompt">
               <span class="drop-icon" aria-hidden="true">A</span>
-              <span><strong id="firstImageLabel">A・最初の画像</strong><small id="dropHelp">クリックまたはここへドロップ</small></span>
+              <span><strong id="firstImageLabel">はじめの画像</strong><small id="dropHelp">クリックまたはここへドロップ</small></span>
             </div>
             <img id="imagePreview" alt="A image preview" hidden>
             <div id="imageShade" class="image-shade" hidden></div>
@@ -125,7 +131,7 @@
               <input id="targetImageInput" type="file" accept="image/png,image/jpeg,image/webp" hidden>
               <div id="targetDropPrompt" class="drop-prompt">
                 <span class="drop-icon" aria-hidden="true">B</span>
-                <span><strong id="targetImageLabel">B・最後の画像</strong><small id="targetDropHelp">クリックまたはここへドロップ</small></span>
+                <span><strong id="targetImageLabel">おわりの画像</strong><small id="targetDropHelp">クリックまたはここへドロップ</small></span>
               </div>
               <img id="targetImagePreview" alt="B image preview" hidden>
               <div id="targetImageShade" class="image-shade" hidden></div>
@@ -152,22 +158,22 @@
         </details>
 
         <fieldset class="style-fieldset">
-          <legend><span class="step-number">2</span><span><strong data-i18n="qualityTitle">品質を選ぶ</strong><small data-i18n="qualityHelp">小・中・大から選べます。迷ったら中がおすすめです。</small></span></legend>
+          <legend><span class="step-number">2</span><span><strong data-i18n="qualityTitle">どんな感じにする？</strong><small data-i18n="qualityHelp">迷ったら「おすすめ」。まずは短い動画で試せます。</small></span></legend>
           <div class="modes">
             <label class="mode">
               <input type="radio" name="mode" value="fast">
               <span class="mode-visual mode-soft" aria-hidden="true"><i></i></span>
-              <span><strong data-i18n="fastTitle">小</strong><small data-i18n="fastSub">NPU画像8枚・速い</small></span><span class="check" aria-hidden="true">✓</span>
+              <span><strong data-i18n="fastTitle">すぐ試す</strong><small data-i18n="fastSub">軽く・はやい</small></span><span class="check" aria-hidden="true">✓</span>
             </label>
             <label class="mode selected">
               <input type="radio" name="mode" value="fun" checked>
               <span class="mode-visual mode-play" aria-hidden="true"><i></i></span>
-              <span><strong data-i18n="funTitle">中</strong><small data-i18n="funSub">NPU画像12枚・おすすめ</small></span><span class="check" aria-hidden="true">✓</span>
+              <span><strong data-i18n="funTitle">おすすめ</strong><small data-i18n="funSub">見た目と速さのバランス</small></span><span class="check" aria-hidden="true">✓</span>
             </label>
             <label class="mode">
               <input type="radio" name="mode" value="wow">
               <span class="mode-visual mode-cinema" aria-hidden="true"><i></i></span>
-              <span><strong data-i18n="wowTitle">大</strong><small data-i18n="wowSub">NPU画像20枚・高画質</small></span><span class="check" aria-hidden="true">✓</span>
+              <span><strong data-i18n="wowTitle">じっくり</strong><small data-i18n="wowSub">より丁寧に仕上げる</small></span><span class="check" aria-hidden="true">✓</span>
             </label>
           </div>
         </fieldset>
@@ -241,8 +247,8 @@
       </section>
     </section>
 
-    <footer><span>NPU Motion Studio — Local AI</span><span data-i18n="privacy">入力は外部へ送信しません</span></footer>
+    <footer><span>NPU AI Video — Local Image-to-Video</span><span data-i18n="privacy">入力は外部へ送信しません</span></footer>
   </main>
-  <script src="/app.js?v=0.7.0" defer></script>
+    <script src="/app.js?v=0.8.0" defer></script>
 </body>
 </html>

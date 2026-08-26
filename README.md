@@ -1,8 +1,8 @@
 <div align="center">
 
-# NPU Motion Studio
+# NPU AI Video
 
-**Make the impossible middle: robot → dog, sketch → product, ruin → city. Locally.**
+**Make still images move: robot → dog, sketch → product, ruin → city. Locally.**
 
 [![Windows](https://img.shields.io/badge/Windows-11-0078D4?logo=windows11)](https://www.microsoft.com/windows/)
 [![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)](https://www.python.org/)
@@ -15,7 +15,7 @@
 
 ![A giant robot physically transforms into a real Shiba Inu](examples/robot-to-dog/robot-to-dog.gif)
 
-Most image-to-video tools animate one still. **NPU Motion Studio starts with two exact endpoints and creates
+Most image-to-video tools animate one still. **NPU AI Video starts with two exact endpoints and creates
 the impossible journey between them.** Drop in image A and image B, write one sentence—“metal armor folds into
 orange fur”—and the app asks the NPU to draw a transformation timeline while the Arc GPU turns it into a smooth
 MP4. No cloud upload, no node graph, and no server queue.
@@ -35,6 +35,7 @@ memes, and weird visual experiments. The included robot→dog clip is a real out
   Quick Sync for H.264.
 - **Aspect ratio is preserved** — A defines the output shape; B is contained without stretching.
 - **Bilingual, beginner-friendly UI** — switch between English and Japanese with one click.
+- **A friendly first try** — pick a mode, tap a motion idea, and make a short clip without learning prompt jargon.
 - **No hard 10-second limit** — quality modes can spend more time drawing better transitions.
 - **Made for rapid experiments** — two images, one sentence, one Create button; the technical pipeline stays hidden.
 - **Choose quality up front** — Small (8), Medium (12), or Large (20) NPU anchors are generated in one pass.

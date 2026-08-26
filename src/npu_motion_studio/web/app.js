@@ -2,13 +2,16 @@ const $ = (selector) => document.querySelector(selector);
 
 const copy = {
   ja: {
-    introKicker: "NPUで描き、Arc GPUでつなぐ。",
-    heroLead: "AからBへの変化を", heroAccent: "ローカルAI動画", heroTail: "に。",
-    introBody: "最初と最後の画像を選ぶだけ。AIが途中の変形や動きを描きます。1枚を動かすモードも選べます。",
-    creationLegend: "動画の基本モード", transitionTitle: "AからBへ変化",
-    transitionSub: "2枚の間をAIが描く・おすすめ", animateTitle: "1枚を動かす",
-    animateSub: "Aを残して大きく動かす", shortPrompt: "短い文章でもOK",
-    glyphTitle: "AI文字を変化させる", glyphSub: "文字シート→NPU→自然な変化",
+    introKicker: "MAKE SOMETHING MOVE",
+    heroLead: "画像を選んで、", heroAccent: "動かしてみよう", heroTail: "。",
+    introBody: "写真でもイラストでもOK。1枚を動かす、AからBへ変える、文字を変身させる。まずは3つから選ぶだけ。",
+    trustLocalTitle: "このPCで作る", trustLocalBody: "アカウント・待ち時間なし",
+    trustPrivateTitle: "外へ送らない", trustPrivateBody: "写真も文章もローカル",
+    trustEasyTitle: "まず1本", trustEasyBody: "短い動画ですぐ試せる",
+    creationLegend: "何を作る？", transitionTitle: "A → B 変身",
+    transitionSub: "2枚の画像をつないで変化", animateTitle: "画像を動かす",
+    animateSub: "1枚から、カメラや被写体を動かす", shortPrompt: "短い一言でOK",
+    glyphTitle: "文字を変身", glyphSub: "文字や記号を、不思議に変える",
     glyphSourceTitle: "AIに変化させる文字", glyphSourceHelp: "文字をシートに並べ、変化の途中はNPUが自然に描きます。",
     glyphSourceLabel: "元の文字", glyphStyleTitle: "雰囲気のヒント",
     glyphStyleHelp: "色や雰囲気のヒントです。文字の形はNPUが決めます。",
@@ -19,34 +22,34 @@ const copy = {
     glyphTextDownload: "TXT", glyphSvgDownload: "文字シートSVG", glyphFontDownload: "フォント",
     glyphStatus: "文字シートを作ると、NPUが変化を描く準備ができます。",
     glyphResultTitle: "AI変化の元になる文字シート", glyphResultHelp: "動画ではこのシートを元に、NPUが文字を自然に変化させます。",
-    shortcutTail: "で作成", qualityTitle: "品質を選ぶ",
-    qualityHelp: "小・中・大から選べます。迷ったら中がおすすめです。", fastTitle: "小",
-    fastSub: "NPU画像8枚・速い", funTitle: "中",
-    funSub: "NPU画像12枚・おすすめ", wowTitle: "大", wowSub: "NPU画像20枚・高画質",
+    shortcutTail: "で作成", qualityTitle: "どんな感じにする？",
+    qualityHelp: "迷ったら「おすすめ」。まずは短い動画で試せます。", fastTitle: "すぐ試す",
+    fastSub: "軽く・はやい", funTitle: "おすすめ",
+    funSub: "見た目と速さのバランス", wowTitle: "じっくり", wowSub: "より丁寧に仕上げる",
     advanced: "詳細設定", duration: "作品の長さ", loopTitle: "最後から最初へ自然につなぐ",
     loopSub: "繰り返し再生しても切れ目を目立たせません",
-    emptyTitle: "AからBへの変化がここに現れます",
-    emptyBody: "2枚の画像と動きを指定して、下の大きなボタンを押してください。",
-    promise1: "AとBを正確に固定", promise2: "NPUで途中を描く", promise3: "Arc GPUで滑らかに",
+    emptyTitle: "変身動画がここに現れます",
+    emptyBody: "2枚の画像を選び、動きを一言書いてみてください。",
+    promise1: "はじめとおわりを固定", promise2: "途中の変化をAIが描く", promise3: "なめらかな動画に仕上げる",
     seconds: "秒", workingKicker: "ただいま制作中", step1: "文章を理解", step2: "NPUで描く",
     step3: "GPUでつなぐ", step4: "仕上げる",
-    workingNote: "小は速く、中はバランス、大は高画質です。",
-    save: "保存する", remix: "同じAとBで、別の動きを作る", privacy: "入力は外部へ送信しません",
-    sceneTransition: "AとBを選んで、変化を書いてください",
-    sceneTransitionHelp: "Aの形と画面比率を保ち、Bまでの途中をAIが描きます。",
-    sceneAnimate: "場面を教えてください", sceneAnimateHelp: "文章と画像は、どちらか片方だけでも大丈夫です。",
+    workingNote: "迷ったら「おすすめ」。できあがったら、別の動きもすぐ試せます。",
+    save: "保存する", remix: "別の動きでもう1本作る", privacy: "入力は外部へ送信しません",
+    sceneTransition: "はじめとおわりを選んで、変化を書こう",
+    sceneTransitionHelp: "2枚の画像の間に、AIが変身の途中を描きます。",
+    sceneAnimate: "どんな動きにする？", sceneAnimateHelp: "文章か画像、どちらか片方だけでも大丈夫です。",
     glyphMotionTitle: "文字の動きを書いてください", glyphMotionHelp: "文字が割れる、伸びる、光になるなど、短い文章で大丈夫です。",
-    emptyTransitionTitle: "AからBへの変化がここに現れます", emptyTransitionBody: "2枚の画像と動きを指定して、下の大きなボタンを押してください。",
-    emptyAnimateTitle: "1枚の画像の動きがここに現れます", emptyAnimateBody: "文章または画像を指定して、下の大きなボタンを押してください。",
-    emptyGlyphTitle: "AI文字の動画がここに現れます", emptyGlyphBody: "文字または文字シート画像を選び、下の大きなボタンを押してください。",
+    emptyTransitionTitle: "変身動画がここに現れます", emptyTransitionBody: "2枚の画像を選び、動きを一言書いてみてください。",
+    emptyAnimateTitle: "動き出した画像がここに現れます", emptyAnimateBody: "画像か文章を選び、まず1本作ってみてください。",
+    emptyGlyphTitle: "変身する文字がここに現れます", emptyGlyphBody: "文字を入力するか、文字シート画像を選んでください。",
     promptTransition: "例：ロボットが部品を展開しながら、赤いスポーツカーへ変形する。",
     promptAnimate: "例：雨の夜。巨大ロボットが勢いよく走り出す。",
-    promptLabel: "変化や動きの説明", orTransition: "AからBへの動きを文章で指定", orAnimate: "または",
-    firstTransition: "A・最初の画像", firstAnimate: "画像を1枚選ぶ", targetLabel: "B・最後の画像",
+    promptLabel: "動きの一言", orTransition: "どんなふうに変わる？", orAnimate: "画像を使うならこちら",
+    firstTransition: "はじめの画像", firstAnimate: "動かす画像", targetLabel: "おわりの画像",
     clickDrop: "クリックまたはここへドロップ", removeImage: "画像を外す",
     chooseA: "Aの画像を選ぶ", chooseImage: "画像を選ぶ", chooseB: "Bの画像を選ぶ",
-    preparing: "AIを準備しています", generateTransition: "AからBの動画を作る",
-    generateAnimate: "動画を作る", creating: "作品を作っています",
+    preparing: "もうすぐ作れます", generateTransition: "A → B の動画を作る",
+    generateAnimate: "動画を作ってみる", creating: "動画を作っています",
     glyphPrompt: "任意：文字の変化を文章で追加できます。空欄でもNPUが自動で変化させます。",
     glyphAutoPrompt: "naturally transform each printed character into an expressive alien glyph, preserve the exact character sheet grid and spacing, one symbol per cell, fluid ink metamorphosis, no extra objects",
     glyphPromptDefault: "",
@@ -55,27 +58,37 @@ const copy = {
     invalidImage: "PNG、JPEG、WebPの画像を選んでください。", imageTooLarge: "画像は5MB以下にしてください。",
     readImageError: "画像を読み込めませんでした。別の画像をお試しください。",
     bothImages: "AとBの画像を2枚とも選んでください。", promptOrImage: "文章を書くか画像を1枚選んでください。",
-    stillPreparing: "AIを準備しています。ボタンが使えるまで少しお待ちください。",
+    stillPreparing: "ローカルAIを準備しています。ボタンが使えるまで少しお待ちください。",
     gettingReady: "準備しています", completed: "できました", completedIn: "{time}秒でできました",
     promptUnderstood: "文章を理解", savedLocal: "NPUとArc GPUで作り、このPCに保存しました",
     generationFailed: "生成に失敗しました。設定を変えてもう一度お試しください。",
-    systemReady: "NPUを見つけました", demoMode: "デモモード", installed: "導入済み",
+    systemReady: "ローカルAI準備OK", demoMode: "お試しモード", installed: "導入済み",
     notInstalled: "未導入（デモは動きます）", noInfo: "情報なし", notDetected: "未検出",
     systemError: "機器情報を取得できませんでした。デモはそのまま試せます。",
     selectedImage: "{name}を選択中。別の画像を選ぶ",
     brushTitle: "動かす場所を指定（Motion Brush）", brushSummary: "赤で動かす・青で固定・矢印で方向",
     brushMove: "激しく動かす", brushLock: "固定する", brushArrow: "方向を引く", brushClear: "全部消す",
     brushTip: "例：車を赤く塗り、背景を青く塗って、右向きの矢印を引きます。",
+    suggestionsTitle: "迷ったら、これを押してみて",
+    suggestionTransformLabel: "光をまとって変身", suggestionTransformPrompt: "光をまといながら、ゆっくり別の姿へ変身する。",
+    suggestionZoomLabel: "ゆっくりズーム", suggestionZoomPrompt: "カメラがゆっくり近づき、主役がこちらを見る。",
+    suggestionLoopLabel: "ループっぽく", suggestionLoopPrompt: "ゆっくり近づいて、最後に少しだけ元へ戻る。",
+    suggestionWindLabel: "風で揺らす", suggestionWindPrompt: "風が吹き、髪や服と背景の光がやさしく揺れる。",
+    suggestionNeonLabel: "ネオンをきらめかせる", suggestionNeonPrompt: "夜のネオンがきらめき、カメラが横へ動く。",
+    suggestionBurstLabel: "弾けて変わる", suggestionBurstPrompt: "文字が弾けて光の粒になり、別の記号へ変わる。",
     recommended: "おすすめ",
   },
   en: {
-    introKicker: "Draw on the NPU. Connect on the Arc GPU.",
-    heroLead: "Turn A into B with", heroAccent: "local AI motion", heroTail: ".",
-    introBody: "Choose a first and last image. AI draws the transformation in between. A single-image mode is included too.",
-    creationLegend: "Creation mode", transitionTitle: "Transform A to B",
-    transitionSub: "AI draws between two images · Recommended", animateTitle: "Animate one image",
-    animateSub: "Move boldly, then return to A", shortPrompt: "A short prompt works",
-    glyphTitle: "Transform text with AI", glyphSub: "Character sheet → NPU → natural morph",
+    introKicker: "MAKE SOMETHING MOVE",
+    heroLead: "Turn an image into", heroAccent: "a little movie", heroTail: ".",
+    introBody: "Photos, illustrations, or text. Choose one playful mode and make your first short video on this PC.",
+    trustLocalTitle: "Made on this PC", trustLocalBody: "No account or queue",
+    trustPrivateTitle: "Stays local", trustPrivateBody: "Your images stay here",
+    trustEasyTitle: "Start with one", trustEasyBody: "Try a short clip first",
+    creationLegend: "What do you want to make?", transitionTitle: "Transform A → B",
+    transitionSub: "Connect two images and make a change", animateTitle: "Animate an image",
+    animateSub: "Move the camera or the subject", shortPrompt: "A few words are enough",
+    glyphTitle: "Morph text", glyphSub: "Turn letters and symbols into something strange",
     glyphSourceTitle: "Text for the AI to transform", glyphSourceHelp: "The NPU receives a character sheet and invents the in-between naturally.",
     glyphSourceLabel: "Source text", glyphStyleTitle: "Mood hint",
     glyphStyleHelp: "A color and mood hint; the NPU decides the new character shapes.",
@@ -86,36 +99,36 @@ const copy = {
     glyphTextDownload: "TXT", glyphSvgDownload: "CHARACTER SHEET SVG", glyphFontDownload: "FONT",
     glyphStatus: "Make the character sheet, then the NPU will draw the transformation.",
     glyphResultTitle: "Character sheet used by the AI", glyphResultHelp: "The video starts here and the NPU morphs each character naturally.",
-    shortcutTail: "to create", qualityTitle: "Choose quality",
-    qualityHelp: "Pick Small, Medium, or Large. Medium is recommended.", fastTitle: "Small", fastSub: "8 NPU frames · fast",
-    funTitle: "Medium", funSub: "12 NPU frames · recommended", wowTitle: "Large",
-    wowSub: "20 NPU frames · high quality", advanced: "Advanced settings", duration: "Video length",
+    shortcutTail: "to create", qualityTitle: "Pick a feel",
+    qualityHelp: "Not sure? Choose Recommended and try a short clip.", fastTitle: "Quick try", fastSub: "Light and fast",
+    funTitle: "Recommended", funSub: "Best balance of look and speed", wowTitle: "Take more time",
+    wowSub: "A more careful finish", advanced: "Advanced settings", duration: "Video length",
     loopTitle: "Seamlessly return to the first frame", loopSub: "Hide the cut during repeated playback",
-    emptyTitle: "Your A-to-B transformation appears here",
-    emptyBody: "Choose two images, describe the motion, and press the big button.",
-    promise1: "Exact A and B endpoints", promise2: "NPU-drawn in-betweens", promise3: "Smooth Arc GPU motion",
+    emptyTitle: "Your transformation appears here",
+    emptyBody: "Choose two images, add a few words, and make your first clip.",
+    promise1: "First and last frames stay put", promise2: "AI draws the in-between", promise3: "Finished as a smooth video",
     seconds: "sec", workingKicker: "CREATING LOCALLY", step1: "Understand prompt", step2: "Draw on NPU",
     step3: "Connect on GPU", step4: "Finish MP4",
-    workingNote: "Small is fast, Medium is balanced, and Large is high quality.",
-    save: "Save video", remix: "Try another motion with the same A and B", privacy: "Your inputs never leave this PC",
-    sceneTransition: "Choose A and B, then describe the transformation",
-    sceneTransitionHelp: "A defines the aspect ratio. AI draws the path toward B.",
-    sceneAnimate: "Describe the scene", sceneAnimateHelp: "Use a prompt, one image, or both.",
+    workingNote: "Recommended is a good place to start. When it is done, try another motion.",
+    save: "Save video", remix: "Make another clip with a new motion", privacy: "Your inputs never leave this PC",
+    sceneTransition: "Choose the start and end, then describe the change",
+    sceneTransitionHelp: "Pick two images. AI draws the transformation between them.",
+    sceneAnimate: "What should move?", sceneAnimateHelp: "Use a prompt, one image, or both.",
     glyphMotionTitle: "Describe the glyph motion", glyphMotionHelp: "Say what happens: fracture, stretch, glow, or reassemble.",
-    emptyTransitionTitle: "Your A-to-B transformation appears here", emptyTransitionBody: "Choose two images, describe the motion, and press the big button.",
-    emptyAnimateTitle: "Your one-image motion appears here", emptyAnimateBody: "Choose a prompt or image, then press the big button.",
-    emptyGlyphTitle: "Your AI-transformed character video appears here", emptyGlyphBody: "Choose source text or a character-sheet image, then press the big button.",
+    emptyTransitionTitle: "Your transformation appears here", emptyTransitionBody: "Choose two images, add a few words, and make your first clip.",
+    emptyAnimateTitle: "Your moving image appears here", emptyAnimateBody: "Choose an image or a prompt, then make a first clip.",
+    emptyGlyphTitle: "Your morphing text appears here", emptyGlyphBody: "Enter text or choose a character-sheet image to get started.",
     promptTransition: "Example: A robot unfolds its parts and transforms into a red sports car.",
     promptAnimate: "Example: A giant robot bursts into a sprint through a rainy neon street.",
     glyphPrompt: "Optional: describe the change. Leave it blank and the NPU will choose a natural morph.",
     glyphAutoPrompt: "naturally transform each printed character into an expressive alien glyph, preserve the exact character sheet grid and spacing, one symbol per cell, fluid ink metamorphosis, no extra objects",
     glyphPromptDefault: "",
-    promptLabel: "Motion or transformation prompt", orTransition: "Tell AI how A should become B", orAnimate: "or",
-    firstTransition: "A · First image", firstAnimate: "Choose one image", targetLabel: "B · Last image",
+    promptLabel: "A few words about the motion", orTransition: "How should it change?", orAnimate: "Add an image too",
+    firstTransition: "Start image", firstAnimate: "Image to animate", targetLabel: "End image",
     clickDrop: "Click or drop an image here", removeImage: "Remove image",
     chooseA: "Choose image A", chooseImage: "Choose an image", chooseB: "Choose image B",
-    preparing: "Preparing local AI", generateTransition: "Create A-to-B video",
-    generateAnimate: "Create video", creating: "Creating your video",
+    preparing: "Almost ready", generateTransition: "Create A → B video",
+    generateAnimate: "Make a video", creating: "Making your video",
     waitBusy: "Keep this window open while it works", qualityFirst: "Generates at the quality you selected",
     startupWait: "The first launch needs a moment", genericError: "Something went wrong. Please try again.",
     invalidImage: "Choose a PNG, JPEG, or WebP image.", imageTooLarge: "Choose an image under 5 MB.",
@@ -125,19 +138,26 @@ const copy = {
     gettingReady: "Getting ready", completed: "Done", completedIn: "Done in {time} seconds",
     promptUnderstood: "Prompt understood", savedLocal: "Created locally with the NPU and Arc GPU",
     generationFailed: "Generation failed. Try a different prompt or quality setting.",
-    systemReady: "NPU ready", demoMode: "Demo mode", installed: "Installed",
+    systemReady: "Local AI ready", demoMode: "Try-it mode", installed: "Installed",
     notInstalled: "Not installed (demo still works)", noInfo: "No information", notDetected: "Not detected",
     systemError: "Hardware details are unavailable. Demo mode still works.",
     selectedImage: "{name} selected. Choose another image",
     brushTitle: "Choose what moves (Motion Brush)", brushSummary: "Red moves · blue locks · arrow directs",
     brushMove: "Move strongly", brushLock: "Keep fixed", brushArrow: "Draw direction", brushClear: "Clear all",
     brushTip: "Example: paint the car red, the background blue, then draw an arrow to the right.",
+    suggestionsTitle: "Not sure? Try one of these",
+    suggestionTransformLabel: "Transform with light", suggestionTransformPrompt: "The subject slowly transforms into a new form while wrapped in glowing light.",
+    suggestionZoomLabel: "Slow zoom", suggestionZoomPrompt: "The camera slowly moves closer as the subject looks toward us.",
+    suggestionLoopLabel: "Make it loop", suggestionLoopPrompt: "The camera moves closer, then gently returns toward the starting view.",
+    suggestionWindLabel: "Add a breeze", suggestionWindPrompt: "A soft breeze moves the hair, clothing, and lights in the background.",
+    suggestionNeonLabel: "Neon shimmer", suggestionNeonPrompt: "Neon lights shimmer while the camera glides sideways through the night.",
+    suggestionBurstLabel: "Burst and morph", suggestionBurstPrompt: "The letters burst into glowing particles and reform as new symbols.",
     recommended: "recommended",
   },
 };
 
 const elements = {
-  form: $("#creationForm"), prompt: $("#prompt"), promptLabel: $("#promptLabel"),
+  form: $("#creationForm"), prompt: $("#prompt"), promptLabel: $("#promptLabel"), promptSuggestions: $("#promptSuggestions"),
   imageInput: $("#imageInput"), dropzone: $("#dropzone"), dropPrompt: $("#dropPrompt"),
   imagePreview: $("#imagePreview"), imageShade: $("#imageShade"), removeImage: $("#removeImage"),
   targetImageInput: $("#targetImageInput"), targetDropzone: $("#targetDropzone"),
@@ -290,6 +310,46 @@ function selectMode(value) {
   });
 }
 
+function renderPromptSuggestions() {
+  if (!elements.promptSuggestions) return;
+  const suggestions = {
+    transition: [
+      ["suggestionTransformLabel", "suggestionTransformPrompt"],
+      ["suggestionZoomLabel", "suggestionZoomPrompt"],
+      ["suggestionNeonLabel", "suggestionNeonPrompt"],
+    ],
+    animate: [
+      ["suggestionZoomLabel", "suggestionZoomPrompt"],
+      ["suggestionWindLabel", "suggestionWindPrompt"],
+      ["suggestionNeonLabel", "suggestionNeonPrompt"],
+    ],
+    glyph: [
+      ["suggestionTransformLabel", "suggestionTransformPrompt"],
+      ["suggestionBurstLabel", "suggestionBurstPrompt"],
+      ["suggestionNeonLabel", "suggestionNeonPrompt"],
+    ],
+  }[state.creationMode] || [];
+  const title = document.createElement("span");
+  title.className = "prompt-suggestions-title";
+  title.textContent = t("suggestionsTitle");
+  const buttons = document.createElement("div");
+  buttons.className = "prompt-suggestion-list";
+  for (const [labelKey, promptKey] of suggestions) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "prompt-suggestion";
+    button.textContent = t(labelKey);
+    button.title = t(promptKey);
+    button.addEventListener("click", () => {
+      elements.prompt.value = t(promptKey);
+      elements.prompt.focus();
+      clearError();
+    });
+    buttons.append(button);
+  }
+  elements.promptSuggestions.replaceChildren(title, buttons);
+}
+
 function selectCreationMode(value) {
   state.creationMode = value;
   const transition = value === "transition";
@@ -318,6 +378,7 @@ function selectCreationMode(value) {
     elements.prompt.value = "";
   }
   if (!state.busy) setBusy(false);
+  renderPromptSuggestions();
 }
 
 function renderSystem() {

@@ -13,12 +13,12 @@ The current Intel Smartsheet form requires the applicant to confirm that they ar
 - Country/region: `Japan`
 - Email: `TODO — your email`
 - GitHub: https://github.com/taichiro20100723-droid/npu-motion-studio
-- Project title: `NPU Motion Studio`
+- Project title: `NPU AI Video`
 - Primary hardware: `Intel Core Ultra 7 258V / Intel AI Boost NPU / Intel Arc 140V GPU`
 
 ## Short project description
 
-**NPU Motion Studio turns two still images into the impossible middle between them.** A user selects image A and image B, writes one sentence describing the transformation, and receives a local MP4. OpenVINO LCM generates prompt-aware anchor images on the Intel NPU; the Arc GPU decodes and interpolates the intervals; Intel Quick Sync encodes the final video. The result is a fast, private, beginner-friendly A→B motion tool for concept reveals, music-video transitions, product ideas, and visual experiments.
+**NPU AI Video turns two still images into the impossible middle between them.** A user selects image A and image B, writes one sentence describing the transformation, and receives a local MP4. OpenVINO LCM generates prompt-aware anchor images on the Intel NPU; the Arc GPU decodes and interpolates the intervals; Intel Quick Sync encodes the final video. The result is a fast, private, beginner-friendly A→B motion tool for concept reveals, music-video transitions, product ideas, and visual experiments.
 
 ## Why this is an OpenVINO project
 
@@ -68,7 +68,7 @@ Use the included non-sensitive robot→dog sample. Do not claim that the app is 
 | 30–43 s | Play the A→B result | “The first frame is A, the last frame is B; the middle is AI-generated.” |
 | 43–52 s | Show the 2.83 s fast preview badge | “Preview quickly before spending time on quality.” |
 | 52–64 s | Show the 12-anchor quality result | “More anchors make the transformation richer.” |
-| 64–75 s | GitHub page and final clip | “NPU Motion Studio is local, open, and reproducible.” |
+| 64–75 s | GitHub page and final clip | “NPU AI Video is local, open, and reproducible.” |
 
 Suggested prompt:
 
@@ -80,11 +80,11 @@ A colossal steel battle robot transforms into a real Shiba Inu while sprinting t
 
 ### What did you build?
 
-I built NPU Motion Studio, a local Windows application that creates an A→B transformation video from two still images and one natural-language sentence. It uses OpenVINO LCM on the Intel NPU for semantic anchor generation, the Intel Arc GPU for decoding and interpolation, and Quick Sync for MP4 output. The interface hides the hardware complexity so a beginner can create a result with one button.
+I built NPU AI Video, a local Windows application that creates an A→B transformation video from two still images and one natural-language sentence. It uses OpenVINO LCM on the Intel NPU for semantic anchor generation, the Intel Arc GPU for decoding and interpolation, and Quick Sync for MP4 output. The interface hides the hardware complexity so a beginner can create a result with one button.
 
 ### What problem does it solve?
 
-Most image-to-video tools animate one existing image. That is useful for camera movement, but it does not directly answer “show me the process of becoming something else.” NPU Motion Studio makes that process the primary object: robot→dog, sketch→product, ruin→city, or any pair of user-supplied endpoints. It also makes local Intel AI PC hardware useful for a creative workflow without cloud upload or a node graph.
+Most image-to-video tools animate one existing image. That is useful for camera movement, but it does not directly answer “show me the process of becoming something else.” NPU AI Video makes that process the primary object: robot→dog, sketch→product, ruin→city, or any pair of user-supplied endpoints. It also makes local Intel AI PC hardware useful for a creative workflow without cloud upload or a node graph.
 
 ### Why Intel hardware and OpenVINO?
 
@@ -117,7 +117,7 @@ The next milestones are better hand/face consistency, stronger subject masks for
 Do not describe yourself as an Intel Software Innovator until Intel accepts the application. If accepted and you later publish a related post, follow Intel's disclosure guidance, for example:
 
 ```text
-#IntelSoftwareInnovator I built NPU Motion Studio with OpenVINO on an Intel Core Ultra AI PC. This post describes my own measured experience; results vary by hardware and model settings.
+#IntelSoftwareInnovator I built NPU AI Video with OpenVINO on an Intel Core Ultra AI PC. This post describes my own measured experience; results vary by hardware and model settings.
 ```
 
 ## Final checklist before clicking Apply

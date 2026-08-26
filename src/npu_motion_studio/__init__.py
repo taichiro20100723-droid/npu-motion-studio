@@ -1,3 +1,3 @@
-"""NPU Motion Studio package."""
+"""NPU AI Video package."""
 
 __version__ = "0.5.0"
