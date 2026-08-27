@@ -35,6 +35,7 @@ def test_storyboard_uses_audio_energy_and_safe_prompts(tmp_path: Path) -> None:
     assert cuts[1].energy_band == "peak"
     assert "no nudity" in cuts[0].prompt
     assert "no people" in SAFE_SUFFIX
+    assert "automatically transform from the previous" in cuts[1].prompt
 
 
 def test_storyboard_reads_optional_lrc(tmp_path: Path) -> None:

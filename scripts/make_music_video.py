@@ -124,9 +124,7 @@ def _generate_clip(
     status = _wait_for_job(api_url, str(created["id"]))
     artifact_url = status.get("artifact_url") or f"/api/jobs/{created['id']}/artifact"
     artifact = (
-        f"{api_url}{artifact_url}"
-        if str(artifact_url).startswith("/")
-        else str(artifact_url)
+        f"{api_url}{artifact_url}" if str(artifact_url).startswith("/") else str(artifact_url)
     )
     _download(artifact, destination)
 
@@ -144,28 +142,101 @@ def _join_clips(
     source: Path,
     output: Path,
     duration: float,
+    *,
+    clip_durations: list[float],
+    transition_seconds: float = 0.45,
 ) -> None:
-    list_path = output.with_suffix(".concat.txt")
-    lines = [f"file '{clip.resolve().as_posix().replace("'", "'\\''")}'" for clip in clips]
-    list_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
-    try:
-        base = [
-            ffmpeg, "-y", "-f", "concat", "-safe", "0", "-i", str(list_path), "-i", str(source),
-            "-map", "0:v:0", "-map", "1:a:0", "-t", f"{duration:.3f}",
-            "-c:v", "h264_qsv", "-global_quality", "18", "-look_ahead", "1",
-            "-c:a", "aac", "-b:a", "256k", "-movflags", "+faststart", str(output),
+    if len(clips) != len(clip_durations):
+        raise ValueError("カット素材とカット秒数の数が一致しません")
+
+    # Use a real xfade chain by default.  This makes a campus photo visibly
+    # become the next room/stage rather than merely cutting between stills.
+    # The final tpad restores the overlap that xfade consumes, so the music is
+    # never shortened.
+    transition = min(
+        max(0.0, transition_seconds),
+        *(max(0.05, value / 2.0) for value in clip_durations),
+    )
+    transitions = (
+        "fade",
+        "wipeleft",
+        "slideright",
+        "circleopen",
+        "smoothright",
+        "zoomin",
+        "pixelize",
+        "fadewhite",
+        "radial",
+        "wiperight",
+    )
+
+    inputs: list[str] = []
+    filters: list[str] = []
+    for index, clip in enumerate(clips):
+        inputs.extend(("-i", str(clip)))
+        filters.append(
+            f"[{index}:v]setpts=PTS-STARTPTS,scale=768:768:force_original_aspect_ratio=decrease,"
+            f"pad=768:768:(ow-iw)/2:(oh-ih)/2:color=black,fps=24,format=yuv420p[v{index}]"
+        )
+
+    current = "v0"
+    accumulated = float(clip_durations[0])
+    if transition > 0 and len(clips) > 1:
+        for index in range(1, len(clips)):
+            offset = max(0.0, accumulated - transition)
+            next_label = f"vx{index}"
+            transition_name = transitions[(index - 1) % len(transitions)]
+            filters.append(
+                f"[{current}][v{index}]xfade=transition={transition_name}:"
+                f"duration={transition:.3f}:offset={offset:.3f},format=yuv420p[{next_label}]"
+            )
+            current = next_label
+            accumulated += float(clip_durations[index]) - transition
+    pad_seconds = max(0.0, duration - accumulated)
+    filters.append(
+        f"[{current}]tpad=stop_mode=clone:stop_duration={pad_seconds:.3f},"
+        f"trim=duration={duration:.3f},setpts=PTS-STARTPTS[v]"
+    )
+    filter_complex = ";".join(filters)
+    audio_input = len(clips)
+
+    def _encode(video_codec: list[str]) -> subprocess.CompletedProcess[str]:
+        command = [
+            ffmpeg,
+            "-y",
+            *inputs,
+            "-i",
+            str(source),
+            "-filter_complex",
+            filter_complex,
+            "-map",
+            "[v]",
+            "-map",
+            f"{audio_input}:a:0",
+            "-t",
+            f"{duration:.3f}",
+            *video_codec,
+            "-c:a",
+            "aac",
+            "-b:a",
+            "256k",
+            "-movflags",
+            "+faststart",
+            str(output),
         ]
-        completed = subprocess.run(base, check=False, capture_output=True, text=True)
+        return subprocess.run(command, check=False, capture_output=True, text=True)
+
+    try:
+        completed = _encode(["-c:v", "h264_qsv", "-global_quality", "18", "-look_ahead", "1"])
         if completed.returncode:
-            fallback = [
-                ffmpeg, "-y", "-f", "concat", "-safe", "0", "-i", str(list_path), "-i", str(source),
-                "-map", "0:v:0", "-map", "1:a:0", "-t", f"{duration:.3f}",
-                "-c:v", "libx264", "-preset", "medium", "-crf", "18",
-                "-c:a", "aac", "-b:a", "256k", "-movflags", "+faststart", str(output),
-            ]
-            _run(fallback)
+            completed = _encode(["-c:v", "libx264", "-preset", "medium", "-crf", "18"])
+        if completed.returncode:
+            detail = (completed.stderr or completed.stdout)[-1200:]
+            raise RuntimeError(f"動画の変化つなぎに失敗しました: {detail}")
     finally:
-        list_path.unlink(missing_ok=True)
+        # Input clips are kept as editable project assets; only the final MP4
+        # is overwritten on a rerun.
+        pass
 
 
 def _make_photo_clip(ffmpeg: str, image: Path, destination: Path, duration: float) -> None:
@@ -261,6 +332,12 @@ def main() -> int:
         default=0,
         help="何カットごとに元写真をそのまま入れるか（0=全カットNPU）",
     )
+    parser.add_argument(
+        "--transition-seconds",
+        type=float,
+        default=0.45,
+        help="カット間の自動変形トランジション秒数（0=通常のカット）",
+    )
     parser.add_argument("--reuse", action="store_true", help="既存のカットを再利用する")
     args = parser.parse_args()
     source = args.source.resolve()
@@ -308,9 +385,7 @@ def main() -> int:
             print(f"再利用: {destination.name}")
             continue
         photo_paths = [
-            path
-            for path in background_paths
-            if path.suffix.casefold() in (".jpg", ".jpeg")
+            path for path in background_paths if path.suffix.casefold() in (".jpg", ".jpeg")
         ]
         if args.photo_every and photo_paths and (cut.index - 1) % args.photo_every == 0:
             photo = photo_paths[((cut.index - 1) // args.photo_every) % len(photo_paths)]
@@ -338,7 +413,15 @@ def main() -> int:
         return 0
     output = (args.output or source.with_name(f"{source.stem}-NPU-MV.mp4")).resolve()
     clip_paths = [clips_dir / f"cut-{cut.index:02d}.mp4" for cut in cuts]
-    _join_clips(ffmpeg, clip_paths, source, output, _duration_from_wav(wav))
+    _join_clips(
+        ffmpeg,
+        clip_paths,
+        source,
+        output,
+        _duration_from_wav(wav),
+        clip_durations=[cut.duration_seconds for cut in cuts],
+        transition_seconds=args.transition_seconds,
+    )
     print(f"完成: {output}")
     print(f"編集用カット表: {storyboard_path}")
     return 0

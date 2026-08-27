@@ -92,7 +92,10 @@ generated in another tool. The app sends that image to the local NPU as-is; chec
 
 `scripts/make_music_video.py` cuts a song into roughly eight-second scenes, uses audio energy to vary motion, asks
 the local NPU/Arc GPU pipeline for the animated cuts, and restores the original audio when joining the final MP4.
-An optional `.lrc` file adds lyric timing; without one, the builder still works from the music's energy curve.
+It automatically writes a large transformation chain (campus → classroom → library → stage) and dynamic xfade
+transitions between cuts. An optional `.lrc` file adds lyric timing; without one, the builder still works from the
+music's energy curve. The included safe recipe uses architecture and props instead of people because the local model
+can occasionally ignore clothing instructions; real-person photos are never used as inputs.
 
 ```powershell
 .\.venv\Scripts\python.exe scripts\make_music_video.py "song.mp4" `

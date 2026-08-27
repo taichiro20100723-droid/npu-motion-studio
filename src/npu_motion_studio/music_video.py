@@ -34,64 +34,101 @@ class MusicCut:
         return asdict(self)
 
 
-# These scenes are object/architecture-led on purpose.  Avoiding human bodies
-# is more reliable than trying to repair an unsafe frame after generation.
+# The scene order is an automatic visual journey.  Each cut is deliberately
+# far from the previous one so the NPU has a clear destination to morph toward.
+# The finished school MV keeps people out of the image inputs.  The local LCM
+# model can ignore clothing instructions, so props and spaces are used for the
+# dramatic transformations instead of trying to repair an unsafe human frame.
 SCENES: tuple[str, ...] = (
-    "a Japanese coastal high-school campus gate at golden hour, red running track, no people",
-    "the school's courtyard with handmade cultural-festival banners, empty and quiet",
-    "a bright school festival stage with colored lights and instruments, empty stage, no people",
     (
-        "an empty science classroom prepared for a festival exhibit, circuit boards and glowing "
-        "diagrams, no real people"
+        "a Japanese coastal high-school campus gate at golden hour, red running track, "
+        "wide establishing shot"
+    ),
+    "the school gate cracking open into a surreal paper-festival corridor, handmade banners flying",
+    (
+        "a bright school festival stage with colored lights, drums, and electric guitars, "
+        "empty stage"
+    ),
+    (
+        "a science classroom exploding into a kinetic festival exhibit, circuit boards and glowing "
+        "diagrams, glowing wires and mechanical parts, empty classroom"
     ),
     (
         "aerial view of the coastal school and town at sunset, festival lights beginning to glow, "
-        "no people visible"
+        "a huge cinematic pullback over the sea"
     ),
-    "a library aisle decorated with paper stars for the school festival, no people",
-    "a gymnasium with handmade stalls and streamers, empty, no people",
+    (
+        "a library aisle decorated with paper stars, books spiralling into a festival stage, "
+        "floating porcelain festival masks on pedestals, no people"
+    ),
+    (
+        "a gymnasium transforming into a glowing market of handmade stalls and streamers, "
+        "handmade stalls and streamers assembling themselves, no people"
+    ),
     (
         "a close-up of school festival wristbands, paint, and colorful craft materials on a table, "
-        "no people"
+        "the materials assembling themselves into a miniature city"
     ),
     (
         "the school entrance at blue hour with lanterns and a glowing festival poster, no people "
-        "visible"
-    ),
-    "a close-up of a festival drum kit under blue stage lights, empty stage, no people",
-    (
-        "a rooftop view toward the sea with school pennants moving in the wind, no people visible"
-    ),
-    "a science display table with glowing diagrams and handmade labels, empty classroom, no people",
-    (
-        "festival confetti and colored paper shapes swirling through an empty classroom, no people"
-    ),
-    "a festival electric guitar and amplifier under warm stage lights, empty stage, no people",
-    (
-        "an empty auditorium with a single spotlight, handmade banners, and a polished floor, no "
-        "people"
-    ),
-    "school club posters and chalk drawings transforming across a hallway, no people visible",
-    "a table of decorated festival snacks and handmade price cards, no people",
-    (
-        "the school field and coastline under dramatic clouds, festival flags rippling, no people "
-        "visible"
-    ),
-    "an empty festival stage with a large handmade banner and warm spotlights, no people",
-    (
-        "lanterns leading from the school gate toward the festival hall at night, no people visible"
+        "visible, poster becoming a portal"
     ),
     (
-        "the school campus returning at dawn after the festival, warm windows and calm sea, no "
-        "people visible"
+        "a close-up of a festival drum kit under blue stage lights, drumbeats bending the "
+        "architecture"
+    ),
+    (
+        "a rooftop view toward the sea with school pennants moving in the wind, the ocean rising "
+        "into the sky"
+    ),
+    (
+        "a science display table with glowing diagrams and handmade labels, equations turning into "
+        "constellations"
+    ),
+    (
+        "festival confetti and colored paper shapes swirling through a classroom, no people"
+    ),
+    (
+        "a festival electric guitar and amplifier under warm stage lights, sound waves becoming "
+        "neon ribbons"
+    ),
+    (
+        "an auditorium with a single spotlight and handmade banners, an original expressionist "
+        "scream mask emerging from the floor, not a reproduction of any artwork"
+    ),
+    (
+        "school club posters and chalk drawings transforming across a hallway, ink becoming living "
+        "color and light, no people visible"
+    ),
+    (
+        "a table of decorated festival snacks and handmade price cards, the table launching into a "
+        "colorful food-festival vortex"
+    ),
+    (
+        "the school field and coastline under dramatic clouds, festival flags ripping through the "
+        "sky, flags and ribbons whipping through the air, no people"
+    ),
+    (
+        "a festival stage with a large handmade banner and warm spotlights, fictional AI-generated "
+        "empty stage and banners pulsing with the music, no people"
+    ),
+    (
+        "lanterns leading from the school gate toward the festival hall at night, the path folding "
+        "through impossible space"
+    ),
+    (
+        "the school campus returning at dawn after the festival, warm windows and calm sea, the "
+        "whole night dissolving into sunrise"
     ),
 )
 
 SAFE_SUFFIX = (
-    "cinematic album music-video shot, strong parallax and camera movement, "
+    "cinematic album music-video shot, extreme dynamic transformation, strong parallax, "
+    "whip-pan, orbiting camera, snap zoom, perspective warp, liquid morph, light burst, "
     "dramatic but elegant lighting, highly detailed, abstract atmosphere, "
-    "no people, no human figure, no face, no body, no skin, no nudity, no exposed body, "
-    "no erotic imagery, no real-person likeness, no watermark"
+    "no people, no human figure, no face, no body, no skin, no breasts, no cleavage, no bikini, "
+    "no lingerie, no bare torso, no exposed skin, no nudity, no erotic imagery, no gore, "
+    "no real-person likeness, no watermark"
 )
 
 
@@ -170,7 +207,14 @@ def build_storyboard(
         else:
             band = "pulse"
             movement = "steady dolly movement, rhythmic light breathing"
-        prompt = f"{SCENES[index % len(SCENES)]}, {movement}, {SAFE_SUFFIX}"
+        destination = SCENES[index % len(SCENES)]
+        origin = SCENES[(index - 1) % len(SCENES)] if index else "a blank dark frame"
+        transition = (
+            f"current destination shot: {destination}; automatically transform from the previous "
+            f"shot ({origin}) into it, make the change obvious and continuous, carry one visual "
+            "motif across the cut"
+        )
+        prompt = f"{transition}, {movement}, {SAFE_SUFFIX}"
         cuts.append(
             MusicCut(
                 index=index + 1,
