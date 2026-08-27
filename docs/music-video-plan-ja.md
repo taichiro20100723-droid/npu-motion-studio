@@ -26,7 +26,7 @@
 1. `Murata Night.mp4` をDownloadsに置く。
 2. 顔のない学校背景写真を `WasedaSaga-MV-backgrounds` に置く。
 3. `make_waseda_saga_festival_mv.bat` をダブルクリックする。
-4. 完成動画はDownloadsの `WasedaSaga-Festival-MV-safe.mp4`、編集用カット表は `WasedaSaga-Safe-MV-work/storyboard.json` にできる。
+4. 完成動画はDownloadsの `WasedaSaga-Festival-MV-dynamic-object-safe.mp4`、編集用カット表は `WasedaSaga-Dynamic-Object-MV-work/storyboard.json` にできる。
 
 ## 公開前チェック
 
