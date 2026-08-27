@@ -88,6 +88,22 @@ leave it blank for the built-in typography transformation cue, or add a short id
 You can also drop in your own character-sheet image, including a free-to-use asset, a photo you made, or an image
 generated in another tool. The app sends that image to the local NPU as-is; check the license of any external asset.
 
+### Music-video builder (experimental)
+
+`scripts/make_music_video.py` cuts a song into roughly eight-second scenes, uses audio energy to vary motion, asks
+the local NPU/Arc GPU pipeline for the animated cuts, and restores the original audio when joining the final MP4.
+An optional `.lrc` file adds lyric timing; without one, the builder still works from the music's energy curve.
+
+```powershell
+.\.venv\Scripts\python.exe scripts\make_music_video.py "song.mp4" `
+  --backgrounds "face-free background folder" --photo-every 4
+```
+
+The included `make_waseda_saga_festival_mv.bat` is a one-double-click recipe for the local Waseda Saga festival
+prototype. It uses only face-free school/campus backgrounds as references, keeps several real background-photo
+shots, and generates the remaining festival visuals locally. Before publishing, confirm the school's permission and
+the license for every photograph; the repository does not redistribute those photos.
+
 ## Measured on a Core Ultra 7 258V
 
 Windows 11 · Intel AI Boost NPU · Intel Arc 140V · OpenVINO 2025.4.1.
