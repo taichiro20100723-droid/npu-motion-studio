@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="dark">
-  <meta name="description" content="NPU AI Video turns one or two images into short local AI videos on your Windows PC.">
-  <title>NPU AI Video — Local Image-to-Video</title>
-    <link rel="stylesheet" href="/styles.css?v=0.8.0">
+  <meta name="description" content="NPU AI Video turns one or two images into short, shareable local AI videos on your Windows PC.">
+  <title>NPU AI Video — Make a little movie</title>
+    <link rel="stylesheet" href="/styles.css?v=0.9.0">
 </head>
 <body>
   <main class="shell">
@@ -27,17 +27,46 @@
     </header>
 
     <section class="intro" aria-labelledby="pageTitle">
-      <p class="intro-kicker" data-i18n="introKicker">MAKE SOMETHING MOVE</p>
-      <h2 id="pageTitle"><span data-i18n="heroLead">画像を選んで、</span><br><em data-i18n="heroAccent">動かしてみよう</em><span data-i18n="heroTail">。</span></h2>
-      <p data-i18n="introBody">写真でもイラストでもOK。1枚を動かす、AからBへ変える、文字を変身させる。まずは3つから選ぶだけ。</p>
+      <p class="intro-kicker" data-i18n="introKicker">MAKE A LITTLE MOVIE</p>
+      <h2 id="pageTitle"><span data-i18n="heroLead">1枚の画像が、</span><br><em data-i18n="heroAccent">5秒の物語になる</em><span data-i18n="heroTail">。</span></h2>
+      <p data-i18n="introBody">写真・イラスト・文字を選ぶだけ。動きのアイデアを押して、ローカルAIでまず1本。</p>
+      <div class="hero-actions">
+        <button id="jumpToCreator" class="hero-primary" type="button"><span data-i18n="heroPrimary">作り始める</span><span aria-hidden="true">↓</span></button>
+        <button id="browseIdeas" class="hero-secondary" type="button"><span data-i18n="heroSecondary">アイデアを見る</span><span aria-hidden="true">✦</span></button>
+      </div>
       <div class="trust-strip" role="list" aria-label="Local AI benefits">
-        <span role="listitem"><b>01</b><strong data-i18n="trustLocalTitle">このPCで作る</strong><small data-i18n="trustLocalBody">アカウント・待ち時間なし</small></span>
+        <span role="listitem"><b>01</b><strong data-i18n="trustLocalTitle">このPCで作る</strong><small data-i18n="trustLocalBody">アカウント・キューなし</small></span>
         <span role="listitem"><b>02</b><strong data-i18n="trustPrivateTitle">外へ送らない</strong><small data-i18n="trustPrivateBody">写真も文章もローカル</small></span>
-        <span role="listitem"><b>03</b><strong data-i18n="trustEasyTitle">まず1本</strong><small data-i18n="trustEasyBody">短い動画ですぐ試せる</small></span>
+        <span role="listitem"><b>03</b><strong data-i18n="trustEasyTitle">まず1本</strong><small data-i18n="trustEasyBody">短い動画から始める</small></span>
       </div>
     </section>
 
-    <section class="workspace">
+    <section id="inspiration" class="starter-strip" aria-labelledby="starterTitle">
+      <div class="starter-heading">
+        <span class="starter-spark" aria-hidden="true">✦</span>
+        <div><p class="starter-eyebrow" data-i18n="starterEyebrow">POPULAR FIRST TRIES</p><h2 id="starterTitle" data-i18n="starterTitle">迷ったら、まずこの3つ</h2><p data-i18n="starterBody">カードを押すと設定が入ります。画像を選ぶだけで作れます。</p></div>
+      </div>
+      <div id="templateGrid" class="template-grid" role="list" aria-label="Starter ideas">
+        <button class="template-card template-transform" type="button" data-template="robot" role="listitem">
+          <span class="template-art" aria-hidden="true"><i></i><b>→</b><em>●</em></span>
+          <span class="template-copy"><strong data-i18n="starterRobot">ロボット → 柴犬</strong><small data-i18n="starterRobotSub">変身の途中を楽しむ</small></span>
+          <span class="template-arrow" aria-hidden="true">↗</span>
+        </button>
+        <button class="template-card template-animate" type="button" data-template="neon" role="listitem">
+          <span class="template-art" aria-hidden="true"><i></i><b>✦</b><em>◒</em></span>
+          <span class="template-copy"><strong data-i18n="starterNeon">夜の街を走る</strong><small data-i18n="starterNeonSub">1枚からカメラを動かす</small></span>
+          <span class="template-arrow" aria-hidden="true">↗</span>
+        </button>
+        <button class="template-card template-glyph" type="button" data-template="glyph" role="listitem">
+          <span class="template-art" aria-hidden="true"><i>Ƶ</i><b>✧</b><em>Λ</em></span>
+          <span class="template-copy"><strong data-i18n="starterGlyph">文字 → 異星の記号</strong><small data-i18n="starterGlyphSub">文字をシェア素材に</small></span>
+          <span class="template-arrow" aria-hidden="true">↗</span>
+        </button>
+      </div>
+      <p class="starter-note"><span aria-hidden="true">↳</span><span data-i18n="starterNote">カードは設定を入れるだけ。写真は外へ送られません。</span></p>
+    </section>
+
+    <section id="creator" class="workspace">
       <form id="creationForm" class="composer" novalidate>
         <fieldset class="creation-mode-fieldset">
           <legend class="sr-only" data-i18n="creationLegend">何を作る？</legend>
@@ -249,6 +278,6 @@
 
     <footer><span>NPU AI Video — Local Image-to-Video</span><span data-i18n="privacy">入力は外部へ送信しません</span></footer>
   </main>
-    <script src="/app.js?v=0.8.0" defer></script>
+    <script src="/app.js?v=0.9.0" defer></script>
 </body>
 </html>

@@ -36,6 +36,12 @@ def test_health_and_home(tmp_path: Path) -> None:
         assert 'id="targetImageInput"' in home.text
         assert 'id="langJa"' in home.text
         assert 'id="langEn"' in home.text
+        assert 'id="jumpToCreator"' in home.text
+        assert 'id="inspiration"' in home.text
+        assert 'id="templateGrid"' in home.text
+        assert 'data-template="robot"' in home.text
+        assert 'data-template="neon"' in home.text
+        assert 'data-template="glyph"' in home.text
         assert 'id="overlayText"' not in home.text
         assert 'id="motionBrush"' in home.text
         assert 'id="brushCanvas"' in home.text
@@ -67,6 +73,9 @@ def test_ui_shows_elapsed_time_and_guards_duplicate_submits(tmp_path: Path) -> N
         assert "overlay_text" not in script.text
         assert 'applyLanguage("ja")' in script.text
         assert 'selectCreationMode("transition")' in script.text
+        assert "starterTemplates" in script.text
+        assert "applyStarterTemplate" in script.text
+        assert "scrollIntoView" in script.text
         assert "prompt: promptValue" in script.text
         assert 'glyph_mode: state.creationMode === "glyph"' in script.text
         assert "glyphCustomImageDataUrl" in script.text

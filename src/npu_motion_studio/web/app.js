@@ -2,12 +2,19 @@ const $ = (selector) => document.querySelector(selector);
 
 const copy = {
   ja: {
-    introKicker: "MAKE SOMETHING MOVE",
-    heroLead: "画像を選んで、", heroAccent: "動かしてみよう", heroTail: "。",
-    introBody: "写真でもイラストでもOK。1枚を動かす、AからBへ変える、文字を変身させる。まずは3つから選ぶだけ。",
-    trustLocalTitle: "このPCで作る", trustLocalBody: "アカウント・待ち時間なし",
+    introKicker: "MAKE A LITTLE MOVIE",
+    heroLead: "1枚の画像が、", heroAccent: "5秒の物語になる", heroTail: "。",
+    introBody: "写真・イラスト・文字を選ぶだけ。動きのアイデアを押して、ローカルAIでまず1本。",
+    heroPrimary: "作り始める", heroSecondary: "アイデアを見る",
+    trustLocalTitle: "このPCで作る", trustLocalBody: "アカウント・キューなし",
     trustPrivateTitle: "外へ送らない", trustPrivateBody: "写真も文章もローカル",
-    trustEasyTitle: "まず1本", trustEasyBody: "短い動画ですぐ試せる",
+    trustEasyTitle: "まず1本", trustEasyBody: "短い動画から始める",
+    starterEyebrow: "POPULAR FIRST TRIES", starterTitle: "迷ったら、まずこの3つ",
+    starterBody: "カードを押すと設定が入ります。画像を選ぶだけで作れます。",
+    starterRobot: "ロボット → 柴犬", starterRobotSub: "変身の途中を楽しむ",
+    starterNeon: "夜の街を走る", starterNeonSub: "1枚からカメラを動かす",
+    starterGlyph: "文字 → 異星の記号", starterGlyphSub: "文字をシェア素材に",
+    starterNote: "カードは設定を入れるだけ。写真は外へ送られません。",
     creationLegend: "何を作る？", transitionTitle: "A → B 変身",
     transitionSub: "2枚の画像をつないで変化", animateTitle: "画像を動かす",
     animateSub: "1枚から、カメラや被写体を動かす", shortPrompt: "短い一言でOK",
@@ -79,12 +86,19 @@ const copy = {
     recommended: "おすすめ",
   },
   en: {
-    introKicker: "MAKE SOMETHING MOVE",
-    heroLead: "Turn an image into", heroAccent: "a little movie", heroTail: ".",
-    introBody: "Photos, illustrations, or text. Choose one playful mode and make your first short video on this PC.",
+    introKicker: "MAKE A LITTLE MOVIE",
+    heroLead: "Turn one image into", heroAccent: "a little movie", heroTail: ".",
+    introBody: "Photos, illustrations, or text. Pick an idea, choose a mode, and make a first local clip.",
+    heroPrimary: "Start creating", heroSecondary: "Browse ideas",
     trustLocalTitle: "Made on this PC", trustLocalBody: "No account or queue",
     trustPrivateTitle: "Stays local", trustPrivateBody: "Your images stay here",
-    trustEasyTitle: "Start with one", trustEasyBody: "Try a short clip first",
+    trustEasyTitle: "Start with one", trustEasyBody: "Begin with a short clip",
+    starterEyebrow: "POPULAR FIRST TRIES", starterTitle: "Not sure? Start here",
+    starterBody: "Pick a card to fill the setup. You only need to add your images.",
+    starterRobot: "Robot → Shiba Inu", starterRobotSub: "Enjoy the impossible middle",
+    starterNeon: "Run through neon", starterNeonSub: "Move the camera from one image",
+    starterGlyph: "Letters → alien glyphs", starterGlyphSub: "Make text worth sharing",
+    starterNote: "Cards only fill the setup. Your photos stay on this PC.",
     creationLegend: "What do you want to make?", transitionTitle: "Transform A → B",
     transitionSub: "Connect two images and make a change", animateTitle: "Animate an image",
     animateSub: "Move the camera or the subject", shortPrompt: "A few words are enough",
@@ -157,7 +171,8 @@ const copy = {
 };
 
 const elements = {
-  form: $("#creationForm"), prompt: $("#prompt"), promptLabel: $("#promptLabel"), promptSuggestions: $("#promptSuggestions"),
+  form: $("#creationForm"), creator: $("#creator"), inspiration: $("#inspiration"),
+  prompt: $("#prompt"), promptLabel: $("#promptLabel"), promptSuggestions: $("#promptSuggestions"),
   imageInput: $("#imageInput"), dropzone: $("#dropzone"), dropPrompt: $("#dropPrompt"),
   imagePreview: $("#imagePreview"), imageShade: $("#imageShade"), removeImage: $("#removeImage"),
   targetImageInput: $("#targetImageInput"), targetDropzone: $("#targetDropzone"),
@@ -185,6 +200,7 @@ const elements = {
   motionBrush: $("#motionBrush"), brushImage: $("#brushImage"),
   brushCanvas: $("#brushCanvas"), clearBrush: $("#clearBrush"),
   emptyTitle: $("#emptyTitle"), emptyBody: $("#emptyBody"),
+  jumpToCreator: $("#jumpToCreator"), browseIdeas: $("#browseIdeas"), templateGrid: $("#templateGrid"),
 };
 
 const state = {
@@ -350,6 +366,54 @@ function renderPromptSuggestions() {
   elements.promptSuggestions.replaceChildren(title, buttons);
 }
 
+const starterTemplates = {
+  robot: {
+    creationMode: "transition", quality: "fun", duration: 4,
+    prompts: {
+      ja: "ロボットが部品を開きながら、柴犬へ変身する。カメラへ走ってくる。",
+      en: "A robot opens its armor and transforms into a Shiba Inu running toward the camera.",
+    },
+  },
+  neon: {
+    creationMode: "animate", quality: "fun", duration: 4,
+    prompts: {
+      ja: "雨の夜のネオン街。カメラが横へ流れ、光がきらめく。",
+      en: "A rainy neon street at night. The camera glides sideways while the lights shimmer.",
+    },
+  },
+  glyph: {
+    creationMode: "glyph", quality: "fast", duration: 3,
+    prompts: {
+      ja: "文字が弾けて光の粒になり、異星の記号へ再構成される。",
+      en: "The letters burst into glowing particles and reform as alien symbols.",
+    },
+  },
+};
+
+function markStarterTemplate(key) {
+  elements.templateGrid?.querySelectorAll("[data-template]").forEach((card) => {
+    card.classList.toggle("selected", card.dataset.template === key);
+  });
+}
+
+function applyStarterTemplate(key) {
+  const template = starterTemplates[key];
+  if (!template || state.busy) return;
+  const creationRadio = document.querySelector(`input[name="creationMode"][value="${template.creationMode}"]`);
+  const qualityRadio = document.querySelector(`input[name="mode"][value="${template.quality}"]`);
+  if (creationRadio) creationRadio.checked = true;
+  if (qualityRadio) qualityRadio.checked = true;
+  selectCreationMode(template.creationMode);
+  selectMode(template.quality);
+  elements.prompt.value = template.prompts[state.language];
+  elements.duration.value = String(template.duration);
+  elements.durationOutput.value = durationText(template.duration);
+  markStarterTemplate(key);
+  elements.creator?.scrollIntoView({behavior: "smooth", block: "start"});
+  window.setTimeout(() => elements.prompt.focus({preventScroll: true}), 260);
+  clearError();
+}
+
 function selectCreationMode(value) {
   state.creationMode = value;
   const transition = value === "transition";
@@ -430,6 +494,16 @@ document.querySelectorAll('input[name="creationMode"]').forEach((radio) => {
 });
 elements.langJa.addEventListener("click", () => applyLanguage("ja"));
 elements.langEn.addEventListener("click", () => applyLanguage("en"));
+elements.jumpToCreator?.addEventListener("click", () => {
+  elements.creator?.scrollIntoView({behavior: "smooth", block: "start"});
+  window.setTimeout(() => elements.prompt.focus({preventScroll: true}), 260);
+});
+elements.browseIdeas?.addEventListener("click", () => {
+  elements.inspiration?.scrollIntoView({behavior: "smooth", block: "center"});
+});
+elements.templateGrid?.querySelectorAll("[data-template]").forEach((card) => {
+  card.addEventListener("click", () => applyStarterTemplate(card.dataset.template));
+});
 elements.duration.addEventListener("input", () => {
   elements.durationOutput.value = durationText(elements.duration.value);
 });
