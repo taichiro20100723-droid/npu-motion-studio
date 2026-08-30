@@ -1,0 +1,57 @@
+name: Showcase an impossible middle
+description: Share an A→B transformation made with NPU Motion Studio.
+title: "Showcase: "
+labels:
+  - showcase
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for sharing! Attach an MP4/GIF and the two endpoint images if you can.
+  - type: input
+    id: from
+    attributes:
+      label: Image A
+      description: What does the first frame show?
+      placeholder: A rusted robot
+    validations:
+      required: true
+  - type: input
+    id: to
+    attributes:
+      label: Image B
+      description: What does the last frame show?
+      placeholder: A real dog
+    validations:
+      required: true
+  - type: textarea
+    id: prompt
+    attributes:
+      label: Motion prompt
+      description: Paste the exact sentence used in the app.
+      placeholder: Metal plates fold into orange fur...
+    validations:
+      required: true
+  - type: input
+    id: hardware
+    attributes:
+      label: Hardware
+      description: Include CPU / NPU / GPU when known.
+      placeholder: Core Ultra 7 258V / Arc 140V
+  - type: input
+    id: timing
+    attributes:
+      label: Generation time
+      placeholder: 20.69 seconds for a 5-second video
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: What worked, drifted, or surprised you?
+  - type: checkboxes
+    id: rights
+    attributes:
+      label: Rights check
+      options:
+        - label: I have permission to share the attached images and video.
+          required: true

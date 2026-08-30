@@ -18,9 +18,25 @@
   <img src="examples/robot-to-dog/robot-to-dog.gif" width="820" alt="A giant robot transforms into a Shiba Inu">
 </p>
 
-> **The hook:** give it a start and an end. NPU AI Video draws the strange, beautiful journey between them — on your own Intel laptop.
+> **The 5-second demo:** a giant robot becomes a real Shiba Inu. The first frame is yours, the last frame is yours, and the impossible middle is generated locally on your Intel laptop.
 
-Most image-to-video tools animate one still. This app is built for the moment people want to replay and share: **robot → dog, sketch → product, ruin → city, letters → alien glyphs**. Pick a mode, add a short idea, and press one large button. There is no cloud upload, node graph, account, or server queue.
+[Watch the MP4](examples/robot-to-dog/robot-to-dog.mp4) · [Try the Motion Brush clip](examples/motion-brush/robot-to-dog-motion-brush.mp4) · [Share your own A→B](SHOWCASE.md)
+
+If this is the kind of demo you want to see more of, **⭐ star the repository and post your strangest A→B result.**
+
+Most image-to-video tools animate one still. NPU AI Video is built for the moment people want to replay and share: **robot → dog, sketch → product, ruin → city, letters → alien glyphs**. Pick a mode, add a short idea, and press one large button. There is no cloud upload, node graph, account, or server queue.
+
+> This is not a full video-diffusion model. It is a deliberately fast hybrid: prompt-aware NPU keyframes, motion warping, GPU interpolation, and hardware video encoding.
+
+## The short version
+
+| You provide | The app creates |
+|---|---|
+| Image A + image B | A transformation between exact endpoints |
+| One sentence | Motion-aware NPU keyframes, not a simple cross-fade |
+| An Intel Core Ultra laptop | A local MP4 using NPU + Arc GPU + Quick Sync |
+
+The result is designed to be shared: a clear before/after, a surprising middle, and a short MP4 that works for short films, music-video transitions, concept reveals, memes, and visual experiments.
 
 ## Start in three moves
 
@@ -77,7 +93,7 @@ Arc GPU: VAE decode + frame interpolation
 Intel Quick Sync: H.264 MP4
 ```
 
-The hybrid design is intentional. It is not marketed as a full video-diffusion model: it protects exact endpoints, redraws prompt-aware key moments, warps motion, interpolates similar frames, and encodes locally. Radical transformations can still become surreal in the middle — that is part of the experiment, not a hidden failure mode.
+The hybrid design protects exact endpoints, redraws prompt-aware key moments, warps motion, interpolates similar frames, and encodes locally. Radical transformations can still become surreal in the middle — that is part of the experiment, not a hidden failure mode.
 
 ## Real outputs and measured speed
 
@@ -118,6 +134,10 @@ The main UI lives in `src/npu_motion_studio/web/`; the Python API is intentional
 ## Music-video builder (experimental)
 
 `make_waseda_saga_festival_mv.bat` is a local recipe for audio-aware cuts and transitions. It uses face-free backgrounds by default. Before publishing any output, confirm permission for every photograph, song, logo, and school asset.
+
+## Share an impossible middle
+
+Made something strange? Follow [SHOWCASE.md](SHOWCASE.md) to post the A image, B image, exact prompt, hardware, timing, and what surprised you. Weird, beautiful failures are welcome too.
 
 ## Honest limitations and licenses
 
