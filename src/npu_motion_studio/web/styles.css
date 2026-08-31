@@ -138,7 +138,7 @@ h1 { margin: 0; font-size: 1.06rem; letter-spacing: -.02em; }
 .starter-note { position: relative; display: flex; align-items: center; gap: 6px; margin: 12px 1px 0; color: #748097; font-size: .62rem; }
 .starter-note span:first-child { color: #ffd45b; font-size: .85rem; }
 
-.workspace { display: grid; grid-template-columns: minmax(340px, .94fr) minmax(430px, 1.2fr); gap: 22px; align-items: stretch; }
+.workspace { display: grid; grid-template-columns: minmax(340px, .94fr) minmax(430px, 1.2fr); gap: 22px; align-items: start; }
 .composer, .stage { border: 1px solid var(--line); border-radius: 25px; background: var(--panel); box-shadow: 0 28px 90px rgba(0,0,0,.32); backdrop-filter: blur(18px); }
 .composer { padding: 25px; }
 .section-heading, .style-fieldset legend { display: flex; align-items: flex-start; gap: 11px; }
@@ -287,7 +287,7 @@ input[type="range"] { width: 100%; accent-color: var(--cyan); }
 .generate:disabled { filter: grayscale(.55); cursor: wait; opacity: .68; transform: none; }
 .error { margin-top: 10px; border: 1px solid rgba(255,118,150,.3); border-radius: 11px; padding: 10px 12px; color: var(--danger); background: rgba(255,74,120,.07); font-size: .76rem; line-height: 1.5; }
 
-.stage { position: relative; min-height: 650px; overflow: hidden; display: grid; place-items: center; padding: 28px; background: linear-gradient(145deg, rgba(16,21,31,.95), rgba(7,10,16,.92)); }
+.stage { position: sticky; top: 24px; height: min(760px, calc(100vh - 48px)); min-height: 560px; overflow: hidden; display: grid; place-items: center; padding: 28px; background: linear-gradient(145deg, rgba(16,21,31,.95), rgba(7,10,16,.92)); }
 .stage::before { content: ""; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(circle at 50% 45%, rgba(92,118,255,.13), transparent 43%), linear-gradient(rgba(255,255,255,.022) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.022) 1px, transparent 1px); background-size: auto, 34px 34px, 34px 34px; mask-image: linear-gradient(to bottom, black, transparent 94%); }
 .empty-state, .working-state, .result-state { width: 100%; position: relative; z-index: 1; text-align: center; }
 .empty-state h3, .working-state h3 { margin: 21px 0 8px; font-size: 1.28rem; }
@@ -339,7 +339,7 @@ footer { display: flex; justify-content: space-between; color: #596477; font-siz
   .intro { grid-template-columns: 1fr; gap: 24px; }
   .hero-visual { width: min(100%, 680px); margin: 0 auto; transform: none; }
   .workspace { grid-template-columns: 1fr; }
-  .stage { min-height: 500px; }
+  .stage { position: relative; top: auto; height: auto; min-height: 500px; }
 }
 
 @media (max-width: 520px) {
