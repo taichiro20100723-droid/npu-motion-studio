@@ -54,7 +54,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     app = FastAPI(
         title=resolved.app_name,
-        version="0.5.0",
+        version="0.5.1",
         docs_url="/api/docs",
         redoc_url=None,
         lifespan=lifespan,
