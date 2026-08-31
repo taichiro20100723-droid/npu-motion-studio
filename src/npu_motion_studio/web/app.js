@@ -4,18 +4,18 @@ const copy = {
   ja: {
     introKicker: "MAKE A LITTLE MOVIE",
     heroLead: "1枚の画像が、", heroAccent: "5秒の物語になる", heroTail: "。",
-    introBody: "写真・イラスト・文字を選ぶだけ。動きのアイデアを押して、ローカルAIでまず1本。",
-    heroPrimary: "作り始める", heroSecondary: "アイデアを見る",
-    trustLocalTitle: "このPCで作る", trustLocalBody: "アカウント・キューなし",
+    introBody: "画像や文字を選び、アイデアを1つ選ぶだけ。まず1本作れます。",
+    heroPrimary: "まず1本作る", heroSecondary: "アイデアを見る",
+    trustLocalTitle: "このPCで作る", trustLocalBody: "アカウント不要",
     trustPrivateTitle: "外へ送らない", trustPrivateBody: "写真も文章もローカル",
     trustEasyTitle: "まず1本", trustEasyBody: "短い動画から始める",
-    starterEyebrow: "POPULAR FIRST TRIES", starterTitle: "迷ったら、まずこの3つ",
-    starterBody: "カードを押すと設定が入ります。画像を選ぶだけで作れます。",
-    starterRobot: "ロボット → 柴犬", starterRobotSub: "変身の途中を楽しむ",
+    starterEyebrow: "QUICK STARTS", starterTitle: "迷ったら、ここから",
+    starterBody: "カードを選び、画像を追加するだけ。",
+    starterRobot: "ロボット → 柴犬", starterRobotSub: "変身の瞬間をつくる",
     starterNeon: "夜の街を走る", starterNeonSub: "1枚からカメラを動かす",
-    starterGlyph: "文字 → 異星の記号", starterGlyphSub: "文字をシェア素材に",
+    starterGlyph: "文字 → 異星の記号", starterGlyphSub: "シェアできる文字を作る",
     starterNote: "カードは設定を入れるだけ。写真は外へ送られません。",
-    creationLegend: "何を作る？", transitionTitle: "A → B 変身",
+    creationLegend: "作り方を選ぶ", transitionTitle: "A → B 変身",
     transitionSub: "2枚の画像をつないで変化", animateTitle: "画像を動かす",
     animateSub: "1枚から、カメラや被写体を動かす", shortPrompt: "短い一言でOK",
     glyphTitle: "文字を変身", glyphSub: "文字や記号を、不思議に変える",
@@ -29,7 +29,7 @@ const copy = {
     glyphTextDownload: "TXT", glyphSvgDownload: "文字シートSVG", glyphFontDownload: "フォント",
     glyphStatus: "文字シートを作ると、NPUが変化を描く準備ができます。",
     glyphResultTitle: "AI変化の元になる文字シート", glyphResultHelp: "動画ではこのシートを元に、NPUが文字を自然に変化させます。",
-    shortcutTail: "で作成", qualityTitle: "どんな感じにする？",
+    shortcutTail: "で作成", qualityTitle: "仕上がりを選ぶ",
     qualityHelp: "迷ったら「おすすめ」。まずは短い動画で試せます。", fastTitle: "すぐ試す",
     fastSub: "軽く・はやい", funTitle: "おすすめ",
     funSub: "見た目と速さのバランス", wowTitle: "じっくり", wowSub: "より丁寧に仕上げる",
@@ -41,7 +41,7 @@ const copy = {
     seconds: "秒", workingKicker: "ただいま制作中", step1: "文章を理解", step2: "NPUで描く",
     step3: "GPUでつなぐ", step4: "仕上げる",
     workingNote: "迷ったら「おすすめ」。できあがったら、別の動きもすぐ試せます。",
-    save: "保存する", remix: "別の動きでもう1本作る", privacy: "入力は外部へ送信しません",
+    save: "動画を保存", remix: "別の動きでもう1本", privacy: "入力は外部へ送信しません",
     sceneTransition: "はじめとおわりを選んで、変化を書こう",
     sceneTransitionHelp: "2枚の画像の間に、AIが変身の途中を描きます。",
     sceneAnimate: "どんな動きにする？", sceneAnimateHelp: "文章か画像、どちらか片方だけでも大丈夫です。",
@@ -51,12 +51,14 @@ const copy = {
     emptyGlyphTitle: "変身する文字がここに現れます", emptyGlyphBody: "文字を入力するか、文字シート画像を選んでください。",
     promptTransition: "例：ロボットが部品を展開しながら、赤いスポーツカーへ変形する。",
     promptAnimate: "例：雨の夜。巨大ロボットが勢いよく走り出す。",
-    promptLabel: "動きの一言", orTransition: "どんなふうに変わる？", orAnimate: "画像を使うならこちら",
-    firstTransition: "はじめの画像", firstAnimate: "動かす画像", targetLabel: "おわりの画像",
+    promptLabel: "動きの説明（任意）", fileConstraints: "PNG・JPEG・WebP / 5MB以下",
+    requirementsTransition: "あと{count}つ：{items}", requirementsAnimate: "画像か説明を1つ追加", requirementsGlyph: "文字か文字シート画像を1つ追加",
+    orTransition: "どんなふうに変わる？", orAnimate: "画像を使うならこちら",
+    firstTransition: "A：変化前", firstAnimate: "動かす画像", targetLabel: "B：変化後",
     clickDrop: "クリックまたはここへドロップ", removeImage: "画像を外す",
     chooseA: "Aの画像を選ぶ", chooseImage: "画像を選ぶ", chooseB: "Bの画像を選ぶ",
     preparing: "もうすぐ作れます", generateTransition: "A → B の動画を作る",
-    generateAnimate: "動画を作ってみる", creating: "動画を作っています",
+    generateAnimate: "動画を作る", creating: "動画を作っています",
     glyphPrompt: "任意：文字の変化を文章で追加できます。空欄でもNPUが自動で変化させます。",
     glyphAutoPrompt: "naturally transform each printed character into an expressive alien glyph, preserve the exact character sheet grid and spacing, one symbol per cell, fluid ink metamorphosis, no extra objects",
     glyphPromptDefault: "",
@@ -88,18 +90,18 @@ const copy = {
   en: {
     introKicker: "MAKE A LITTLE MOVIE",
     heroLead: "Turn one image into", heroAccent: "a little movie", heroTail: ".",
-    introBody: "Photos, illustrations, or text. Pick an idea, choose a mode, and make a first local clip.",
-    heroPrimary: "Start creating", heroSecondary: "Browse ideas",
-    trustLocalTitle: "Made on this PC", trustLocalBody: "No account or queue",
+    introBody: "Choose images or text, pick one idea, and make your first clip locally.",
+    heroPrimary: "Make a first clip", heroSecondary: "See ideas",
+    trustLocalTitle: "Made on this PC", trustLocalBody: "No account needed",
     trustPrivateTitle: "Stays local", trustPrivateBody: "Your images stay here",
     trustEasyTitle: "Start with one", trustEasyBody: "Begin with a short clip",
-    starterEyebrow: "POPULAR FIRST TRIES", starterTitle: "Not sure? Start here",
-    starterBody: "Pick a card to fill the setup. You only need to add your images.",
-    starterRobot: "Robot → Shiba Inu", starterRobotSub: "Enjoy the impossible middle",
+    starterEyebrow: "QUICK STARTS", starterTitle: "Not sure? Start here",
+    starterBody: "Pick a card, then add your images.",
+    starterRobot: "Robot → Shiba Inu", starterRobotSub: "Make the impossible middle",
     starterNeon: "Run through neon", starterNeonSub: "Move the camera from one image",
-    starterGlyph: "Letters → alien glyphs", starterGlyphSub: "Make text worth sharing",
+    starterGlyph: "Letters → alien glyphs", starterGlyphSub: "Make shareable text",
     starterNote: "Cards only fill the setup. Your photos stay on this PC.",
-    creationLegend: "What do you want to make?", transitionTitle: "Transform A → B",
+    creationLegend: "Choose how to create", transitionTitle: "Transform A → B",
     transitionSub: "Connect two images and make a change", animateTitle: "Animate an image",
     animateSub: "Move the camera or the subject", shortPrompt: "A few words are enough",
     glyphTitle: "Morph text", glyphSub: "Turn letters and symbols into something strange",
@@ -113,7 +115,7 @@ const copy = {
     glyphTextDownload: "TXT", glyphSvgDownload: "CHARACTER SHEET SVG", glyphFontDownload: "FONT",
     glyphStatus: "Make the character sheet, then the NPU will draw the transformation.",
     glyphResultTitle: "Character sheet used by the AI", glyphResultHelp: "The video starts here and the NPU morphs each character naturally.",
-    shortcutTail: "to create", qualityTitle: "Pick a feel",
+    shortcutTail: "to create", qualityTitle: "Choose a look",
     qualityHelp: "Not sure? Choose Recommended and try a short clip.", fastTitle: "Quick try", fastSub: "Light and fast",
     funTitle: "Recommended", funSub: "Best balance of look and speed", wowTitle: "Take more time",
     wowSub: "A more careful finish", advanced: "Advanced settings", duration: "Video length",
@@ -124,7 +126,7 @@ const copy = {
     seconds: "sec", workingKicker: "CREATING LOCALLY", step1: "Understand prompt", step2: "Draw on NPU",
     step3: "Connect on GPU", step4: "Finish MP4",
     workingNote: "Recommended is a good place to start. When it is done, try another motion.",
-    save: "Save video", remix: "Make another clip with a new motion", privacy: "Your inputs never leave this PC",
+    save: "Save video", remix: "Make another clip", privacy: "Your inputs never leave this PC",
     sceneTransition: "Choose the start and end, then describe the change",
     sceneTransitionHelp: "Pick two images. AI draws the transformation between them.",
     sceneAnimate: "What should move?", sceneAnimateHelp: "Use a prompt, one image, or both.",
@@ -137,12 +139,14 @@ const copy = {
     glyphPrompt: "Optional: describe the change. Leave it blank and the NPU will choose a natural morph.",
     glyphAutoPrompt: "naturally transform each printed character into an expressive alien glyph, preserve the exact character sheet grid and spacing, one symbol per cell, fluid ink metamorphosis, no extra objects",
     glyphPromptDefault: "",
-    promptLabel: "A few words about the motion", orTransition: "How should it change?", orAnimate: "Add an image too",
-    firstTransition: "Start image", firstAnimate: "Image to animate", targetLabel: "End image",
+    promptLabel: "Motion description (optional)", fileConstraints: "PNG · JPEG · WebP / 5MB max",
+    requirementsTransition: "{count} more: {items}", requirementsAnimate: "Add an image or a description", requirementsGlyph: "Add text or a character-sheet image",
+    orTransition: "How should it change?", orAnimate: "Add an image too",
+    firstTransition: "A: start", firstAnimate: "Image to animate", targetLabel: "B: end",
     clickDrop: "Click or drop an image here", removeImage: "Remove image",
     chooseA: "Choose image A", chooseImage: "Choose an image", chooseB: "Choose image B",
     preparing: "Almost ready", generateTransition: "Create A → B video",
-    generateAnimate: "Make a video", creating: "Making your video",
+    generateAnimate: "Make the video", creating: "Making your video",
     waitBusy: "Keep this window open while it works", qualityFirst: "Generates at the quality you selected",
     startupWait: "The first launch needs a moment", genericError: "Something went wrong. Please try again.",
     invalidImage: "Choose a PNG, JPEG, or WebP image.", imageTooLarge: "Choose an image under 5 MB.",
@@ -196,7 +200,7 @@ const elements = {
   progressTrack: $(".progress-track"), countdown: $("#countdown"), resultVideo: $("#resultVideo"),
   resultImage: $("#resultImage"), resultTime: $("#resultTime"), resultNote: $("#resultNote"),
   download: $("#download"), systemLabel: $("#systemLabel"), systemDot: $("#systemDot"),
-  systemPanel: $("#systemPanel"), langJa: $("#langJa"), langEn: $("#langEn"),
+  systemPanel: $("#systemPanel"), requirementsHint: $("#requirementsHint"), langJa: $("#langJa"), langEn: $("#langEn"),
   motionBrush: $("#motionBrush"), brushImage: $("#brushImage"),
   brushCanvas: $("#brushCanvas"), clearBrush: $("#clearBrush"),
   emptyTitle: $("#emptyTitle"), emptyBody: $("#emptyBody"),
@@ -311,6 +315,26 @@ function setBusy(busy) {
   elements.generateLabel.textContent = busy ? t("creating") : deadlineLabel();
   elements.generateHelp.textContent = busy
     ? t("waitBusy") : state.engineReady ? t("qualityFirst") : t("startupWait");
+  updateRequirements();
+}
+
+function updateRequirements() {
+  if (!elements.requirementsHint) return;
+  if (state.busy) { elements.requirementsHint.hidden = true; return; }
+  const missing = [];
+  if (state.creationMode === "transition") {
+    if (!state.imageDataUrl) missing.push(state.language === "ja" ? "A画像" : "A image");
+    if (!state.targetImageDataUrl) missing.push(state.language === "ja" ? "B画像" : "B image");
+    if (missing.length) {
+      elements.requirementsHint.textContent = format(t("requirementsTransition"), {count: missing.length, items: missing.join(state.language === "ja" ? "・" : " and ")});
+      elements.requirementsHint.hidden = false; return;
+    }
+  } else if (state.creationMode === "animate" && !state.imageDataUrl && !elements.prompt.value.trim()) {
+    elements.requirementsHint.textContent = t("requirementsAnimate"); elements.requirementsHint.hidden = false; return;
+  } else if (state.creationMode === "glyph" && !elements.glyphSource.value.trim() && !state.glyphCustomImageDataUrl) {
+    elements.requirementsHint.textContent = t("requirementsGlyph"); elements.requirementsHint.hidden = false; return;
+  }
+  elements.requirementsHint.textContent = ""; elements.requirementsHint.hidden = true;
 }
 
 function clearError() { elements.error.textContent = ""; elements.error.hidden = true; }
@@ -392,7 +416,9 @@ const starterTemplates = {
 
 function markStarterTemplate(key) {
   elements.templateGrid?.querySelectorAll("[data-template]").forEach((card) => {
-    card.classList.toggle("selected", card.dataset.template === key);
+    const selected = card.dataset.template === key;
+    card.classList.toggle("selected", selected);
+    card.setAttribute("aria-pressed", String(selected));
   });
 }
 
@@ -406,6 +432,7 @@ function applyStarterTemplate(key) {
   selectCreationMode(template.creationMode);
   selectMode(template.quality);
   elements.prompt.value = template.prompts[state.language];
+  updateRequirements();
   elements.duration.value = String(template.duration);
   elements.durationOutput.value = durationText(template.duration);
   markStarterTemplate(key);
@@ -443,6 +470,7 @@ function selectCreationMode(value) {
   }
   if (!state.busy) setBusy(false);
   renderPromptSuggestions();
+  updateRequirements();
 }
 
 function renderSystem() {
@@ -478,7 +506,7 @@ function applyLanguage(language) {
   elements.targetDropzone.setAttribute("aria-label", t("chooseB"));
   elements.durationOutput.value = durationText(elements.duration.value);
   elements.scaleMin.textContent = durationText(2); elements.scaleMax.textContent = durationText(10);
-  selectCreationMode(state.creationMode); renderGlyphImageStatus(); renderSystem(); clearError();
+  selectCreationMode(state.creationMode); renderGlyphImageStatus(); renderSystem(); updateRequirements(); clearError();
   if (state.busy) {
     elements.progressMessage.textContent = progressMessageFor(state.currentStage)
       || state.currentJobMessage || t("gettingReady");
@@ -507,7 +535,8 @@ elements.templateGrid?.querySelectorAll("[data-template]").forEach((card) => {
 elements.duration.addEventListener("input", () => {
   elements.durationOutput.value = durationText(elements.duration.value);
 });
-elements.glyphSource.addEventListener("input", updateGlyphPreview);
+elements.prompt.addEventListener("input", updateRequirements);
+elements.glyphSource.addEventListener("input", () => { updateGlyphPreview(); updateRequirements(); });
 document.querySelectorAll('input[name="glyphStyle"]').forEach((radio) => radio.addEventListener("change", () => {
   document.querySelectorAll(".glyph-style").forEach((label) => label.classList.toggle("selected", label.querySelector("input").checked));
   updateGlyphPreview();
@@ -606,6 +635,7 @@ function acceptImage(file, slotName) {
     slot.prompt.hidden = true;
     slot.dropzone.setAttribute("aria-label", format(t("selectedImage"), {name: file.name}));
     if (slotName === "start") setupBrush(state[slot.stateKey]);
+    updateRequirements();
   });
   reader.addEventListener("error", () => showError(t("readImageError")));
   reader.readAsDataURL(file);
@@ -617,6 +647,7 @@ function clearImage(slotName) {
   slot.remove.hidden = true; slot.prompt.hidden = false;
   slot.dropzone.setAttribute("aria-label", emptyAria(slotName));
   if (slotName === "start") resetBrush(true);
+  updateRequirements();
 }
 
 function bindImageSlot(slotName) {
@@ -714,7 +745,11 @@ function drawArrow(from, to) {
 
 document.querySelectorAll(".brush-tool").forEach((button) => button.addEventListener("click", () => {
   state.brushTool = button.dataset.tool;
-  document.querySelectorAll(".brush-tool").forEach((item) => item.classList.toggle("active", item === button));
+  document.querySelectorAll(".brush-tool").forEach((item) => {
+    const selected = item === button;
+    item.classList.toggle("active", selected);
+    item.setAttribute("aria-pressed", String(selected));
+  });
 }));
 elements.clearBrush.addEventListener("click", () => resetBrush(false));
 elements.brushCanvas.addEventListener("pointerdown", (event) => {

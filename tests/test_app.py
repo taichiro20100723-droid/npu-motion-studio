@@ -42,6 +42,13 @@ def test_health_and_home(tmp_path: Path) -> None:
         assert 'data-template="robot"' in home.text
         assert 'data-template="neon"' in home.text
         assert 'data-template="glyph"' in home.text
+        assert 'data-template="robot" aria-pressed="false"' in home.text
+        assert 'id="promptLabel" class="field-label"' in home.text
+        assert 'data-i18n="fileConstraints"' in home.text
+        assert 'id="requirementsHint"' in home.text
+        assert 'id="dropzone"' in home.text and 'id="removeImage"' in home.text
+        assert '<div id="dropzone"' in home.text and '<div id="targetDropzone"' in home.text
+        assert 'aria-live="polite"' in home.text
         assert 'id="overlayText"' not in home.text
         assert 'id="motionBrush"' in home.text
         assert 'id="brushCanvas"' in home.text
@@ -75,6 +82,8 @@ def test_ui_shows_elapsed_time_and_guards_duplicate_submits(tmp_path: Path) -> N
         assert 'selectCreationMode("transition")' in script.text
         assert "starterTemplates" in script.text
         assert "applyStarterTemplate" in script.text
+        assert "updateRequirements" in script.text
+        assert "requirementsTransition" in script.text
         assert "scrollIntoView" in script.text
         assert "prompt: promptValue" in script.text
         assert 'glyph_mode: state.creationMode === "glyph"' in script.text

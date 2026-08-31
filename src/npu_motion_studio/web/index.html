@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="dark">
   <meta name="description" content="NPU AI Video turns one or two images into short, shareable local AI videos on your Windows PC.">
   <title>NPU AI Video — Make a little movie</title>
-    <link rel="stylesheet" href="/styles.css?v=0.10.0">
+    <link rel="stylesheet" href="/styles.css?v=0.13.0">
 </head>
 <body>
   <main class="shell">
@@ -42,13 +42,13 @@
         </div>
       </div>
       <div class="hero-visual" aria-hidden="true">
-        <div class="hero-visual-top"><span>01 / 03</span><span><i></i> LOCAL PREVIEW</span></div>
+        <div class="hero-visual-top"><span><i></i> LOCAL PREVIEW</span><span>5 SEC</span></div>
         <div class="hero-visual-scene">
-          <div class="hero-frame hero-frame-a"><span class="hero-frame-label">A / INPUT</span><b class="hero-frame-mark">01</b><strong>ROBOT</strong></div>
-          <div class="hero-connector"><span>TRANSFORM</span><b>→</b></div>
-          <div class="hero-frame hero-frame-b"><span class="hero-frame-label">B / OUTPUT</span><b class="hero-frame-mark">02</b><strong>SHIBA</strong></div>
+          <div class="hero-frame hero-frame-a"><span class="hero-frame-label">A</span><strong>ROBOT</strong></div>
+          <div class="hero-connector"><b>→</b></div>
+          <div class="hero-frame hero-frame-b"><span class="hero-frame-label">B</span><strong>SHIBA</strong></div>
         </div>
-        <div class="hero-visual-meter"><span>12 ANCHORS</span><i><b></b></i><span>5 SEC</span></div>
+        <div class="hero-visual-meter"><span>ROBOT → SHIBA</span><i><b></b></i><span>LOCAL</span></div>
       </div>
     </section>
 
@@ -58,17 +58,17 @@
         <div><p class="starter-eyebrow" data-i18n="starterEyebrow">POPULAR FIRST TRIES</p><h2 id="starterTitle" data-i18n="starterTitle">迷ったら、まずこの3つ</h2><p data-i18n="starterBody">カードを押すと設定が入ります。画像を選ぶだけで作れます。</p></div>
       </div>
       <div id="templateGrid" class="template-grid" role="list" aria-label="Starter ideas">
-        <button class="template-card template-transform" type="button" data-template="robot" role="listitem">
+        <button class="template-card template-transform" type="button" data-template="robot" aria-pressed="false">
           <span class="template-art" aria-hidden="true"><i></i><b>→</b><em>●</em></span>
           <span class="template-copy"><strong data-i18n="starterRobot">ロボット → 柴犬</strong><small data-i18n="starterRobotSub">変身の途中を楽しむ</small></span>
           <span class="template-arrow" aria-hidden="true">↗</span>
         </button>
-        <button class="template-card template-animate" type="button" data-template="neon" role="listitem">
+        <button class="template-card template-animate" type="button" data-template="neon" aria-pressed="false">
           <span class="template-art" aria-hidden="true"><i></i><b>✦</b><em>◒</em></span>
           <span class="template-copy"><strong data-i18n="starterNeon">夜の街を走る</strong><small data-i18n="starterNeonSub">1枚からカメラを動かす</small></span>
           <span class="template-arrow" aria-hidden="true">↗</span>
         </button>
-        <button class="template-card template-glyph" type="button" data-template="glyph" role="listitem">
+        <button class="template-card template-glyph" type="button" data-template="glyph" aria-pressed="false">
           <span class="template-art" aria-hidden="true"><i>Ƶ</i><b>✧</b><em>Λ</em></span>
           <span class="template-copy"><strong data-i18n="starterGlyph">文字 → 異星の記号</strong><small data-i18n="starterGlyphSub">文字をシェア素材に</small></span>
           <span class="template-arrow" aria-hidden="true">↗</span>
@@ -108,7 +108,7 @@
           <div><h3 id="sceneTitle">AとBを選んで、変化を書いてください</h3><p id="sceneHelp">Aの形と画面比率を保ち、Bまでの途中をAIが描きます。</p></div>
         </div>
 
-        <label id="promptLabel" class="sr-only" for="prompt">変化や動きの説明</label>
+        <label id="promptLabel" class="field-label" for="prompt" data-i18n="promptLabel">動きの説明（任意）</label>
         <textarea id="prompt" maxlength="500" rows="4" aria-describedby="promptHint" placeholder="例：ロボットが部品を展開しながら、赤いスポーツカーへ変形する。"></textarea>
         <div id="promptHint" class="input-hint"><span data-i18n="shortPrompt">短い一言でOK</span><span><kbd>Ctrl</kbd> + <kbd>Enter</kbd> <span data-i18n="shortcutTail">で作成</span></span></div>
         <div id="promptSuggestions" class="prompt-suggestions" role="group" aria-label="Prompt ideas"></div>
@@ -130,7 +130,7 @@
               <button id="glyphImageRemove" class="glyph-image-remove" type="button" hidden data-i18n="glyphImageRemove">外す</button>
               <img id="glyphImagePreview" class="glyph-image-preview" alt="Character sheet image preview" hidden>
             </div>
-            <p id="glyphImageStatus" class="glyph-image-status" data-i18n="glyphImageStatus">画像を選ばなければ、入力文字からシートを作ります。</p>
+            <p id="glyphImageStatus" class="glyph-image-status" role="status" data-i18n="glyphImageStatus">画像を選ばなければ、入力文字からシートを作ります。</p>
           </div>
           <div class="glyph-style-heading"><strong data-i18n="glyphStyleTitle">雰囲気</strong><small data-i18n="glyphStyleHelp">選んだスタイルで毎回同じ文字を再現できます。</small></div>
           <div class="glyph-styles" role="group" aria-label="Glyph style">
@@ -150,32 +150,36 @@
             <a id="glyphSvgDownload" class="glyph-download" download hidden data-i18n="glyphSvgDownload">文字シートSVG</a>
             <a id="glyphFontDownload" class="glyph-download" download hidden data-i18n="glyphFontDownload">フォント</a>
           </div>
-          <p id="glyphStatus" class="glyph-status" data-i18n="glyphStatus">文字シートを作ると、NPUが変化を描く準備ができます。</p>
+          <p id="glyphStatus" class="glyph-status" role="status" data-i18n="glyphStatus">文字シートを作ると、NPUが変化を描く準備ができます。</p>
         </section>
 
         <div id="imagePair" class="image-pair transition-active">
+          <div class="image-slot">
           <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Aの画像を選ぶ" aria-describedby="dropHelp">
             <input id="imageInput" type="file" accept="image/png,image/jpeg,image/webp" hidden>
             <div id="dropPrompt" class="drop-prompt">
               <span class="drop-icon" aria-hidden="true">A</span>
-              <span><strong id="firstImageLabel">はじめの画像</strong><small id="dropHelp">クリックまたはここへドロップ</small></span>
+              <span><strong id="firstImageLabel">A：変化前</strong><small id="dropHelp">クリックまたはここへドロップ</small><span class="drop-constraints" data-i18n="fileConstraints">PNG・JPEG・WebP / 5MB以下</span></span>
             </div>
             <img id="imagePreview" alt="A image preview" hidden>
             <div id="imageShade" class="image-shade" hidden></div>
-            <button id="removeImage" class="remove-image" type="button" hidden>画像を外す</button>
+          </div>
+          <button id="removeImage" class="remove-image" type="button" hidden>画像を外す</button>
           </div>
 
           <div id="transitionTargetGroup" class="transition-target">
             <span class="transition-arrow" aria-hidden="true">→</span>
+            <div class="image-slot">
             <div id="targetDropzone" class="dropzone" tabindex="0" role="button" aria-label="Bの画像を選ぶ" aria-describedby="targetDropHelp">
               <input id="targetImageInput" type="file" accept="image/png,image/jpeg,image/webp" hidden>
               <div id="targetDropPrompt" class="drop-prompt">
                 <span class="drop-icon" aria-hidden="true">B</span>
-                <span><strong id="targetImageLabel">おわりの画像</strong><small id="targetDropHelp">クリックまたはここへドロップ</small></span>
+                <span><strong id="targetImageLabel">B：変化後</strong><small id="targetDropHelp">クリックまたはここへドロップ</small><span class="drop-constraints" data-i18n="fileConstraints">PNG・JPEG・WebP / 5MB以下</span></span>
               </div>
               <img id="targetImagePreview" alt="B image preview" hidden>
               <div id="targetImageShade" class="image-shade" hidden></div>
-              <button id="removeTargetImage" class="remove-image" type="button" hidden>画像を外す</button>
+            </div>
+            <button id="removeTargetImage" class="remove-image" type="button" hidden>画像を外す</button>
             </div>
           </div>
         </div>
@@ -188,9 +192,9 @@
               <canvas id="brushCanvas" aria-label="Motion Brush canvas"></canvas>
             </div>
             <div class="brush-tools" role="toolbar" aria-label="Motion Brush tools">
-              <button type="button" class="brush-tool active" data-tool="move"><span class="red-dot"></span><b data-i18n="brushMove">激しく動かす</b></button>
-              <button type="button" class="brush-tool" data-tool="lock"><span class="blue-dot"></span><b data-i18n="brushLock">固定する</b></button>
-              <button type="button" class="brush-tool" data-tool="arrow"><span class="arrow-icon">→</span><b data-i18n="brushArrow">方向を引く</b></button>
+              <button type="button" class="brush-tool active" data-tool="move" aria-pressed="true"><span class="red-dot"></span><b data-i18n="brushMove">激しく動かす</b></button>
+              <button type="button" class="brush-tool" data-tool="lock" aria-pressed="false"><span class="blue-dot"></span><b data-i18n="brushLock">固定する</b></button>
+              <button type="button" class="brush-tool" data-tool="arrow" aria-pressed="false"><span class="arrow-icon">→</span><b data-i18n="brushArrow">方向を引く</b></button>
               <button id="clearBrush" type="button" class="brush-clear" data-i18n="brushClear">全部消す</button>
             </div>
             <p class="brush-tip" data-i18n="brushTip">例：車を赤く塗り、背景を青く塗って、右向きの矢印を引きます。</p>
@@ -239,10 +243,11 @@
           <span><strong id="generateLabel">AIを準備しています</strong><small id="generateHelp">選んだ品質で最初から生成します</small></span>
           <span class="generate-arrow" aria-hidden="true">→</span>
         </button>
+        <p id="requirementsHint" class="requirements-hint" aria-live="polite" hidden></p>
         <div id="formError" class="error" role="alert" tabindex="-1" hidden></div>
       </form>
 
-      <section class="stage" aria-label="Preview" aria-live="polite">
+      <section class="stage" aria-label="Preview">
         <div id="emptyState" class="empty-state">
           <div class="orb" aria-hidden="true"><span></span><i></i></div>
           <h3 id="emptyTitle" data-i18n="emptyTitle">AからBへの変化がここに現れます</h3>
@@ -257,7 +262,7 @@
         <div id="workingState" class="working-state" hidden>
           <div class="timer-ring" aria-label="Elapsed time"><strong id="countdown">0.0</strong><small data-i18n="seconds">秒</small></div>
           <p class="working-kicker" data-i18n="workingKicker">ただいま制作中</p>
-          <h3 id="progressMessage">準備しています</h3>
+          <h3 id="progressMessage" aria-live="polite">準備しています</h3>
           <div class="progress-track" role="progressbar" aria-label="Progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="progressBar"></span></div>
           <ol class="pipeline">
             <li id="step-analysis"><span>1</span><b data-i18n="step1">文章を理解</b></li>
@@ -289,6 +294,6 @@
 
     <footer><span>NPU AI Video — Local Image-to-Video</span><span data-i18n="privacy">入力は外部へ送信しません</span></footer>
   </main>
-    <script src="/app.js?v=0.9.0" defer></script>
+    <script src="/app.js?v=0.12.0" defer></script>
 </body>
 </html>
