@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="dark">
   <meta name="description" content="NPU AI Video turns one or two images into short, shareable local AI videos on your Windows PC.">
   <title>NPU AI Video — Make a little movie</title>
-    <link rel="stylesheet" href="/styles.css?v=0.9.0">
+    <link rel="stylesheet" href="/styles.css?v=0.10.0">
 </head>
 <body>
   <main class="shell">
@@ -27,17 +27,28 @@
     </header>
 
     <section class="intro" aria-labelledby="pageTitle">
-      <p class="intro-kicker" data-i18n="introKicker">MAKE A LITTLE MOVIE</p>
-      <h2 id="pageTitle"><span data-i18n="heroLead">1枚の画像が、</span><br><em data-i18n="heroAccent">5秒の物語になる</em><span data-i18n="heroTail">。</span></h2>
-      <p data-i18n="introBody">写真・イラスト・文字を選ぶだけ。動きのアイデアを押して、ローカルAIでまず1本。</p>
-      <div class="hero-actions">
-        <button id="jumpToCreator" class="hero-primary" type="button"><span data-i18n="heroPrimary">作り始める</span><span aria-hidden="true">↓</span></button>
-        <button id="browseIdeas" class="hero-secondary" type="button"><span data-i18n="heroSecondary">アイデアを見る</span><span aria-hidden="true">✦</span></button>
+      <div class="intro-copy">
+        <p class="intro-kicker" data-i18n="introKicker">MAKE A LITTLE MOVIE</p>
+        <h2 id="pageTitle"><span data-i18n="heroLead">1枚の画像が、</span><br><em data-i18n="heroAccent">5秒の物語になる</em><span data-i18n="heroTail">。</span></h2>
+        <p data-i18n="introBody">写真・イラスト・文字を選ぶだけ。動きのアイデアを押して、ローカルAIでまず1本。</p>
+        <div class="hero-actions">
+          <button id="jumpToCreator" class="hero-primary" type="button"><span data-i18n="heroPrimary">作り始める</span><span aria-hidden="true">↓</span></button>
+          <button id="browseIdeas" class="hero-secondary" type="button"><span data-i18n="heroSecondary">アイデアを見る</span><span aria-hidden="true">✦</span></button>
+        </div>
+        <div class="trust-strip" role="list" aria-label="Local AI benefits">
+          <span role="listitem"><b>01</b><strong data-i18n="trustLocalTitle">このPCで作る</strong><small data-i18n="trustLocalBody">アカウント・キューなし</small></span>
+          <span role="listitem"><b>02</b><strong data-i18n="trustPrivateTitle">外へ送らない</strong><small data-i18n="trustPrivateBody">写真も文章もローカル</small></span>
+          <span role="listitem"><b>03</b><strong data-i18n="trustEasyTitle">まず1本</strong><small data-i18n="trustEasyBody">短い動画から始める</small></span>
+        </div>
       </div>
-      <div class="trust-strip" role="list" aria-label="Local AI benefits">
-        <span role="listitem"><b>01</b><strong data-i18n="trustLocalTitle">このPCで作る</strong><small data-i18n="trustLocalBody">アカウント・キューなし</small></span>
-        <span role="listitem"><b>02</b><strong data-i18n="trustPrivateTitle">外へ送らない</strong><small data-i18n="trustPrivateBody">写真も文章もローカル</small></span>
-        <span role="listitem"><b>03</b><strong data-i18n="trustEasyTitle">まず1本</strong><small data-i18n="trustEasyBody">短い動画から始める</small></span>
+      <div class="hero-visual" aria-hidden="true">
+        <div class="hero-visual-top"><span>01 / 03</span><span><i></i> LOCAL PREVIEW</span></div>
+        <div class="hero-visual-scene">
+          <div class="hero-frame hero-frame-a"><span class="hero-frame-label">A / INPUT</span><b class="hero-frame-mark">01</b><strong>ROBOT</strong></div>
+          <div class="hero-connector"><span>TRANSFORM</span><b>→</b></div>
+          <div class="hero-frame hero-frame-b"><span class="hero-frame-label">B / OUTPUT</span><b class="hero-frame-mark">02</b><strong>SHIBA</strong></div>
+        </div>
+        <div class="hero-visual-meter"><span>12 ANCHORS</span><i><b></b></i><span>5 SEC</span></div>
       </div>
     </section>
 
